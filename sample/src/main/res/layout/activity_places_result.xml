@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="8dp"
-    tools:context="pl.charmas.android.reactivelocation.sample.PlacesResultActivity">
+    tools:context="xyz.fcampbell.rxgms.sample.PlacesResultActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
