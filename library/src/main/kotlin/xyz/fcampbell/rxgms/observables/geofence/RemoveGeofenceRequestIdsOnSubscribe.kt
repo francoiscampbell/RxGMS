@@ -7,7 +7,10 @@ import com.google.android.gms.location.LocationServices
 import rx.Observer
 import xyz.fcampbell.rxgms.observables.StatusException
 
-internal class RemoveGeofenceRequestIdsOnSubscribe(ctx: Context, private val geofenceRequestIds: List<String>) : RemoveGeofenceOnSubscribe<Status>(ctx) {
+internal class RemoveGeofenceRequestIdsOnSubscribe(
+        ctx: Context,
+        private val geofenceRequestIds: List<String>
+) : RemoveGeofenceOnSubscribe<Status>(ctx) {
 
     override fun removeGeofences(locationClient: GoogleApiClient, observer: Observer<in Status>) {
         LocationServices.GeofencingApi.removeGeofences(locationClient, geofenceRequestIds)

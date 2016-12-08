@@ -12,8 +12,8 @@ import com.google.android.gms.maps.model.LatLngBounds
 import rx.Observable
 import xyz.fcampbell.rxgms.observables.*
 import xyz.fcampbell.rxgms.observables.activity.ActivityUpdatesOnSubscribe
-import xyz.fcampbell.rxgms.observables.geocode.GeocodeObservable
-import xyz.fcampbell.rxgms.observables.geocode.ReverseGeocodeObservable
+import xyz.fcampbell.rxgms.observables.geocode.GeocodeOnSubscribe
+import xyz.fcampbell.rxgms.observables.geocode.ReverseGeocodeOnSubscribe
 import xyz.fcampbell.rxgms.observables.geofence.AddGeofenceOnSubscribe
 import xyz.fcampbell.rxgms.observables.geofence.RemoveGeofenceOnSubscribe
 import xyz.fcampbell.rxgms.observables.location.*
@@ -140,7 +140,7 @@ class RxGms(private val ctx: Context) {
      * @return observable that serves list of address based on location
      */
     fun getReverseGeocodeObservable(lat: Double, lng: Double, maxResults: Int): Observable<List<Address>> {
-        return ReverseGeocodeObservable.createObservable(ctx, Locale.getDefault(), lat, lng, maxResults)
+        return ReverseGeocodeOnSubscribe.createObservable(ctx, Locale.getDefault(), lat, lng, maxResults)
     }
 
     /**
@@ -160,7 +160,7 @@ class RxGms(private val ctx: Context) {
      * @return observable that serves list of address based on location
      */
     fun getReverseGeocodeObservable(locale: Locale, lat: Double, lng: Double, maxResults: Int): Observable<List<Address>> {
-        return ReverseGeocodeObservable.createObservable(ctx, locale, lat, lng, maxResults)
+        return ReverseGeocodeOnSubscribe.createObservable(ctx, locale, lat, lng, maxResults)
     }
 
     /**
@@ -181,7 +181,7 @@ class RxGms(private val ctx: Context) {
      * @return observable that serves list of address based on location name
      */
     @JvmOverloads fun getGeocodeObservable(locationName: String, maxResults: Int, bounds: LatLngBounds? = null): Observable<List<Address>> {
-        return GeocodeObservable.createObservable(ctx, locationName, maxResults, bounds)
+        return GeocodeOnSubscribe.createObservable(ctx, locationName, maxResults, bounds)
     }
 
     /**

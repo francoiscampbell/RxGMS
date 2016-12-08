@@ -11,7 +11,11 @@ import rx.Observer
 import xyz.fcampbell.rxgms.observables.BaseLocationOnSubscribe
 import xyz.fcampbell.rxgms.observables.StatusException
 
-class AddLocationIntentUpdatesOnSubscribe private constructor(ctx: Context, private val locationRequest: LocationRequest, private val intent: PendingIntent) : BaseLocationOnSubscribe<Status>(ctx) {
+class AddLocationIntentUpdatesOnSubscribe private constructor(
+        ctx: Context,
+        private val locationRequest: LocationRequest,
+        private val intent: PendingIntent
+) : BaseLocationOnSubscribe<Status>(ctx) {
 
     override fun onGoogleApiClientReady(apiClient: GoogleApiClient, observer: Observer<in Status>) {
         LocationServices.FusedLocationApi.requestLocationUpdates(apiClient, locationRequest, intent)

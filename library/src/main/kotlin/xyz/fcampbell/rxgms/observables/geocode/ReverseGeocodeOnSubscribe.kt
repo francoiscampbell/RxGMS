@@ -9,7 +9,13 @@ import rx.schedulers.Schedulers
 import java.io.IOException
 import java.util.*
 
-class ReverseGeocodeObservable private constructor(private val ctx: Context, private val locale: Locale, private val latitude: Double, private val longitude: Double, private val maxResults: Int) : Observable.OnSubscribe<List<Address>> {
+class ReverseGeocodeOnSubscribe private constructor(
+        private val ctx: Context,
+        private val locale: Locale,
+        private val latitude: Double,
+        private val longitude: Double,
+        private val maxResults: Int
+) : Observable.OnSubscribe<List<Address>> {
 
     override fun call(subscriber: Subscriber<in List<Address>>) {
         val geocoder = Geocoder(ctx, locale)
@@ -20,7 +26,7 @@ class ReverseGeocodeObservable private constructor(private val ctx: Context, pri
             // If it's a service not available error try a different approach using google web api
             if (e.message.equals("Service not Available", ignoreCase = true)) {
                 Observable
-                        .create(FallbackReverseGeocodeObservable(locale, latitude, longitude, maxResults))
+                        .create(FallbackReverseGeocodeOnSubscribe(locale, latitude, longitude, maxResults))
                         .subscribeOn(Schedulers.io())
                         .subscribe(subscriber)
             } else {
@@ -33,7 +39,7 @@ class ReverseGeocodeObservable private constructor(private val ctx: Context, pri
     companion object {
         @JvmStatic
         fun createObservable(ctx: Context, locale: Locale, latitude: Double, longitude: Double, maxResults: Int): Observable<List<Address>> {
-            return Observable.create(ReverseGeocodeObservable(ctx, locale, latitude, longitude, maxResults))
+            return Observable.create(ReverseGeocodeOnSubscribe(ctx, locale, latitude, longitude, maxResults))
         }
     }
 }

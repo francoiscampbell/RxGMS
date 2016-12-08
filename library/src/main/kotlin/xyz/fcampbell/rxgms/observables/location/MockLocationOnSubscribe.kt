@@ -11,7 +11,10 @@ import rx.Subscription
 import xyz.fcampbell.rxgms.observables.BaseLocationOnSubscribe
 import xyz.fcampbell.rxgms.observables.StatusException
 
-class MockLocationOnSubscribe protected constructor(ctx: Context, private val locationObservable: Observable<Location>) : BaseLocationOnSubscribe<Status>(ctx) {
+class MockLocationOnSubscribe private constructor(
+        ctx: Context,
+        private val locationObservable: Observable<Location>
+) : BaseLocationOnSubscribe<Status>(ctx) {
     private var mockLocationSubscription: Subscription? = null
 
     override fun onGoogleApiClientReady(apiClient: GoogleApiClient, observer: Observer<in Status>) {

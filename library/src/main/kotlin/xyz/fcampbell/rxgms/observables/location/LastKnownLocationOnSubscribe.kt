@@ -8,7 +8,9 @@ import rx.Observable
 import rx.Observer
 import xyz.fcampbell.rxgms.observables.BaseLocationOnSubscribe
 
-class LastKnownLocationOnSubscribe private constructor(ctx: Context) : BaseLocationOnSubscribe<Location>(ctx) {
+class LastKnownLocationOnSubscribe private constructor(
+        ctx: Context
+) : BaseLocationOnSubscribe<Location>(ctx) {
 
     override fun onGoogleApiClientReady(apiClient: GoogleApiClient, observer: Observer<in Location>) {
         val location = LocationServices.FusedLocationApi.getLastLocation(apiClient)

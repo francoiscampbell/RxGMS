@@ -10,7 +10,10 @@ import rx.Observer
 import xyz.fcampbell.rxgms.observables.BaseLocationOnSubscribe
 import xyz.fcampbell.rxgms.observables.StatusException
 
-class RemoveLocationIntentUpdatesOnSubscribe private constructor(ctx: Context, private val intent: PendingIntent) : BaseLocationOnSubscribe<Status>(ctx) {
+class RemoveLocationIntentUpdatesOnSubscribe private constructor(
+        ctx: Context,
+        private val intent: PendingIntent
+) : BaseLocationOnSubscribe<Status>(ctx) {
 
     override fun onGoogleApiClientReady(apiClient: GoogleApiClient, observer: Observer<in Status>) {
         LocationServices.FusedLocationApi.removeLocationUpdates(apiClient, intent)

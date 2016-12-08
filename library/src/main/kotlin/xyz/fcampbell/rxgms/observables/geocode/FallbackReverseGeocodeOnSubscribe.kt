@@ -13,7 +13,7 @@ import java.net.HttpURLConnection
 import java.net.URL
 import java.util.*
 
-internal class FallbackReverseGeocodeObservable(
+internal class FallbackReverseGeocodeOnSubscribe(
         private val locale: Locale,
         private val latitude: Double,
         private val longitude: Double,

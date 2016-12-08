@@ -8,7 +8,9 @@ import rx.Observable
 import rx.Observer
 import xyz.fcampbell.rxgms.observables.BaseLocationOnSubscribe
 
-abstract class RemoveGeofenceOnSubscribe<T> protected constructor(ctx: Context) : BaseLocationOnSubscribe<T>(ctx) {
+abstract class RemoveGeofenceOnSubscribe<T> protected constructor(
+        ctx: Context
+) : BaseLocationOnSubscribe<T>(ctx) {
 
     override fun onGoogleApiClientReady(apiClient: GoogleApiClient, observer: Observer<in T>) {
         removeGeofences(apiClient, observer)
