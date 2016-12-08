@@ -1,7 +1,9 @@
 apply plugin: 'com.android.application'
 
 def getGooglePlayServicesApiKey() {
-    if (REACTIVE_LOCATION_GMS_API_KEY != null && !REACTIVE_LOCATION_GMS_API_KEY.isEmpty()) {
+    if (project.hasProperty('REACTIVE_LOCATION_GMS_API_KEY') 
+        && REACTIVE_LOCATION_GMS_API_KEY != null 
+        && !REACTIVE_LOCATION_GMS_API_KEY.isEmpty()) {
         return REACTIVE_LOCATION_GMS_API_KEY;
     }
     return ""
@@ -39,5 +41,5 @@ dependencies {
     compile 'io.reactivex:rxandroid:1.2.1'
     compile 'com.jakewharton.rxbinding:rxbinding:0.4.0'
     compile 'com.tbruyelle.rxpermissions:rxpermissions:0.7.0@aar'
-    compile project(':android-reactive-location')
+    compile project(':library')
 }
