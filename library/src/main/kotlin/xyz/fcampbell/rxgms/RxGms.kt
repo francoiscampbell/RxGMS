@@ -382,7 +382,7 @@ class RxGms(private val ctx: Context) {
         </T> */
         @JvmStatic
         fun <T : Result> fromPendingResult(result: PendingResult<T>): Observable<T> {
-            return Observable.create(PendingResultObservable(result))
+            return Observable.create(PendingResultOnSubscribe(result))
         }
     }
 }

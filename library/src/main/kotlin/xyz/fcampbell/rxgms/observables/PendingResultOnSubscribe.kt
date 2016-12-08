@@ -6,7 +6,7 @@ import rx.Observable
 import rx.Subscriber
 import rx.subscriptions.Subscriptions
 
-class PendingResultObservable<T : Result>(private val result: PendingResult<T>) : Observable.OnSubscribe<T> {
+class PendingResultOnSubscribe<T : Result>(private val result: PendingResult<T>) : Observable.OnSubscribe<T> {
     private var complete = false
 
     override fun call(subscriber: Subscriber<in T>) {
