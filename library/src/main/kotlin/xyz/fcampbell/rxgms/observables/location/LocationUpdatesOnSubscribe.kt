@@ -28,8 +28,6 @@ class LocationUpdatesOnSubscribe private constructor(
     }
 
     companion object {
-        private const val TAG = "LocationUpdatesObservable"
-
         @JvmStatic
         fun createObservable(ctx: Context, locationRequest: LocationRequest): Observable<Location> {
             return Observable.create(LocationUpdatesOnSubscribe(ctx, locationRequest))
