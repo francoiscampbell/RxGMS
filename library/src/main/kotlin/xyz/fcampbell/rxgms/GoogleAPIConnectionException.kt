@@ -1,4 +1,4 @@
-package xyz.fcampbell.rxgms.onsubscribe
+package xyz.fcampbell.rxgms
 
 import com.google.android.gms.common.ConnectionResult
 

@@ -9,7 +9,7 @@ import rx.Observable
 import rx.Observer
 import rx.Subscription
 import xyz.fcampbell.rxgms.onsubscribe.BaseLocationOnSubscribe
-import xyz.fcampbell.rxgms.onsubscribe.StatusException
+import xyz.fcampbell.rxgms.StatusException
 
 class MockLocationOnSubscribe private constructor(
         ctx: Context,

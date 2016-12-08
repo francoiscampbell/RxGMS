@@ -6,7 +6,7 @@ import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.common.api.Status
 import com.google.android.gms.location.LocationServices
 import rx.Observer
-import xyz.fcampbell.rxgms.onsubscribe.StatusException
+import xyz.fcampbell.rxgms.StatusException
 
 internal class RemoveGeofenceByPendingIntentOnSubscribe(
         ctx: Context,

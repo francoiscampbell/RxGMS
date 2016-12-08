@@ -9,6 +9,8 @@ import rx.Observable
 import rx.Observer
 import rx.Subscriber
 import rx.subscriptions.Subscriptions
+import xyz.fcampbell.rxgms.GoogleAPIConnectionException
+import xyz.fcampbell.rxgms.GoogleAPIConnectionSuspendedException
 import java.util.*
 
 

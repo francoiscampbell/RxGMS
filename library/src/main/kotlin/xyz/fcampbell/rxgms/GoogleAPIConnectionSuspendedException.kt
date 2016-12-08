@@ -1,4 +1,4 @@
-package xyz.fcampbell.rxgms.onsubscribe
+package xyz.fcampbell.rxgms
 
 class GoogleAPIConnectionSuspendedException internal constructor(
         val errorCause: Int

@@ -8,7 +8,7 @@ import com.google.android.gms.location.LocationServices
 import rx.Observable
 import rx.Observer
 import xyz.fcampbell.rxgms.onsubscribe.BaseLocationOnSubscribe
-import xyz.fcampbell.rxgms.onsubscribe.StatusException
+import xyz.fcampbell.rxgms.StatusException
 
 class RemoveLocationIntentUpdatesOnSubscribe private constructor(
         ctx: Context,
