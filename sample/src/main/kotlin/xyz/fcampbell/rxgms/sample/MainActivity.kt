@@ -10,14 +10,16 @@ import android.util.Log
 import android.view.Menu
 import android.widget.TextView
 import android.widget.Toast
-import com.google.android.gms.location.*
+import com.google.android.gms.location.ActivityRecognitionResult
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationSettingsRequest
+import com.google.android.gms.location.LocationSettingsStatusCodes
 import rx.Observable
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.functions.Action1
 import rx.functions.Func1
 import rx.schedulers.Schedulers
-import xyz.fcampbell.android.rxgms.R
 import xyz.fcampbell.rxgms.ReactiveLocationProvider
 import xyz.fcampbell.rxgms.sample.utils.*
 
@@ -147,7 +149,6 @@ class MainActivity : BaseActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
-        val states = LocationSettingsStates.fromIntent(data)//intent);
         when (requestCode) {
             REQUEST_CHECK_SETTINGS ->
                 //Reference: https://developers.google.com/android/reference/com/google/android/gms/location/SettingsApi

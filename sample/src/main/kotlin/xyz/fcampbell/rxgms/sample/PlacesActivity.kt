@@ -12,7 +12,7 @@ import rx.Observable
 import rx.functions.Func1
 import rx.subscriptions.CompositeSubscription
 import xyz.fcampbell.rxgms.ReactiveLocationProvider
-import xyz.fcampbell.rxgms.sample.utils.UnsubscribeIfPresent.unsubscribe
+import xyz.fcampbell.rxgms.sample.utils.UnsubscribeIfPresent
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -58,7 +58,9 @@ class PlacesActivity : BaseActivity() {
                 .filter { s -> !TextUtils.isEmpty(s) }
         val lastKnownLocationObservable = reactiveLocationProvider.getLastKnownLocation()
         val suggestionsObservable = Observable
-                .combineLatest(queryObservable, lastKnownLocationObservable) { query, currentLocation -> QueryWithCurrentLocation(query, currentLocation) }.flatMap(Func1<QueryWithCurrentLocation, Observable<AutocompletePredictionBuffer>> { q ->
+                .combineLatest(queryObservable, lastKnownLocationObservable) { query, currentLocation ->
+                    QueryWithCurrentLocation(query, currentLocation)
+                }.flatMap(Func1<QueryWithCurrentLocation, Observable<AutocompletePredictionBuffer>> { q ->
             if (q.location == null) return@Func1 Observable.empty<AutocompletePredictionBuffer>()
 
             val latitude = q.location.latitude
@@ -73,7 +75,7 @@ class PlacesActivity : BaseActivity() {
         compositeSubscription.add(suggestionsObservable.subscribe { buffer ->
             val infos = ArrayList<AutocompleteInfo>()
             for (prediction in buffer) {
-                infos.add(AutocompleteInfo(prediction.getFullText(null).toString(), prediction.placeId))
+                infos.add(AutocompleteInfo(prediction.getFullText(null).toString(), prediction.placeId ?: ""))
             }
             buffer.release()
             placeSuggestionsList.adapter = ArrayAdapter(this@PlacesActivity, android.R.layout.simple_list_item_1, infos)
@@ -82,13 +84,12 @@ class PlacesActivity : BaseActivity() {
 
     override fun onStop() {
         super.onStop()
-        unsubscribe(compositeSubscription)
+        UnsubscribeIfPresent.unsubscribe(compositeSubscription)
     }
 
-    private class QueryWithCurrentLocation private constructor(val query: String, val location: Location?)
+    private class QueryWithCurrentLocation(val query: String, val location: Location?)
 
-    private class AutocompleteInfo private constructor(private val description: String, private val id: String) {
-
+    private class AutocompleteInfo(private val description: String, val id: String) {
         override fun toString(): String {
             return description
         }

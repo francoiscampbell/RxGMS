@@ -10,7 +10,7 @@ import android.widget.Toast
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofencingRequest
 import rx.Subscription
-import xyz.fcampbell.android.rxgms.R
+import xyz.fcampbell.rxgms.sample.R
 import xyz.fcampbell.rxgms.ReactiveLocationProvider
 import xyz.fcampbell.rxgms.sample.utils.DisplayTextOnViewAction
 import xyz.fcampbell.rxgms.sample.utils.LocationToStringFunc

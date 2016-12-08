@@ -319,7 +319,7 @@ class ReactiveLocationProvider(private val ctx: Context) {
      * *
      * @return observable with suggestions buffer and completes
      */
-    fun getPlaceAutocompletePredictions(query: String, bounds: LatLngBounds, filter: AutocompleteFilter): Observable<AutocompletePredictionBuffer> {
+    fun getPlaceAutocompletePredictions(query: String, bounds: LatLngBounds, filter: AutocompleteFilter?): Observable<AutocompletePredictionBuffer> {
         return getGoogleApiClientObservable(Places.PLACE_DETECTION_API, Places.GEO_DATA_API)
                 .flatMap { api ->
                     fromPendingResult(Places.GeoDataApi.getAutocompletePredictions(api, query, bounds, filter))

@@ -5,9 +5,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.TextView
 import rx.subscriptions.CompositeSubscription
-import xyz.fcampbell.android.rxgms.R
+import xyz.fcampbell.rxgms.sample.R
 import xyz.fcampbell.rxgms.ReactiveLocationProvider
-import xyz.fcampbell.rxgms.sample.utils.UnsubscribeIfPresent.unsubscribe
+import xyz.fcampbell.rxgms.sample.utils.UnsubscribeIfPresent
 
 class PlacesResultActivity : BaseActivity() {
 
@@ -56,7 +56,7 @@ class PlacesResultActivity : BaseActivity() {
 
     override fun onStop() {
         super.onStop()
-        unsubscribe(compositeSubscription)
+        UnsubscribeIfPresent.unsubscribe(compositeSubscription)
     }
 
     companion object {

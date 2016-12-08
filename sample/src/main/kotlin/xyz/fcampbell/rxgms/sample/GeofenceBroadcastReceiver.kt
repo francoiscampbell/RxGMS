@@ -7,6 +7,7 @@ import android.content.Intent
 import android.support.v4.app.NotificationCompat
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofencingEvent
+import xyz.fcampbell.rxgms.sample.R
 
 class GeofenceBroadcastReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
@@ -15,7 +16,7 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
 
         val nm = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val notification = NotificationCompat.Builder(context)
-                .setSmallIcon(xyz.fcampbell.android.rxgms.sample.R.drawable.ic_launcher)
+                .setSmallIcon(R.drawable.ic_launcher)
                 .setContentTitle("Geofence action")
                 .setContentText(transition)
                 .setTicker("Geofence action")

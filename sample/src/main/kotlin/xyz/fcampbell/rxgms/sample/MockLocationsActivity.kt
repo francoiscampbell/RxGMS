@@ -14,7 +14,7 @@ import rx.functions.Action1
 import rx.functions.Func1
 import rx.functions.Func2
 import rx.subjects.PublishSubject
-import xyz.fcampbell.android.rxgms.R
+import xyz.fcampbell.rxgms.sample.R
 import xyz.fcampbell.rxgms.ReactiveLocationProvider
 import xyz.fcampbell.rxgms.sample.utils.DisplayTextOnViewAction
 import xyz.fcampbell.rxgms.sample.utils.LocationToStringFunc
