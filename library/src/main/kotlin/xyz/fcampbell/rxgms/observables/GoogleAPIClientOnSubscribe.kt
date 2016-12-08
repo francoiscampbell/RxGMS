@@ -8,9 +8,9 @@ import com.google.android.gms.common.api.GoogleApiClient
 import rx.Observable
 import rx.Observer
 
-class GoogleAPIClientObservable
+class GoogleAPIClientOnSubscribe
 @SafeVarargs
-private constructor(ctx: Context, vararg apis: Api<out Api.ApiOptions.NotRequiredOptions>) : BaseObservable<GoogleApiClient>(ctx, *apis) {
+private constructor(ctx: Context, vararg apis: Api<out Api.ApiOptions.NotRequiredOptions>) : BaseOnSubscribe<GoogleApiClient>(ctx, *apis) {
 
     override fun onGoogleApiClientReady(apiClient: GoogleApiClient, observer: Observer<in GoogleApiClient>) {
         observer.onNext(apiClient)
@@ -21,7 +21,7 @@ private constructor(ctx: Context, vararg apis: Api<out Api.ApiOptions.NotRequire
         @SafeVarargs
         @JvmStatic
         fun create(context: Context, vararg apis: Api<out Api.ApiOptions.NotRequiredOptions>): Observable<GoogleApiClient> {
-            return Observable.create(GoogleAPIClientObservable(context, *apis))
+            return Observable.create(GoogleAPIClientOnSubscribe(context, *apis))
         }
     }
 }

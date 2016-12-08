@@ -8,10 +8,10 @@ import com.google.android.gms.location.LocationServices
 import rx.Observable
 import rx.Observer
 import rx.Subscription
-import xyz.fcampbell.rxgms.observables.BaseLocationObservable
+import xyz.fcampbell.rxgms.observables.BaseLocationOnSubscribe
 import xyz.fcampbell.rxgms.observables.StatusException
 
-class MockLocationObservable protected constructor(ctx: Context, private val locationObservable: Observable<Location>) : BaseLocationObservable<Status>(ctx) {
+class MockLocationOnSubscribe protected constructor(ctx: Context, private val locationObservable: Observable<Location>) : BaseLocationOnSubscribe<Status>(ctx) {
     private var mockLocationSubscription: Subscription? = null
 
     override fun onGoogleApiClientReady(apiClient: GoogleApiClient, observer: Observer<in Status>) {
@@ -40,7 +40,7 @@ class MockLocationObservable protected constructor(ctx: Context, private val loc
         }, { throwable -> observer.onError(throwable) }) { observer.onCompleted() }
     }
 
-    override fun onUnsubscribed(apiClient: GoogleApiClient) {
+    override fun onUnsubscribe(apiClient: GoogleApiClient) {
         if (apiClient.isConnected) {
             try {
                 LocationServices.FusedLocationApi.setMockMode(apiClient, false)
@@ -58,7 +58,7 @@ class MockLocationObservable protected constructor(ctx: Context, private val loc
     companion object {
         @JvmStatic
         fun createObservable(context: Context, locationObservable: Observable<Location>): Observable<Status> {
-            return Observable.create(MockLocationObservable(context, locationObservable))
+            return Observable.create(MockLocationOnSubscribe(context, locationObservable))
         }
     }
 }

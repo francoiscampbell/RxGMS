@@ -8,10 +8,10 @@ import com.google.android.gms.location.GeofencingRequest
 import com.google.android.gms.location.LocationServices
 import rx.Observable
 import rx.Observer
-import xyz.fcampbell.rxgms.observables.BaseLocationObservable
+import xyz.fcampbell.rxgms.observables.BaseLocationOnSubscribe
 import xyz.fcampbell.rxgms.observables.StatusException
 
-class AddGeofenceObservable private constructor(ctx: Context, private val request: GeofencingRequest, private val geofenceTransitionPendingIntent: PendingIntent) : BaseLocationObservable<Status>(ctx) {
+class AddGeofenceOnSubscribe private constructor(ctx: Context, private val request: GeofencingRequest, private val geofenceTransitionPendingIntent: PendingIntent) : BaseLocationOnSubscribe<Status>(ctx) {
 
     override fun onGoogleApiClientReady(apiClient: GoogleApiClient, observer: Observer<in Status>) {
         LocationServices.GeofencingApi.addGeofences(apiClient, request, geofenceTransitionPendingIntent)
@@ -28,7 +28,7 @@ class AddGeofenceObservable private constructor(ctx: Context, private val reques
     companion object {
         @JvmStatic
         fun createObservable(ctx: Context, request: GeofencingRequest, geofenceTransitionPendingIntent: PendingIntent): Observable<Status> {
-            return Observable.create(AddGeofenceObservable(ctx, request, geofenceTransitionPendingIntent))
+            return Observable.create(AddGeofenceOnSubscribe(ctx, request, geofenceTransitionPendingIntent))
         }
     }
 

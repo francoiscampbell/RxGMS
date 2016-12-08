@@ -13,10 +13,10 @@ import com.google.android.gms.location.ActivityRecognitionResult
 import rx.Observable
 import rx.Observer
 
-class ActivityUpdatesObservable private constructor(
+class ActivityUpdatesOnSubscribe private constructor(
         private val context: Context,
         private val detectionIntervalMilliseconds: Int
-) : BaseActivityObservable<ActivityRecognitionResult>(context) {
+) : BaseActivityOnSubscribe<ActivityRecognitionResult>(context) {
     private var receiver: ActivityUpdatesBroadcastReceiver? = null
 
     override fun onGoogleApiClientReady(apiClient: GoogleApiClient, observer: Observer<in ActivityRecognitionResult>) {
@@ -29,7 +29,7 @@ class ActivityUpdatesObservable private constructor(
     private val receiverPendingIntent: PendingIntent
         get() = PendingIntent.getBroadcast(context, 0, Intent(ACTION_ACTIVITY_DETECTED), PendingIntent.FLAG_UPDATE_CURRENT)
 
-    override fun onUnsubscribed(apiClient: GoogleApiClient) {
+    override fun onUnsubscribe(apiClient: GoogleApiClient) {
         if (apiClient.isConnected) {
             ActivityRecognition.ActivityRecognitionApi.removeActivityUpdates(apiClient, receiverPendingIntent)
         }
@@ -52,7 +52,7 @@ class ActivityUpdatesObservable private constructor(
 
         @JvmStatic
         fun createObservable(ctx: Context, detectionIntervalMiliseconds: Int): Observable<ActivityRecognitionResult> {
-            return Observable.create(ActivityUpdatesObservable(ctx, detectionIntervalMiliseconds))
+            return Observable.create(ActivityUpdatesOnSubscribe(ctx, detectionIntervalMiliseconds))
         }
     }
 }

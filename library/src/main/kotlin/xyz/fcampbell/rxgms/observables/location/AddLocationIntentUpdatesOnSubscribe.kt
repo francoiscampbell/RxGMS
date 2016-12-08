@@ -8,10 +8,10 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import rx.Observable
 import rx.Observer
-import xyz.fcampbell.rxgms.observables.BaseLocationObservable
+import xyz.fcampbell.rxgms.observables.BaseLocationOnSubscribe
 import xyz.fcampbell.rxgms.observables.StatusException
 
-class AddLocationIntentUpdatesObservable private constructor(ctx: Context, private val locationRequest: LocationRequest, private val intent: PendingIntent) : BaseLocationObservable<Status>(ctx) {
+class AddLocationIntentUpdatesOnSubscribe private constructor(ctx: Context, private val locationRequest: LocationRequest, private val intent: PendingIntent) : BaseLocationOnSubscribe<Status>(ctx) {
 
     override fun onGoogleApiClientReady(apiClient: GoogleApiClient, observer: Observer<in Status>) {
         LocationServices.FusedLocationApi.requestLocationUpdates(apiClient, locationRequest, intent)
@@ -29,7 +29,7 @@ class AddLocationIntentUpdatesObservable private constructor(ctx: Context, priva
     companion object {
         @JvmStatic
         fun createObservable(ctx: Context, locationRequest: LocationRequest, intent: PendingIntent): Observable<Status> {
-            return Observable.create(AddLocationIntentUpdatesObservable(ctx, locationRequest, intent))
+            return Observable.create(AddLocationIntentUpdatesOnSubscribe(ctx, locationRequest, intent))
         }
     }
 }

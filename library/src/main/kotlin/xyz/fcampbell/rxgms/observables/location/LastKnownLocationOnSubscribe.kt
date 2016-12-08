@@ -6,9 +6,9 @@ import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.LocationServices
 import rx.Observable
 import rx.Observer
-import xyz.fcampbell.rxgms.observables.BaseLocationObservable
+import xyz.fcampbell.rxgms.observables.BaseLocationOnSubscribe
 
-class LastKnownLocationObservable private constructor(ctx: Context) : BaseLocationObservable<Location>(ctx) {
+class LastKnownLocationOnSubscribe private constructor(ctx: Context) : BaseLocationOnSubscribe<Location>(ctx) {
 
     override fun onGoogleApiClientReady(apiClient: GoogleApiClient, observer: Observer<in Location>) {
         val location = LocationServices.FusedLocationApi.getLastLocation(apiClient)
@@ -21,7 +21,7 @@ class LastKnownLocationObservable private constructor(ctx: Context) : BaseLocati
     companion object {
         @JvmStatic
         fun createObservable(ctx: Context): Observable<Location> {
-            return Observable.create(LastKnownLocationObservable(ctx))
+            return Observable.create(LastKnownLocationOnSubscribe(ctx))
         }
     }
 }

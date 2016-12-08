@@ -6,9 +6,9 @@ import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.common.api.Status
 import rx.Observable
 import rx.Observer
-import xyz.fcampbell.rxgms.observables.BaseLocationObservable
+import xyz.fcampbell.rxgms.observables.BaseLocationOnSubscribe
 
-abstract class RemoveGeofenceObservable<T> protected constructor(ctx: Context) : BaseLocationObservable<T>(ctx) {
+abstract class RemoveGeofenceOnSubscribe<T> protected constructor(ctx: Context) : BaseLocationOnSubscribe<T>(ctx) {
 
     override fun onGoogleApiClientReady(apiClient: GoogleApiClient, observer: Observer<in T>) {
         removeGeofences(apiClient, observer)
@@ -20,13 +20,13 @@ abstract class RemoveGeofenceObservable<T> protected constructor(ctx: Context) :
         @JvmStatic
         fun createObservable(
                 ctx: Context, pendingIntent: PendingIntent): Observable<Status> {
-            return Observable.create(RemoveGeofenceByPendingIntentObservable(ctx, pendingIntent))
+            return Observable.create(RemoveGeofenceByPendingIntentOnSubscribe(ctx, pendingIntent))
         }
 
         @JvmStatic
         fun createObservable(
                 ctx: Context, requestIds: List<String>): Observable<Status> {
-            return Observable.create(RemoveGeofenceRequestIdsObservable(ctx, requestIds))
+            return Observable.create(RemoveGeofenceRequestIdsOnSubscribe(ctx, requestIds))
         }
     }
 

@@ -7,10 +7,10 @@ import com.google.android.gms.common.api.Status
 import com.google.android.gms.location.LocationServices
 import rx.Observable
 import rx.Observer
-import xyz.fcampbell.rxgms.observables.BaseLocationObservable
+import xyz.fcampbell.rxgms.observables.BaseLocationOnSubscribe
 import xyz.fcampbell.rxgms.observables.StatusException
 
-class RemoveLocationIntentUpdatesObservable private constructor(ctx: Context, private val intent: PendingIntent) : BaseLocationObservable<Status>(ctx) {
+class RemoveLocationIntentUpdatesOnSubscribe private constructor(ctx: Context, private val intent: PendingIntent) : BaseLocationOnSubscribe<Status>(ctx) {
 
     override fun onGoogleApiClientReady(apiClient: GoogleApiClient, observer: Observer<in Status>) {
         LocationServices.FusedLocationApi.removeLocationUpdates(apiClient, intent)
@@ -27,7 +27,7 @@ class RemoveLocationIntentUpdatesObservable private constructor(ctx: Context, pr
     companion object {
         @JvmStatic
         fun createObservable(ctx: Context, intent: PendingIntent): Observable<Status> {
-            return Observable.create(RemoveLocationIntentUpdatesObservable(ctx, intent))
+            return Observable.create(RemoveLocationIntentUpdatesOnSubscribe(ctx, intent))
         }
     }
 }

@@ -12,7 +12,7 @@ import rx.subscriptions.Subscriptions
 import java.util.*
 
 
-abstract class BaseObservable<T> @SafeVarargs protected constructor(
+abstract class BaseOnSubscribe<T> @SafeVarargs protected constructor(
         private val ctx: Context,
         vararg services: Api<out Api.ApiOptions.NotRequiredOptions>
 ) : Observable.OnSubscribe<T> {
@@ -32,7 +32,7 @@ abstract class BaseObservable<T> @SafeVarargs protected constructor(
 
         subscriber.add(Subscriptions.create {
             if (apiClient.isConnected || apiClient.isConnecting) {
-                onUnsubscribed(apiClient)
+                onUnsubscribe(apiClient)
                 apiClient.disconnect()
             }
         })
@@ -42,15 +42,14 @@ abstract class BaseObservable<T> @SafeVarargs protected constructor(
     protected fun createApiClient(subscriber: Subscriber<in T>): GoogleApiClient {
         val apiClientConnectionCallbacks = ApiClientConnectionCallbacks(subscriber)
 
-        val apiClientBuilder = GoogleApiClient.Builder(ctx)
-
+        val apiClientBuilder = GoogleApiClient.Builder(
+                ctx,
+                apiClientConnectionCallbacks,
+                apiClientConnectionCallbacks)
 
         for (service in services) {
             apiClientBuilder.addApi(service)
         }
-
-        apiClientBuilder.addConnectionCallbacks(apiClientConnectionCallbacks)
-        apiClientBuilder.addOnConnectionFailedListener(apiClientConnectionCallbacks)
 
         val apiClient = apiClientBuilder.build()
 
@@ -59,7 +58,7 @@ abstract class BaseObservable<T> @SafeVarargs protected constructor(
         return apiClient
     }
 
-    protected open fun onUnsubscribed(apiClient: GoogleApiClient) {
+    protected open fun onUnsubscribe(apiClient: GoogleApiClient) {
     }
 
     protected abstract fun onGoogleApiClientReady(apiClient: GoogleApiClient, observer: Observer<in T>)
@@ -67,7 +66,7 @@ abstract class BaseObservable<T> @SafeVarargs protected constructor(
     private inner class ApiClientConnectionCallbacks(
             private val observer: Observer<in T>
     ) : GoogleApiClient.ConnectionCallbacks,
-            GoogleApiClient.OnConnectionFailedListener {
+        GoogleApiClient.OnConnectionFailedListener {
 
         private lateinit var apiClient: GoogleApiClient
 

@@ -11,11 +11,11 @@ import com.google.android.gms.location.places.*
 import com.google.android.gms.maps.model.LatLngBounds
 import rx.Observable
 import xyz.fcampbell.rxgms.observables.*
-import xyz.fcampbell.rxgms.observables.activity.ActivityUpdatesObservable
+import xyz.fcampbell.rxgms.observables.activity.ActivityUpdatesOnSubscribe
 import xyz.fcampbell.rxgms.observables.geocode.GeocodeObservable
 import xyz.fcampbell.rxgms.observables.geocode.ReverseGeocodeObservable
-import xyz.fcampbell.rxgms.observables.geofence.AddGeofenceObservable
-import xyz.fcampbell.rxgms.observables.geofence.RemoveGeofenceObservable
+import xyz.fcampbell.rxgms.observables.geofence.AddGeofenceOnSubscribe
+import xyz.fcampbell.rxgms.observables.geofence.RemoveGeofenceOnSubscribe
 import xyz.fcampbell.rxgms.observables.location.*
 import java.util.*
 
@@ -39,7 +39,7 @@ class RxGms(private val ctx: Context) {
      * @return observable that serves last known location
      */
     @RequiresPermission(anyOf = arrayOf("android.permission.ACCESS_COARSE_LOCATION", "android.permission.ACCESS_FINE_LOCATION"))
-    fun getLastKnownLocation() = LastKnownLocationObservable.createObservable(ctx)
+    fun getLastKnownLocation() = LastKnownLocationOnSubscribe.createObservable(ctx)
 
     /**
      * Creates observable that allows to observe infinite stream of location updates.
@@ -58,7 +58,7 @@ class RxGms(private val ctx: Context) {
      */
     @RequiresPermission(anyOf = arrayOf("android.permission.ACCESS_COARSE_LOCATION", "android.permission.ACCESS_FINE_LOCATION"))
     fun getUpdatedLocation(locationRequest: LocationRequest): Observable<Location> {
-        return LocationUpdatesObservable.createObservable(ctx, locationRequest)
+        return LocationUpdatesOnSubscribe.createObservable(ctx, locationRequest)
     }
 
     /**
@@ -84,7 +84,7 @@ class RxGms(private val ctx: Context) {
      */
     @RequiresPermission(allOf = arrayOf("android.permission.ACCESS_COARSE_LOCATION", "android.permission.ACCESS_MOCK_LOCATION"))
     fun mockLocation(sourceLocationObservable: Observable<Location>): Observable<Status> {
-        return MockLocationObservable.createObservable(ctx, sourceLocationObservable)
+        return MockLocationOnSubscribe.createObservable(ctx, sourceLocationObservable)
     }
 
     /**
@@ -108,7 +108,7 @@ class RxGms(private val ctx: Context) {
      */
     @RequiresPermission(anyOf = arrayOf("android.permission.ACCESS_COARSE_LOCATION", "android.permission.ACCESS_FINE_LOCATION"))
     fun requestLocationUpdates(locationRequest: LocationRequest, intent: PendingIntent): Observable<Status> {
-        return AddLocationIntentUpdatesObservable.createObservable(ctx, locationRequest, intent)
+        return AddLocationIntentUpdatesOnSubscribe.createObservable(ctx, locationRequest, intent)
     }
 
     /**
@@ -122,7 +122,7 @@ class RxGms(private val ctx: Context) {
      * @return observable that removes the PendingIntent
      */
     fun removeLocationUpdates(intent: PendingIntent): Observable<Status> {
-        return RemoveLocationIntentUpdatesObservable.createObservable(ctx, intent)
+        return RemoveLocationIntentUpdatesOnSubscribe.createObservable(ctx, intent)
     }
 
     /**
@@ -205,7 +205,7 @@ class RxGms(private val ctx: Context) {
      */
     @RequiresPermission("android.permission.ACCESS_FINE_LOCATION")
     fun addGeofences(geofenceTransitionPendingIntent: PendingIntent, request: GeofencingRequest): Observable<Status> {
-        return AddGeofenceObservable.createObservable(ctx, request, geofenceTransitionPendingIntent)
+        return AddGeofenceOnSubscribe.createObservable(ctx, request, geofenceTransitionPendingIntent)
     }
 
     /**
@@ -225,7 +225,7 @@ class RxGms(private val ctx: Context) {
      * @return observable that removed geofences
      */
     fun removeGeofences(pendingIntent: PendingIntent): Observable<Status> {
-        return RemoveGeofenceObservable.createObservable(ctx, pendingIntent)
+        return RemoveGeofenceOnSubscribe.createObservable(ctx, pendingIntent)
     }
 
     /**
@@ -245,7 +245,7 @@ class RxGms(private val ctx: Context) {
      * @return observable that removed geofences
      */
     fun removeGeofences(requestIds: List<String>): Observable<Status> {
-        return RemoveGeofenceObservable.createObservable(ctx, requestIds)
+        return RemoveGeofenceOnSubscribe.createObservable(ctx, requestIds)
     }
 
 
@@ -257,7 +257,7 @@ class RxGms(private val ctx: Context) {
      * @return observable that provides activity recognition
      */
     fun getDetectedActivity(detectIntervalMiliseconds: Int): Observable<ActivityRecognitionResult> {
-        return ActivityUpdatesObservable.createObservable(ctx, detectIntervalMiliseconds)
+        return ActivityUpdatesOnSubscribe.createObservable(ctx, detectIntervalMiliseconds)
     }
 
     /**
@@ -367,7 +367,7 @@ class RxGms(private val ctx: Context) {
      * @return observable that emits apis client after successful connection
      */
     fun getGoogleApiClientObservable(vararg apis: Api<out Api.ApiOptions.NotRequiredOptions>): Observable<GoogleApiClient> {
-        return GoogleAPIClientObservable.create(ctx, *apis)
+        return GoogleAPIClientOnSubscribe.create(ctx, *apis)
     }
 
     companion object {
