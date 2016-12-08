@@ -31,7 +31,7 @@ class RxGms(private val ctx: Context) {
      * any value.
      *
      *
-     * Observable can report [GoogleAPIConnectionException]
+     * Observable can report [GoogleApiConnectionException]
      * when there are trouble connecting with Google Play Services and other exceptions that
      * can be thrown on [com.google.android.gms.location.FusedLocationProviderApi.getLastLocation].
      * Everything is delivered by [rx.Observer.onError].
@@ -47,7 +47,7 @@ class RxGms(private val ctx: Context) {
      * then disconnected.
      *
      *
-     * Observable can report [GoogleAPIConnectionException]
+     * Observable can report [GoogleApiConnectionException]
      * when there are trouble connecting with Google Play Services and other exceptions that
      * can be thrown on [com.google.android.gms.location.FusedLocationProviderApi.requestLocationUpdates].
      * Everything is delivered by [rx.Observer.onError].
@@ -188,7 +188,7 @@ class RxGms(private val ctx: Context) {
      * Creates observable that adds request and completes when the action is done.
      *
      *
-     * Observable can report [GoogleAPIConnectionException]
+     * Observable can report [GoogleApiConnectionException]
      * when there are trouble connecting with Google Play Services.
      *
      *
@@ -357,8 +357,8 @@ class RxGms(private val ctx: Context) {
 
     /**
      * Observable that emits [com.google.android.gms.common.api.GoogleApiClient] object after connection.
-     * In case of error [GoogleAPIConnectionException] is emmited.
-     * When connection to Google Play Services is suspended [GoogleAPIConnectionSuspendedException]
+     * In case of error [GoogleApiConnectionException] is emmited.
+     * When connection to Google Play Services is suspended [GoogleApiConnectionSuspendedException]
      * is emitted as error.
      * Do not disconnect from apis client manually - just unsubscribe.
 

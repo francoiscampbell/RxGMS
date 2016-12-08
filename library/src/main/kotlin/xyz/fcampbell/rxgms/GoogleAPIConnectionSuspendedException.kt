@@ -1,5 +1,5 @@
 package xyz.fcampbell.rxgms
 
-class GoogleAPIConnectionSuspendedException internal constructor(
+class GoogleApiConnectionSuspendedException internal constructor(
         val errorCause: Int
 ) : RuntimeException()

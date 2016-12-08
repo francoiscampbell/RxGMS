@@ -9,8 +9,8 @@ import rx.Observable
 import rx.Observer
 import rx.Subscriber
 import rx.subscriptions.Subscriptions
-import xyz.fcampbell.rxgms.GoogleAPIConnectionException
-import xyz.fcampbell.rxgms.GoogleAPIConnectionSuspendedException
+import xyz.fcampbell.rxgms.GoogleApiConnectionException
+import xyz.fcampbell.rxgms.GoogleApiConnectionSuspendedException
 import java.util.*
 
 
@@ -82,11 +82,11 @@ abstract class BaseOnSubscribe<T> @SafeVarargs protected constructor(
         }
 
         override fun onConnectionSuspended(cause: Int) {
-            observer.onError(GoogleAPIConnectionSuspendedException(cause))
+            observer.onError(GoogleApiConnectionSuspendedException(cause))
         }
 
         override fun onConnectionFailed(connectionResult: ConnectionResult) {
-            observer.onError(GoogleAPIConnectionException("Error connecting to GoogleApiClient.", connectionResult))
+            observer.onError(GoogleApiConnectionException("Error connecting to GoogleApiClient.", connectionResult))
         }
 
         fun setClient(client: GoogleApiClient) {
