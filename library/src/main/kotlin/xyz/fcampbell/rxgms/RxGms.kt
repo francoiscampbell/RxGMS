@@ -23,7 +23,7 @@ import java.util.*
  * Factory of observables that can manipulate location
  * delivered by Google Play Services.
  */
-class ReactiveLocationProvider(private val ctx: Context) {
+class RxGms(private val ctx: Context) {
 
     /**
      * Creates observable that obtains last known location and than completes.
@@ -342,7 +342,7 @@ class ReactiveLocationProvider(private val ctx: Context) {
 
     /**
      * Returns observable that fetches a placePhotoMetadata from the Places API using the place placePhotoMetadata metadata.
-     * Use after fetching the place placePhotoMetadata metadata with [ReactiveLocationProvider.getPhotoMetadataById]
+     * Use after fetching the place placePhotoMetadata metadata with [RxGms.getPhotoMetadataById]
 
      * @param placePhotoMetadata the place photo meta data
      * *

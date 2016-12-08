@@ -11,7 +11,7 @@ import com.jakewharton.rxbinding.widget.RxTextView
 import rx.Observable
 import rx.functions.Func1
 import rx.subscriptions.CompositeSubscription
-import xyz.fcampbell.rxgms.ReactiveLocationProvider
+import xyz.fcampbell.rxgms.RxGms
 import xyz.fcampbell.rxgms.sample.utils.UnsubscribeIfPresent
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -21,7 +21,7 @@ class PlacesActivity : BaseActivity() {
     private lateinit var currentPlaceView: TextView
     private lateinit var queryView: EditText
     private lateinit var placeSuggestionsList: ListView
-    private lateinit var reactiveLocationProvider: ReactiveLocationProvider
+    private lateinit var rxGms: RxGms
     private lateinit var compositeSubscription: CompositeSubscription
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,13 +35,13 @@ class PlacesActivity : BaseActivity() {
             startActivity(PlacesResultActivity.getStartIntent(this@PlacesActivity, info.id))
         }
 
-        reactiveLocationProvider = ReactiveLocationProvider(this)
+        rxGms = RxGms(this)
     }
 
     override fun onLocationPermissionGranted() {
         compositeSubscription = CompositeSubscription()
         compositeSubscription.add(
-                reactiveLocationProvider.getCurrentPlace(null)
+                rxGms.getCurrentPlace(null)
                         .subscribe { buffer ->
                             val likelihood = buffer.get(0)
                             if (likelihood != null) {
@@ -56,7 +56,7 @@ class PlacesActivity : BaseActivity() {
                 .map { charSequence -> charSequence.toString() }
                 .debounce(1, TimeUnit.SECONDS)
                 .filter { s -> !TextUtils.isEmpty(s) }
-        val lastKnownLocationObservable = reactiveLocationProvider.getLastKnownLocation()
+        val lastKnownLocationObservable = rxGms.getLastKnownLocation()
         val suggestionsObservable = Observable
                 .combineLatest(queryObservable, lastKnownLocationObservable) { query, currentLocation ->
                     QueryWithCurrentLocation(query, currentLocation)
@@ -69,7 +69,7 @@ class PlacesActivity : BaseActivity() {
                     LatLng(latitude - 0.05, longitude - 0.05),
                     LatLng(latitude + 0.05, longitude + 0.05)
             )
-            reactiveLocationProvider.getPlaceAutocompletePredictions(q.query, bounds, null)
+            rxGms.getPlaceAutocompletePredictions(q.query, bounds, null)
         })
 
         compositeSubscription.add(suggestionsObservable.subscribe { buffer ->

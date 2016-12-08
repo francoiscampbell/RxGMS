@@ -20,11 +20,11 @@ import rx.android.schedulers.AndroidSchedulers
 import rx.functions.Action1
 import rx.functions.Func1
 import rx.schedulers.Schedulers
-import xyz.fcampbell.rxgms.ReactiveLocationProvider
+import xyz.fcampbell.rxgms.RxGms
 import xyz.fcampbell.rxgms.sample.utils.*
 
 class MainActivity : BaseActivity() {
-    private lateinit var locationProvider: ReactiveLocationProvider
+    private lateinit var locationProvider: RxGms
 
     private lateinit var lastKnownLocationView: TextView
     private lateinit var updatableLocationView: TextView
@@ -50,7 +50,7 @@ class MainActivity : BaseActivity() {
         addressLocationView = findViewById(R.id.address_for_location_view) as TextView
         currentActivityView = findViewById(R.id.activity_recent_view) as TextView
 
-        locationProvider = ReactiveLocationProvider(applicationContext)
+        locationProvider = RxGms(applicationContext)
         lastKnownLocationObservable = locationProvider.getLastKnownLocation()
 
         val locationRequest = LocationRequest.create()

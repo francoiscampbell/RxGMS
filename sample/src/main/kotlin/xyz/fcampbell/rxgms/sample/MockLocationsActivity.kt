@@ -15,7 +15,7 @@ import rx.functions.Func1
 import rx.functions.Func2
 import rx.subjects.PublishSubject
 import xyz.fcampbell.rxgms.sample.R
-import xyz.fcampbell.rxgms.ReactiveLocationProvider
+import xyz.fcampbell.rxgms.RxGms
 import xyz.fcampbell.rxgms.sample.utils.DisplayTextOnViewAction
 import xyz.fcampbell.rxgms.sample.utils.LocationToStringFunc
 import xyz.fcampbell.rxgms.sample.utils.UnsubscribeIfPresent.unsubscribe
@@ -30,7 +30,7 @@ class MockLocationsActivity : BaseActivity() {
     private lateinit var mockModeToggleButton: ToggleButton
     private lateinit var setLocationButton: Button
 
-    private lateinit var locationProvider: ReactiveLocationProvider
+    private lateinit var locationProvider: RxGms
     private lateinit var mockLocationObservable: Observable<Location>
     private lateinit var mockLocationSubscription: Subscription
     private lateinit var updatedLocationSubscription: Subscription
@@ -41,7 +41,7 @@ class MockLocationsActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mocklocations)
 
-        locationProvider = ReactiveLocationProvider(this)
+        locationProvider = RxGms(this)
         mockLocationSubject = PublishSubject.create<Location>()
 
         mockLocationObservable = mockLocationSubject.asObservable()

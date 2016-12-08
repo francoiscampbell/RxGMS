@@ -6,12 +6,12 @@ import android.os.Bundle
 import android.widget.TextView
 import rx.subscriptions.CompositeSubscription
 import xyz.fcampbell.rxgms.sample.R
-import xyz.fcampbell.rxgms.ReactiveLocationProvider
+import xyz.fcampbell.rxgms.RxGms
 import xyz.fcampbell.rxgms.sample.utils.UnsubscribeIfPresent
 
 class PlacesResultActivity : BaseActivity() {
 
-    private lateinit var reactiveLocationProvider: ReactiveLocationProvider
+    private lateinit var rxGms: RxGms
     private lateinit var compositeSubscription: CompositeSubscription
     private lateinit var placeNameView: TextView
     private lateinit var placeLocationView: TextView
@@ -26,7 +26,7 @@ class PlacesResultActivity : BaseActivity() {
         placeLocationView = findViewById(R.id.place_location_view) as TextView
         placeAddressView = findViewById(R.id.place_address_view) as TextView
 
-        reactiveLocationProvider = ReactiveLocationProvider(this)
+        rxGms = RxGms(this)
 
         getPlaceIdFromIntent()
     }
@@ -42,7 +42,7 @@ class PlacesResultActivity : BaseActivity() {
 
     override fun onLocationPermissionGranted() {
         compositeSubscription = CompositeSubscription()
-        compositeSubscription.add(reactiveLocationProvider.getPlaceById(placeId)
+        compositeSubscription.add(rxGms.getPlaceById(placeId)
                 .subscribe { buffer ->
                     val place = buffer.get(0)
                     if (place != null) {

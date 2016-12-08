@@ -11,14 +11,14 @@ import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofencingRequest
 import rx.Subscription
 import xyz.fcampbell.rxgms.sample.R
-import xyz.fcampbell.rxgms.ReactiveLocationProvider
+import xyz.fcampbell.rxgms.RxGms
 import xyz.fcampbell.rxgms.sample.utils.DisplayTextOnViewAction
 import xyz.fcampbell.rxgms.sample.utils.LocationToStringFunc
 import xyz.fcampbell.rxgms.sample.utils.UnsubscribeIfPresent
 
 class GeofenceActivity : BaseActivity() {
 
-    private lateinit var reactiveLocationProvider: ReactiveLocationProvider
+    private lateinit var rxGms: RxGms
     private lateinit var latitudeInput: EditText
     private lateinit var longitudeInput: EditText
     private lateinit var radiusInput: EditText
@@ -27,7 +27,7 @@ class GeofenceActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        reactiveLocationProvider = ReactiveLocationProvider(this)
+        rxGms = RxGms(this)
         setContentView(R.layout.activity_geofence)
         initViews()
     }
@@ -42,7 +42,7 @@ class GeofenceActivity : BaseActivity() {
     }
 
     override fun onLocationPermissionGranted() {
-        lastKnownLocationSubscription = reactiveLocationProvider
+        lastKnownLocationSubscription = rxGms
                 .getLastKnownLocation()
                 .map(LocationToStringFunc())
                 .subscribe(DisplayTextOnViewAction(lastKnownLocationView))
@@ -54,7 +54,7 @@ class GeofenceActivity : BaseActivity() {
     }
 
     private fun clearGeofence() {
-        reactiveLocationProvider.removeGeofences(createNotificationBroadcastPendingIntent()).subscribe({ toast("Geofences removed") }) { throwable ->
+        rxGms.removeGeofences(createNotificationBroadcastPendingIntent()).subscribe({ toast("Geofences removed") }) { throwable ->
             toast("Error removing geofences")
             Log.d(TAG, "Error removing geofences", throwable)
         }
@@ -72,9 +72,9 @@ class GeofenceActivity : BaseActivity() {
         val geofencingRequest = createGeofencingRequest() ?: return
 
         val pendingIntent = createNotificationBroadcastPendingIntent()
-        reactiveLocationProvider
+        rxGms
                 .removeGeofences(pendingIntent)
-                .flatMap { reactiveLocationProvider.addGeofences(pendingIntent, geofencingRequest) }
+                .flatMap { rxGms.addGeofences(pendingIntent, geofencingRequest) }
                 .subscribe({ addGeofenceResult -> toast("Geofence added, success: " + addGeofenceResult.isSuccess) }) { throwable ->
                     toast("Error adding geofence.")
                     Log.d(TAG, "Error adding geofence.", throwable)
