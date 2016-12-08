@@ -10,13 +10,13 @@ import com.google.android.gms.location.*
 import com.google.android.gms.location.places.*
 import com.google.android.gms.maps.model.LatLngBounds
 import rx.Observable
-import xyz.fcampbell.rxgms.observables.*
-import xyz.fcampbell.rxgms.observables.activity.ActivityUpdatesOnSubscribe
-import xyz.fcampbell.rxgms.observables.geocode.GeocodeOnSubscribe
-import xyz.fcampbell.rxgms.observables.geocode.ReverseGeocodeOnSubscribe
-import xyz.fcampbell.rxgms.observables.geofence.AddGeofenceOnSubscribe
-import xyz.fcampbell.rxgms.observables.geofence.RemoveGeofenceOnSubscribe
-import xyz.fcampbell.rxgms.observables.location.*
+import xyz.fcampbell.rxgms.onsubscribe.*
+import xyz.fcampbell.rxgms.onsubscribe.activity.ActivityUpdatesOnSubscribe
+import xyz.fcampbell.rxgms.onsubscribe.geocode.GeocodeOnSubscribe
+import xyz.fcampbell.rxgms.onsubscribe.geocode.ReverseGeocodeOnSubscribe
+import xyz.fcampbell.rxgms.onsubscribe.geofence.AddGeofenceOnSubscribe
+import xyz.fcampbell.rxgms.onsubscribe.geofence.RemoveGeofenceOnSubscribe
+import xyz.fcampbell.rxgms.onsubscribe.location.*
 import java.util.*
 
 /**

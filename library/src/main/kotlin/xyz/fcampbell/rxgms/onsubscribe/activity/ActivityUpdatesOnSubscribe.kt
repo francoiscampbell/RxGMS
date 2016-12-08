@@ -1,4 +1,4 @@
-package xyz.fcampbell.rxgms.observables.activity
+package xyz.fcampbell.rxgms.onsubscribe.activity
 
 import android.app.PendingIntent
 import android.content.BroadcastReceiver

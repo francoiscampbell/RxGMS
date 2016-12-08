@@ -1,24 +1,22 @@
-package xyz.fcampbell.rxgms.observables.geofence
+package xyz.fcampbell.rxgms.onsubscribe.location
 
 import android.app.PendingIntent
 import android.content.Context
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.common.api.Status
-import com.google.android.gms.location.GeofencingRequest
 import com.google.android.gms.location.LocationServices
 import rx.Observable
 import rx.Observer
-import xyz.fcampbell.rxgms.observables.BaseLocationOnSubscribe
-import xyz.fcampbell.rxgms.observables.StatusException
+import xyz.fcampbell.rxgms.onsubscribe.BaseLocationOnSubscribe
+import xyz.fcampbell.rxgms.onsubscribe.StatusException
 
-class AddGeofenceOnSubscribe private constructor(
+class RemoveLocationIntentUpdatesOnSubscribe private constructor(
         ctx: Context,
-        private val request: GeofencingRequest,
-        private val geofenceTransitionPendingIntent: PendingIntent
+        private val intent: PendingIntent
 ) : BaseLocationOnSubscribe<Status>(ctx) {
 
     override fun onGoogleApiClientReady(apiClient: GoogleApiClient, observer: Observer<in Status>) {
-        LocationServices.GeofencingApi.addGeofences(apiClient, request, geofenceTransitionPendingIntent)
+        LocationServices.FusedLocationApi.removeLocationUpdates(apiClient, intent)
                 .setResultCallback { status ->
                     if (status.isSuccess) {
                         observer.onNext(status)
@@ -31,9 +29,8 @@ class AddGeofenceOnSubscribe private constructor(
 
     companion object {
         @JvmStatic
-        fun createObservable(ctx: Context, request: GeofencingRequest, geofenceTransitionPendingIntent: PendingIntent): Observable<Status> {
-            return Observable.create(AddGeofenceOnSubscribe(ctx, request, geofenceTransitionPendingIntent))
+        fun createObservable(ctx: Context, intent: PendingIntent): Observable<Status> {
+            return Observable.create(RemoveLocationIntentUpdatesOnSubscribe(ctx, intent))
         }
     }
-
 }

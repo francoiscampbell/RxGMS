@@ -1,20 +1,19 @@
-package xyz.fcampbell.rxgms.observables.geofence
+package xyz.fcampbell.rxgms.onsubscribe.geofence
 
-import android.app.PendingIntent
 import android.content.Context
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.common.api.Status
 import com.google.android.gms.location.LocationServices
 import rx.Observer
-import xyz.fcampbell.rxgms.observables.StatusException
+import xyz.fcampbell.rxgms.onsubscribe.StatusException
 
-internal class RemoveGeofenceByPendingIntentOnSubscribe(
+internal class RemoveGeofenceRequestIdsOnSubscribe(
         ctx: Context,
-        private val pendingIntent: PendingIntent
+        private val geofenceRequestIds: List<String>
 ) : RemoveGeofenceOnSubscribe<Status>(ctx) {
 
     override fun removeGeofences(locationClient: GoogleApiClient, observer: Observer<in Status>) {
-        LocationServices.GeofencingApi.removeGeofences(locationClient, pendingIntent)
+        LocationServices.GeofencingApi.removeGeofences(locationClient, geofenceRequestIds)
                 .setResultCallback { status ->
                     if (status.isSuccess) {
                         observer.onNext(status)

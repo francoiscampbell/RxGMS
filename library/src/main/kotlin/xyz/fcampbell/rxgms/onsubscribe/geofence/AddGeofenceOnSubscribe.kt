@@ -1,22 +1,24 @@
-package xyz.fcampbell.rxgms.observables.location
+package xyz.fcampbell.rxgms.onsubscribe.geofence
 
 import android.app.PendingIntent
 import android.content.Context
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.common.api.Status
+import com.google.android.gms.location.GeofencingRequest
 import com.google.android.gms.location.LocationServices
 import rx.Observable
 import rx.Observer
-import xyz.fcampbell.rxgms.observables.BaseLocationOnSubscribe
-import xyz.fcampbell.rxgms.observables.StatusException
+import xyz.fcampbell.rxgms.onsubscribe.BaseLocationOnSubscribe
+import xyz.fcampbell.rxgms.onsubscribe.StatusException
 
-class RemoveLocationIntentUpdatesOnSubscribe private constructor(
+class AddGeofenceOnSubscribe private constructor(
         ctx: Context,
-        private val intent: PendingIntent
+        private val request: GeofencingRequest,
+        private val geofenceTransitionPendingIntent: PendingIntent
 ) : BaseLocationOnSubscribe<Status>(ctx) {
 
     override fun onGoogleApiClientReady(apiClient: GoogleApiClient, observer: Observer<in Status>) {
-        LocationServices.FusedLocationApi.removeLocationUpdates(apiClient, intent)
+        LocationServices.GeofencingApi.addGeofences(apiClient, request, geofenceTransitionPendingIntent)
                 .setResultCallback { status ->
                     if (status.isSuccess) {
                         observer.onNext(status)
@@ -29,8 +31,9 @@ class RemoveLocationIntentUpdatesOnSubscribe private constructor(
 
     companion object {
         @JvmStatic
-        fun createObservable(ctx: Context, intent: PendingIntent): Observable<Status> {
-            return Observable.create(RemoveLocationIntentUpdatesOnSubscribe(ctx, intent))
+        fun createObservable(ctx: Context, request: GeofencingRequest, geofenceTransitionPendingIntent: PendingIntent): Observable<Status> {
+            return Observable.create(AddGeofenceOnSubscribe(ctx, request, geofenceTransitionPendingIntent))
         }
     }
+
 }

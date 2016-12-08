@@ -1,4 +1,4 @@
-package xyz.fcampbell.rxgms.observables
+package xyz.fcampbell.rxgms.onsubscribe
 
 import android.content.Context
 import android.os.Bundle

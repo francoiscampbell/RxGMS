@@ -1,4 +1,4 @@
-package xyz.fcampbell.rxgms.observables
+package xyz.fcampbell.rxgms.onsubscribe
 
 import com.google.android.gms.common.api.Status
 

@@ -1,4 +1,4 @@
-package xyz.fcampbell.rxgms.observables.geocode
+package xyz.fcampbell.rxgms.onsubscribe.geocode
 
 import android.location.Address
 import android.text.TextUtils
