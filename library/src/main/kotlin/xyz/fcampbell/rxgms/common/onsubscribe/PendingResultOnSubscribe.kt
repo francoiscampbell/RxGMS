@@ -6,7 +6,7 @@ import rx.Observable
 import rx.Subscriber
 import rx.subscriptions.Subscriptions
 
-class PendingResultOnSubscribe<T : Result>(
+internal class PendingResultOnSubscribe<T : Result>(
         private val result: PendingResult<T>
 ) : Observable.OnSubscribe<T> {
     private var complete = false

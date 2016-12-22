@@ -10,7 +10,7 @@ import rx.Observable
 import rx.Observer
 import xyz.fcampbell.rxgms.location.onsubscribe.BaseLocationOnSubscribe
 
-class LocationUpdatesOnSubscribe private constructor(
+internal class LocationUpdatesOnSubscribe private constructor(
         ctx: Context,
         private val locationRequest: LocationRequest
 ) : BaseLocationOnSubscribe<Location>(ctx) {

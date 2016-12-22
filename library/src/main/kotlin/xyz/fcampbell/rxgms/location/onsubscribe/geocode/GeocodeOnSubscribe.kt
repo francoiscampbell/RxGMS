@@ -8,7 +8,7 @@ import rx.Observable
 import rx.Subscriber
 import java.io.IOException
 
-class GeocodeOnSubscribe private constructor(
+internal class GeocodeOnSubscribe private constructor(
         private val ctx: Context,
         private val locationName: String,
         private val maxResults: Int,

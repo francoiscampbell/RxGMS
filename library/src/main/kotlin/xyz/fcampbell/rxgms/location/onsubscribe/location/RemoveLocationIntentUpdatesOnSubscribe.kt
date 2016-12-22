@@ -7,10 +7,10 @@ import com.google.android.gms.common.api.Status
 import com.google.android.gms.location.LocationServices
 import rx.Observable
 import rx.Observer
-import xyz.fcampbell.rxgms.location.onsubscribe.BaseLocationOnSubscribe
 import xyz.fcampbell.rxgms.common.exception.StatusException
+import xyz.fcampbell.rxgms.location.onsubscribe.BaseLocationOnSubscribe
 
-class RemoveLocationIntentUpdatesOnSubscribe private constructor(
+internal class RemoveLocationIntentUpdatesOnSubscribe private constructor(
         ctx: Context,
         private val intent: PendingIntent
 ) : BaseLocationOnSubscribe<Status>(ctx) {

@@ -6,6 +6,6 @@ import com.google.android.gms.location.ActivityRecognition
 
 import xyz.fcampbell.rxgms.common.onsubscribe.BaseOnSubscribe
 
-abstract class BaseActivityRecognitionOnSubscribe<T> protected constructor(
+abstract internal class BaseActivityRecognitionOnSubscribe<T> protected constructor(
         ctx: Context
 ) : BaseOnSubscribe<T>(ctx, ActivityRecognition.API)

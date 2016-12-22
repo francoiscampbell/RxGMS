@@ -6,7 +6,7 @@ import com.google.android.gms.common.api.GoogleApiClient
 import rx.Observable
 import rx.Observer
 
-class GoogleApiClientOnSubscribe @SafeVarargs private constructor(
+internal class GoogleApiClientOnSubscribe @SafeVarargs private constructor(
         ctx: Context,
         vararg apis: Api<out Api.ApiOptions.NotRequiredOptions>
 ) : BaseOnSubscribe<GoogleApiClient>(ctx, *apis) {

@@ -8,10 +8,10 @@ import com.google.android.gms.location.LocationServices
 import rx.Observable
 import rx.Observer
 import rx.Subscription
-import xyz.fcampbell.rxgms.location.onsubscribe.BaseLocationOnSubscribe
 import xyz.fcampbell.rxgms.common.exception.StatusException
+import xyz.fcampbell.rxgms.location.onsubscribe.BaseLocationOnSubscribe
 
-class MockLocationOnSubscribe private constructor(
+internal class MockLocationOnSubscribe private constructor(
         ctx: Context,
         private val locationObservable: Observable<Location>
 ) : BaseLocationOnSubscribe<Status>(ctx) {

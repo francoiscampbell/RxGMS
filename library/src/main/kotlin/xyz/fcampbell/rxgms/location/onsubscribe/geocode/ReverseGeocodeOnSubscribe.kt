@@ -9,7 +9,7 @@ import rx.schedulers.Schedulers
 import java.io.IOException
 import java.util.*
 
-class ReverseGeocodeOnSubscribe private constructor(
+internal class ReverseGeocodeOnSubscribe private constructor(
         private val ctx: Context,
         private val locale: Locale,
         private val latitude: Double,

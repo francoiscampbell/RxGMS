@@ -11,7 +11,7 @@ import rx.Observer
 import xyz.fcampbell.rxgms.common.exception.StatusException
 import xyz.fcampbell.rxgms.location.onsubscribe.BaseLocationOnSubscribe
 
-class AddGeofenceOnSubscribe private constructor(
+internal class AddGeofenceOnSubscribe private constructor(
         ctx: Context,
         private val request: GeofencingRequest,
         private val geofenceTransitionPendingIntent: PendingIntent

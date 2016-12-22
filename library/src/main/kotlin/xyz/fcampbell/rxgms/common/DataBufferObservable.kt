@@ -7,6 +7,7 @@ import rx.subscriptions.Subscriptions
 /**
  * Util class that creates observable from buffer.
  */
+//TODO remove if not necessary
 object DataBufferObservable {
 
     /**

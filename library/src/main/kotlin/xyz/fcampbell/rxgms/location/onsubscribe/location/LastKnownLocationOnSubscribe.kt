@@ -8,7 +8,7 @@ import rx.Observable
 import rx.Observer
 import xyz.fcampbell.rxgms.location.onsubscribe.BaseLocationOnSubscribe
 
-class LastKnownLocationOnSubscribe private constructor(
+internal class LastKnownLocationOnSubscribe private constructor(
         ctx: Context
 ) : BaseLocationOnSubscribe<Location>(ctx) {
 

@@ -8,10 +8,10 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import rx.Observable
 import rx.Observer
-import xyz.fcampbell.rxgms.location.onsubscribe.BaseLocationOnSubscribe
 import xyz.fcampbell.rxgms.common.exception.StatusException
+import xyz.fcampbell.rxgms.location.onsubscribe.BaseLocationOnSubscribe
 
-class AddLocationIntentUpdatesOnSubscribe private constructor(
+internal class AddLocationIntentUpdatesOnSubscribe private constructor(
         ctx: Context,
         private val locationRequest: LocationRequest,
         private val intent: PendingIntent

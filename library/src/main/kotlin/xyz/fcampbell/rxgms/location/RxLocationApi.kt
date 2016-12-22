@@ -40,26 +40,6 @@ class RxLocationApi internal constructor(private val ctx: Context) {
     fun getLastKnownLocation() = LastKnownLocationOnSubscribe.createObservable(ctx)
 
     /**
-     * Creates observable that allows to observe infinite stream of location updates.
-     * To stop the stream you have to unsubscribe from observable - location updates are
-     * then disconnected.
-     *
-     *
-     * Observable can report [GoogleApiConnectionException]
-     * when there are trouble connecting with Google Play Services and other exceptions that
-     * can be thrown on [com.google.android.gms.location.FusedLocationProviderApi.requestLocationUpdates].
-     * Everything is delivered by [rx.Observer.onError].
-
-     * @param locationRequest request object with info about what kind of location you need
-     * *
-     * @return observable that serves infinite stream of location updates
-     */
-    @RequiresPermission(anyOf = arrayOf("android.permission.ACCESS_COARSE_LOCATION", "android.permission.ACCESS_FINE_LOCATION"))
-    fun getUpdatedLocation(locationRequest: LocationRequest): Observable<Location> {
-        return LocationUpdatesOnSubscribe.createObservable(ctx, locationRequest)
-    }
-
-    /**
      * Returns an observable which activates mock location mode when subscribed to, using the
      * supplied observable as a source of mock locations. Mock locations will replace normal
      * location information for all users of the FusedLocationProvider API on the device while this
@@ -83,6 +63,26 @@ class RxLocationApi internal constructor(private val ctx: Context) {
     @RequiresPermission(allOf = arrayOf("android.permission.ACCESS_COARSE_LOCATION", "android.permission.ACCESS_MOCK_LOCATION"))
     fun mockLocation(sourceLocationObservable: Observable<Location>): Observable<Status> {
         return MockLocationOnSubscribe.createObservable(ctx, sourceLocationObservable)
+    }
+
+    /**
+     * Creates observable that allows to observe infinite stream of location updates.
+     * To stop the stream you have to unsubscribe from observable - location updates are
+     * then disconnected.
+     *
+     *
+     * Observable can report [GoogleApiConnectionException]
+     * when there are trouble connecting with Google Play Services and other exceptions that
+     * can be thrown on [com.google.android.gms.location.FusedLocationProviderApi.requestLocationUpdates].
+     * Everything is delivered by [rx.Observer.onError].
+
+     * @param locationRequest request object with info about what kind of location you need
+     * *
+     * @return observable that serves infinite stream of location updates
+     */
+    @RequiresPermission(anyOf = arrayOf("android.permission.ACCESS_COARSE_LOCATION", "android.permission.ACCESS_FINE_LOCATION"))
+    fun requestLocationUpdates(locationRequest: LocationRequest): Observable<Location> {
+        return LocationUpdatesOnSubscribe.createObservable(ctx, locationRequest)
     }
 
     /**
@@ -318,7 +318,7 @@ class RxLocationApi internal constructor(private val ctx: Context) {
      * *
      * @return observable that emits metadata buffer and completes
      */
-    fun getPhotoMetadataById(placeId: String): Observable<PlacePhotoMetadataResult> {
+    fun getPlacePhotos(placeId: String): Observable<PlacePhotoMetadataResult> {
         return getGoogleApiClientObservable(Places.PLACE_DETECTION_API, Places.GEO_DATA_API)
                 .flatMap { api ->
                     fromPendingResult(Places.GeoDataApi.getPlacePhotos(api, placeId))
@@ -333,7 +333,7 @@ class RxLocationApi internal constructor(private val ctx: Context) {
      * *
      * @return observable that emits the photo result and completes
      */
-    fun getPhotoForMetadata(placePhotoMetadata: PlacePhotoMetadata): Observable<PlacePhotoResult> {
+    fun getPhoto(placePhotoMetadata: PlacePhotoMetadata): Observable<PlacePhotoResult> {
         return getGoogleApiClientObservable(Places.PLACE_DETECTION_API, Places.GEO_DATA_API)
                 .flatMap { api ->
                     fromPendingResult(placePhotoMetadata.getPhoto(api))

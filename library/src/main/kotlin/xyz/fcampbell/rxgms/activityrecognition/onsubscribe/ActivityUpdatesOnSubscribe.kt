@@ -14,7 +14,7 @@ import rx.Observable
 import rx.Observer
 import xyz.fcampbell.android.rxgms.BuildConfig
 
-class ActivityUpdatesOnSubscribe private constructor(
+internal class ActivityUpdatesOnSubscribe private constructor(
         private val context: Context,
         private val detectionIntervalMilliseconds: Int
 ) : BaseActivityRecognitionOnSubscribe<ActivityRecognitionResult>(context) {
