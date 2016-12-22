@@ -13,7 +13,7 @@ import xyz.fcampbell.rxgms.common.exception.GoogleApiConnectionException
 import xyz.fcampbell.rxgms.common.exception.GoogleApiConnectionSuspendedException
 
 
-abstract internal class BaseOnSubscribe<T> @SafeVarargs protected constructor(
+internal abstract class BaseOnSubscribe<T> @SafeVarargs protected constructor(
         private val ctx: Context,
         private vararg val services: Api<out Api.ApiOptions.NotRequiredOptions>
 ) : Observable.OnSubscribe<T> {

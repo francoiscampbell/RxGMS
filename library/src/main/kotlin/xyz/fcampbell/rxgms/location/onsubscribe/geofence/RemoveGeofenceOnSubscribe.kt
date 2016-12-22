@@ -8,7 +8,7 @@ import rx.Observable
 import rx.Observer
 import xyz.fcampbell.rxgms.location.onsubscribe.BaseLocationOnSubscribe
 
-abstract internal class RemoveGeofenceOnSubscribe<T> protected constructor(
+internal abstract class RemoveGeofenceOnSubscribe<T> protected constructor(
         ctx: Context
 ) : BaseLocationOnSubscribe<T>(ctx) {
 
