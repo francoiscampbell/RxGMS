@@ -8,7 +8,7 @@ import com.google.android.gms.common.api.GoogleApiClient
 import rx.Observable
 import rx.Observer
 
-class GoogleAPIClientOnSubscribe @SafeVarargs private constructor(
+class GoogleApiClientOnSubscribe @SafeVarargs private constructor(
         ctx: Context,
         vararg apis: Api<out Api.ApiOptions.NotRequiredOptions>
 ) : BaseOnSubscribe<GoogleApiClient>(ctx, *apis) {
@@ -22,7 +22,7 @@ class GoogleAPIClientOnSubscribe @SafeVarargs private constructor(
         @SafeVarargs
         @JvmStatic
         fun create(context: Context, vararg apis: Api<out Api.ApiOptions.NotRequiredOptions>): Observable<GoogleApiClient> {
-            return Observable.create(GoogleAPIClientOnSubscribe(context, *apis))
+            return Observable.create(GoogleApiClientOnSubscribe(context, *apis))
         }
     }
 }

@@ -9,20 +9,14 @@ import rx.Observable
 import rx.Observer
 import rx.Subscriber
 import rx.subscriptions.Subscriptions
-import xyz.fcampbell.rxgms.GoogleApiConnectionException
-import xyz.fcampbell.rxgms.GoogleApiConnectionSuspendedException
-import java.util.*
+import xyz.fcampbell.rxgms.exception.GoogleApiConnectionException
+import xyz.fcampbell.rxgms.exception.GoogleApiConnectionSuspendedException
 
 
 abstract class BaseOnSubscribe<T> @SafeVarargs protected constructor(
         private val ctx: Context,
-        vararg services: Api<out Api.ApiOptions.NotRequiredOptions>
+        private vararg val services: Api<out Api.ApiOptions.NotRequiredOptions>
 ) : Observable.OnSubscribe<T> {
-    private val services: List<Api<out Api.ApiOptions.NotRequiredOptions>>
-
-    init {
-        this.services = Arrays.asList(*services)
-    }
 
     override fun call(subscriber: Subscriber<in T>) {
         val apiClient = createApiClient(subscriber)
@@ -44,18 +38,14 @@ abstract class BaseOnSubscribe<T> @SafeVarargs protected constructor(
     protected fun createApiClient(subscriber: Subscriber<in T>): GoogleApiClient {
         val apiClientConnectionCallbacks = ApiClientConnectionCallbacks(subscriber)
 
-        val apiClientBuilder = GoogleApiClient.Builder(
+        val apiClient = GoogleApiClient.Builder(
                 ctx,
                 apiClientConnectionCallbacks,
                 apiClientConnectionCallbacks)
+                .addApis(*services)
+                .build()
 
-        for (service in services) {
-            apiClientBuilder.addApi(service)
-        }
-
-        val apiClient = apiClientBuilder.build()
-
-        apiClientConnectionCallbacks.setClient(apiClient)
+        apiClientConnectionCallbacks.apiClient = apiClient
 
         return apiClient
     }
@@ -65,12 +55,19 @@ abstract class BaseOnSubscribe<T> @SafeVarargs protected constructor(
 
     protected abstract fun onGoogleApiClientReady(apiClient: GoogleApiClient, observer: Observer<in T>)
 
+    private fun GoogleApiClient.Builder.addApis(vararg apis: Api<out Api.ApiOptions.NotRequiredOptions>): GoogleApiClient.Builder {
+        for (api in apis) {
+            addApi(api)
+        }
+        return this
+    }
+
     private inner class ApiClientConnectionCallbacks(
             private val observer: Observer<in T>
     ) : GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
-        private lateinit var apiClient: GoogleApiClient
+        lateinit var apiClient: GoogleApiClient
 
         override fun onConnected(bundle: Bundle?) {
             try {
@@ -86,12 +83,7 @@ abstract class BaseOnSubscribe<T> @SafeVarargs protected constructor(
         }
 
         override fun onConnectionFailed(connectionResult: ConnectionResult) {
-            observer.onError(GoogleApiConnectionException("Error connecting to GoogleApiClient.", connectionResult))
-        }
-
-        fun setClient(client: GoogleApiClient) {
-            this.apiClient = client
+            observer.onError(GoogleApiConnectionException(connectionResult, "Error connecting to GoogleApiClient."))
         }
     }
-
 }

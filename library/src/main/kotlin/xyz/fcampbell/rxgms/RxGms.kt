@@ -10,13 +10,14 @@ import com.google.android.gms.location.*
 import com.google.android.gms.location.places.*
 import com.google.android.gms.maps.model.LatLngBounds
 import rx.Observable
-import xyz.fcampbell.rxgms.onsubscribe.*
-import xyz.fcampbell.rxgms.onsubscribe.activity.ActivityUpdatesOnSubscribe
-import xyz.fcampbell.rxgms.onsubscribe.geocode.GeocodeOnSubscribe
-import xyz.fcampbell.rxgms.onsubscribe.geocode.ReverseGeocodeOnSubscribe
-import xyz.fcampbell.rxgms.onsubscribe.geofence.AddGeofenceOnSubscribe
-import xyz.fcampbell.rxgms.onsubscribe.geofence.RemoveGeofenceOnSubscribe
-import xyz.fcampbell.rxgms.onsubscribe.location.*
+import xyz.fcampbell.rxgms.onsubscribe.GoogleApiClientOnSubscribe
+import xyz.fcampbell.rxgms.onsubscribe.PendingResultOnSubscribe
+import xyz.fcampbell.rxgms.onsubscribe.activityrecognition.ActivityUpdatesOnSubscribe
+import xyz.fcampbell.rxgms.onsubscribe.location.geocode.GeocodeOnSubscribe
+import xyz.fcampbell.rxgms.onsubscribe.location.geocode.ReverseGeocodeOnSubscribe
+import xyz.fcampbell.rxgms.onsubscribe.location.geofence.AddGeofenceOnSubscribe
+import xyz.fcampbell.rxgms.onsubscribe.location.geofence.RemoveGeofenceOnSubscribe
+import xyz.fcampbell.rxgms.onsubscribe.location.location.*
 import java.util.*
 
 /**
@@ -24,7 +25,6 @@ import java.util.*
  * delivered by Google Play Services.
  */
 class RxGms(private val ctx: Context) {
-
     /**
      * Creates observable that obtains last known location and than completes.
      * Delivered location is never null - when it is unavailable Observable completes without emitting
@@ -168,7 +168,6 @@ class RxGms(private val ctx: Context) {
      * possible addresses using included Geocoder class. You should subscribe for this
      * observable on I/O thread.
      * The stream finishes after address list is available.
-     *
      *
      * You may specify a bounding box for the search results.
 
@@ -367,7 +366,7 @@ class RxGms(private val ctx: Context) {
      * @return observable that emits apis client after successful connection
      */
     fun getGoogleApiClientObservable(vararg apis: Api<out Api.ApiOptions.NotRequiredOptions>): Observable<GoogleApiClient> {
-        return GoogleAPIClientOnSubscribe.create(ctx, *apis)
+        return GoogleApiClientOnSubscribe.create(ctx, *apis)
     }
 
     companion object {
@@ -386,15 +385,3 @@ class RxGms(private val ctx: Context) {
         }
     }
 }
-/**
- * Creates observable that translates a street address or other description into a list of
- * possible addresses using included Geocoder class. You should subscribe for this
- * observable on I/O thread.
- * The stream finishes after address list is available.
-
- * @param locationName a user-supplied description of a location
- * *
- * @param maxResults   max number of results you are interested in
- * *
- * @return observable that serves list of address based on location name
- */

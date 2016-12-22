@@ -25,4 +25,4 @@ object DataBufferObservable {
             subscriber.add(Subscriptions.create { buffer.release() })
         }
     }
-}//no instance
+}

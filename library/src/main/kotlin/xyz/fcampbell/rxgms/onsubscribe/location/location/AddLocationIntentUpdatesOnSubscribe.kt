@@ -1,4 +1,4 @@
-package xyz.fcampbell.rxgms.onsubscribe.location
+package xyz.fcampbell.rxgms.onsubscribe.location.location
 
 import android.app.PendingIntent
 import android.content.Context
@@ -8,8 +8,8 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import rx.Observable
 import rx.Observer
-import xyz.fcampbell.rxgms.onsubscribe.BaseLocationOnSubscribe
-import xyz.fcampbell.rxgms.StatusException
+import xyz.fcampbell.rxgms.onsubscribe.location.BaseLocationOnSubscribe
+import xyz.fcampbell.rxgms.exception.StatusException
 
 class AddLocationIntentUpdatesOnSubscribe private constructor(
         ctx: Context,

@@ -1,4 +1,4 @@
-package xyz.fcampbell.rxgms.onsubscribe.geofence
+package xyz.fcampbell.rxgms.onsubscribe.location.geofence
 
 import android.app.PendingIntent
 import android.content.Context
@@ -6,7 +6,7 @@ import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.common.api.Status
 import com.google.android.gms.location.LocationServices
 import rx.Observer
-import xyz.fcampbell.rxgms.StatusException
+import xyz.fcampbell.rxgms.exception.StatusException
 
 internal class RemoveGeofenceByPendingIntentOnSubscribe(
         ctx: Context,

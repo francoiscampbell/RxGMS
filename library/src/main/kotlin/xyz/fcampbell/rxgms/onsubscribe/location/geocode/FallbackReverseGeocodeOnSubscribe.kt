@@ -1,4 +1,4 @@
-package xyz.fcampbell.rxgms.onsubscribe.geocode
+package xyz.fcampbell.rxgms.onsubscribe.location.geocode
 
 import android.location.Address
 import android.text.TextUtils
@@ -72,6 +72,7 @@ internal class FallbackReverseGeocodeOnSubscribe(
             }
 
             // Process results
+            //TODO use gson
             val results = jsonRootObject.getJSONArray("results")
             var i = 0
             while (i < results.length() && i < maxResults) {

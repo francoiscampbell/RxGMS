@@ -1,4 +1,4 @@
-package xyz.fcampbell.rxgms.onsubscribe.geocode
+package xyz.fcampbell.rxgms.onsubscribe.location.geocode
 
 import android.content.Context
 import android.location.Address

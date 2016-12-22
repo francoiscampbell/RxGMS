@@ -1,4 +1,4 @@
-package xyz.fcampbell.rxgms.onsubscribe.location
+package xyz.fcampbell.rxgms.onsubscribe.location.location
 
 import android.content.Context
 import android.location.Location
@@ -6,7 +6,7 @@ import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.LocationServices
 import rx.Observable
 import rx.Observer
-import xyz.fcampbell.rxgms.onsubscribe.BaseLocationOnSubscribe
+import xyz.fcampbell.rxgms.onsubscribe.location.BaseLocationOnSubscribe
 
 class LastKnownLocationOnSubscribe private constructor(
         ctx: Context

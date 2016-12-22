@@ -1,4 +1,4 @@
-package xyz.fcampbell.rxgms.onsubscribe.activity
+package xyz.fcampbell.rxgms.onsubscribe.activityrecognition
 
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
@@ -16,7 +16,7 @@ import rx.Observer
 class ActivityUpdatesOnSubscribe private constructor(
         private val context: Context,
         private val detectionIntervalMilliseconds: Int
-) : BaseActivityOnSubscribe<ActivityRecognitionResult>(context) {
+) : BaseActivityRecognitionOnSubscribe<ActivityRecognitionResult>(context) {
     private var receiver: ActivityUpdatesBroadcastReceiver? = null
 
     override fun onGoogleApiClientReady(apiClient: GoogleApiClient, observer: Observer<in ActivityRecognitionResult>) {
