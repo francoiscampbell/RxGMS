@@ -23,6 +23,7 @@ dependencies {
 
     provided "com.google.android.gms:play-services-location:$vGooglePlayServices"
     provided "com.google.android.gms:play-services-places:$vGooglePlayServices"
+    provided "com.google.android.gms:play-services-drive:$vGooglePlayServices"
 }
 
 // Comment this to deploy to local maven repository
