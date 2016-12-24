@@ -13,18 +13,12 @@ import xyz.fcampbell.rxgms.location.onsubscribe.BaseLocationOnSubscribe
 /**
  * Created by francois on 2016-12-22.
  */
-internal class CheckLocationSettingsOnSubscribe private constructor(
+internal class CheckLocationSettingsOnSubscribe(
         ctx: Context,
         private val locationRequest: LocationSettingsRequest
 ) : BaseLocationOnSubscribe<LocationSettingsResult>(ctx) {
     override fun onGoogleApiClientReady(apiClient: GoogleApiClient, observer: Observer<in LocationSettingsResult>) {
         val pendingResult = LocationServices.SettingsApi.checkLocationSettings(apiClient, locationRequest)
         Observable.create(PendingResultOnSubscribe(pendingResult)).subscribe(observer)
-    }
-
-    companion object {
-        fun createObservable(ctx: Context, locationRequest: LocationSettingsRequest): Observable<LocationSettingsResult> {
-            return Observable.create(CheckLocationSettingsOnSubscribe(ctx, locationRequest))
-        }
     }
 }

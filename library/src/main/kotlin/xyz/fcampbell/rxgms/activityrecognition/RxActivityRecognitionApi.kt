@@ -8,15 +8,17 @@ import xyz.fcampbell.rxgms.activityrecognition.onsubscribe.ActivityUpdatesOnSubs
 /**
  * Reactive way to access Google Play Location APIs
  */
-class RxActivityRecognitionApi internal constructor(private val ctx: Context) {
+class RxActivityRecognitionApi internal constructor(
+        private val ctx: Context
+) {
     /**
      * Observable that can be used to observe activity provided by Actity Recognition mechanism.
 
-     * @param detectIntervalMiliseconds detecion interval
+     * @param detectionIntervalMiliseconds detection interval
      * *
      * @return observable that provides activity recognition
      */
-    fun requestActivityUpdates(detectIntervalMiliseconds: Int): Observable<ActivityRecognitionResult> {
-        return ActivityUpdatesOnSubscribe.createObservable(ctx, detectIntervalMiliseconds)
+    fun requestActivityUpdates(detectionIntervalMiliseconds: Int): Observable<ActivityRecognitionResult> {
+        return Observable.create(ActivityUpdatesOnSubscribe(ctx, detectionIntervalMiliseconds))
     }
 }

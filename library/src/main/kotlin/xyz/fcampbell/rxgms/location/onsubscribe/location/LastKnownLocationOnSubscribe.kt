@@ -4,11 +4,10 @@ import android.content.Context
 import android.location.Location
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.LocationServices
-import rx.Observable
 import rx.Observer
 import xyz.fcampbell.rxgms.location.onsubscribe.BaseLocationOnSubscribe
 
-internal class LastKnownLocationOnSubscribe private constructor(
+internal class LastKnownLocationOnSubscribe(
         ctx: Context
 ) : BaseLocationOnSubscribe<Location>(ctx) {
 
@@ -18,12 +17,5 @@ internal class LastKnownLocationOnSubscribe private constructor(
             observer.onNext(location)
         }
         observer.onCompleted()
-    }
-
-    companion object {
-        @JvmStatic
-        fun createObservable(ctx: Context): Observable<Location> {
-            return Observable.create(LastKnownLocationOnSubscribe(ctx))
-        }
     }
 }

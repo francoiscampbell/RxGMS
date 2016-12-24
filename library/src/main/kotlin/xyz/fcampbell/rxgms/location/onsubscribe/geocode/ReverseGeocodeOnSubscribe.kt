@@ -9,7 +9,7 @@ import rx.schedulers.Schedulers
 import java.io.IOException
 import java.util.*
 
-internal class ReverseGeocodeOnSubscribe private constructor(
+internal class ReverseGeocodeOnSubscribe(
         private val ctx: Context,
         private val locale: Locale,
         private val latitude: Double,
@@ -34,12 +34,5 @@ internal class ReverseGeocodeOnSubscribe private constructor(
             }
         }
 
-    }
-
-    companion object {
-        @JvmStatic
-        fun createObservable(ctx: Context, locale: Locale, latitude: Double, longitude: Double, maxResults: Int): Observable<List<Address>> {
-            return Observable.create(ReverseGeocodeOnSubscribe(ctx, locale, latitude, longitude, maxResults))
-        }
     }
 }

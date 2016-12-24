@@ -6,11 +6,10 @@ import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.LocationListener
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
-import rx.Observable
 import rx.Observer
 import xyz.fcampbell.rxgms.location.onsubscribe.BaseLocationOnSubscribe
 
-internal class LocationUpdatesOnSubscribe private constructor(
+internal class LocationUpdatesOnSubscribe(
         ctx: Context,
         private val locationRequest: LocationRequest
 ) : BaseLocationOnSubscribe<Location>(ctx) {
@@ -26,12 +25,4 @@ internal class LocationUpdatesOnSubscribe private constructor(
             LocationServices.FusedLocationApi.removeLocationUpdates(apiClient, listener)
         }
     }
-
-    companion object {
-        @JvmStatic
-        fun createObservable(ctx: Context, locationRequest: LocationRequest): Observable<Location> {
-            return Observable.create(LocationUpdatesOnSubscribe(ctx, locationRequest))
-        }
-    }
-
 }

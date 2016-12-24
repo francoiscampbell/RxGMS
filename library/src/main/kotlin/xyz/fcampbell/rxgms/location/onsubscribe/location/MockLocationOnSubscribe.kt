@@ -11,7 +11,7 @@ import rx.Subscription
 import xyz.fcampbell.rxgms.common.exception.StatusException
 import xyz.fcampbell.rxgms.location.onsubscribe.BaseLocationOnSubscribe
 
-internal class MockLocationOnSubscribe private constructor(
+internal class MockLocationOnSubscribe(
         ctx: Context,
         private val locationObservable: Observable<Location>
 ) : BaseLocationOnSubscribe<Status>(ctx) {
@@ -55,13 +55,6 @@ internal class MockLocationOnSubscribe private constructor(
         }
         if (mockLocationSubscription != null && !mockLocationSubscription!!.isUnsubscribed) {
             mockLocationSubscription!!.unsubscribe()
-        }
-    }
-
-    companion object {
-        @JvmStatic
-        fun createObservable(context: Context, locationObservable: Observable<Location>): Observable<Status> {
-            return Observable.create(MockLocationOnSubscribe(context, locationObservable))
         }
     }
 }

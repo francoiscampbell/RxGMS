@@ -8,7 +8,7 @@ import rx.Observable
 import rx.Subscriber
 import java.io.IOException
 
-internal class GeocodeOnSubscribe private constructor(
+internal class GeocodeOnSubscribe(
         private val ctx: Context,
         private val locationName: String,
         private val maxResults: Int,
@@ -36,12 +36,5 @@ internal class GeocodeOnSubscribe private constructor(
             }
         }
 
-    }
-
-    companion object {
-        @JvmStatic
-        fun createObservable(ctx: Context, locationName: String, maxResults: Int, bounds: LatLngBounds?): Observable<List<Address>> {
-            return Observable.create(GeocodeOnSubscribe(ctx, locationName, maxResults, bounds))
-        }
     }
 }

@@ -14,7 +14,9 @@ import xyz.fcampbell.rxgms.common.onsubscribe.PendingResultOnSubscribe
 /**
  * Reactive way to access Google Play Location APIs
  */
-class RxPlacesApi internal constructor(private val ctx: Context) {
+class RxPlacesApi internal constructor(
+        private val ctx: Context
+) {
     /**
      * Returns observable that fetches current place from Places API. To flatmap and auto release
      * buffer to [com.google.android.gms.location.places.PlaceLikelihood] observable use

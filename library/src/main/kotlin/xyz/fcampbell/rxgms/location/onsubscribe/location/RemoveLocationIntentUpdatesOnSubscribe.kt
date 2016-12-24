@@ -5,12 +5,11 @@ import android.content.Context
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.common.api.Status
 import com.google.android.gms.location.LocationServices
-import rx.Observable
 import rx.Observer
 import xyz.fcampbell.rxgms.common.exception.StatusException
 import xyz.fcampbell.rxgms.location.onsubscribe.BaseLocationOnSubscribe
 
-internal class RemoveLocationIntentUpdatesOnSubscribe private constructor(
+internal class RemoveLocationIntentUpdatesOnSubscribe(
         ctx: Context,
         private val intent: PendingIntent
 ) : BaseLocationOnSubscribe<Status>(ctx) {
@@ -25,12 +24,5 @@ internal class RemoveLocationIntentUpdatesOnSubscribe private constructor(
                         observer.onError(StatusException(status))
                     }
                 }
-    }
-
-    companion object {
-        @JvmStatic
-        fun createObservable(ctx: Context, intent: PendingIntent): Observable<Status> {
-            return Observable.create(RemoveLocationIntentUpdatesOnSubscribe(ctx, intent))
-        }
     }
 }

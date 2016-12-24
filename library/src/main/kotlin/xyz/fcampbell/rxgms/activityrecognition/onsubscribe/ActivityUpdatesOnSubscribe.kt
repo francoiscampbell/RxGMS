@@ -5,16 +5,13 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.ActivityRecognition
 import com.google.android.gms.location.ActivityRecognitionResult
-
-import rx.Observable
 import rx.Observer
 import xyz.fcampbell.android.rxgms.BuildConfig
 
-internal class ActivityUpdatesOnSubscribe private constructor(
+internal class ActivityUpdatesOnSubscribe(
         private val context: Context,
         private val detectionIntervalMilliseconds: Int
 ) : BaseActivityRecognitionOnSubscribe<ActivityRecognitionResult>(context) {
@@ -50,10 +47,5 @@ internal class ActivityUpdatesOnSubscribe private constructor(
 
     companion object {
         private val ACTION_ACTIVITY_DETECTED = "${BuildConfig.APPLICATION_ID}.ACTION_ACTIVITY_UPDATE_DETECTED"
-
-        @JvmStatic
-        fun createObservable(ctx: Context, detectionIntervalMiliseconds: Int): Observable<ActivityRecognitionResult> {
-            return Observable.create(ActivityUpdatesOnSubscribe(ctx, detectionIntervalMiliseconds))
-        }
     }
 }

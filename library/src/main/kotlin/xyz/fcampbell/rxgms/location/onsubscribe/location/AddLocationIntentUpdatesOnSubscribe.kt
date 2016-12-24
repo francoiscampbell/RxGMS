@@ -6,12 +6,11 @@ import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.common.api.Status
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
-import rx.Observable
 import rx.Observer
 import xyz.fcampbell.rxgms.common.exception.StatusException
 import xyz.fcampbell.rxgms.location.onsubscribe.BaseLocationOnSubscribe
 
-internal class AddLocationIntentUpdatesOnSubscribe private constructor(
+internal class AddLocationIntentUpdatesOnSubscribe(
         ctx: Context,
         private val locationRequest: LocationRequest,
         private val intent: PendingIntent
@@ -28,12 +27,5 @@ internal class AddLocationIntentUpdatesOnSubscribe private constructor(
                     }
                 }
 
-    }
-
-    companion object {
-        @JvmStatic
-        fun createObservable(ctx: Context, locationRequest: LocationRequest, intent: PendingIntent): Observable<Status> {
-            return Observable.create(AddLocationIntentUpdatesOnSubscribe(ctx, locationRequest, intent))
-        }
     }
 }

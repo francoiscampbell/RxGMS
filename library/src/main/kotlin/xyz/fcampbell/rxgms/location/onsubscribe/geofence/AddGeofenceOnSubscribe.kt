@@ -6,12 +6,11 @@ import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.common.api.Status
 import com.google.android.gms.location.GeofencingRequest
 import com.google.android.gms.location.LocationServices
-import rx.Observable
 import rx.Observer
 import xyz.fcampbell.rxgms.common.exception.StatusException
 import xyz.fcampbell.rxgms.location.onsubscribe.BaseLocationOnSubscribe
 
-internal class AddGeofenceOnSubscribe private constructor(
+internal class AddGeofenceOnSubscribe(
         ctx: Context,
         private val request: GeofencingRequest,
         private val geofenceTransitionPendingIntent: PendingIntent
@@ -28,12 +27,4 @@ internal class AddGeofenceOnSubscribe private constructor(
                     }
                 }
     }
-
-    companion object {
-        @JvmStatic
-        fun createObservable(ctx: Context, request: GeofencingRequest, geofenceTransitionPendingIntent: PendingIntent): Observable<Status> {
-            return Observable.create(AddGeofenceOnSubscribe(ctx, request, geofenceTransitionPendingIntent))
-        }
-    }
-
 }
