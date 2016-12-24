@@ -1,15 +1,10 @@
 package xyz.fcampbell.rxgms.location
 
 import android.content.Context
-import com.google.android.gms.common.api.Api
-import com.google.android.gms.common.api.GoogleApiClient
-import com.google.android.gms.common.api.PendingResult
-import com.google.android.gms.common.api.Result
 import com.google.android.gms.location.places.*
 import com.google.android.gms.maps.model.LatLngBounds
 import rx.Observable
-import xyz.fcampbell.rxgms.common.onsubscribe.GoogleApiClientOnSubscribe
-import xyz.fcampbell.rxgms.common.onsubscribe.PendingResultOnSubscribe
+import xyz.fcampbell.rxgms.location.onsubscribe.location.*
 
 /**
  * Reactive way to access Google Play Location APIs
@@ -27,10 +22,7 @@ class RxPlacesApi internal constructor(
      * @return observable that emits current places buffer and completes
      */
     fun getCurrentPlace(placeFilter: PlaceFilter?): Observable<PlaceLikelihoodBuffer> {
-        return getGoogleApiClientObservable(Places.PLACE_DETECTION_API, Places.GEO_DATA_API)
-                .flatMap { api ->
-                    fromPendingResult(Places.PlaceDetectionApi.getCurrentPlace(api, placeFilter))
-                }
+        return Observable.create(GetCurrentPlaceOnSubscribe(ctx, placeFilter))
     }
 
     /**
@@ -40,11 +32,8 @@ class RxPlacesApi internal constructor(
      * *
      * @return observable that emits places buffer and completes
      */
-    fun getPlaceById(placeId: String?): Observable<PlaceBuffer> {
-        return getGoogleApiClientObservable(Places.PLACE_DETECTION_API, Places.GEO_DATA_API)
-                .flatMap { api ->
-                    fromPendingResult(Places.GeoDataApi.getPlaceById(api, placeId))
-                }
+    fun getPlaceById(placeId: String): Observable<PlaceBuffer> {
+        return Observable.create(GetPlaceByIdOnSubscribe(ctx, placeId))
     }
 
     /**
@@ -61,10 +50,7 @@ class RxPlacesApi internal constructor(
      * @return observable with suggestions buffer and completes
      */
     fun getPlaceAutocompletePredictions(query: String, bounds: LatLngBounds, filter: AutocompleteFilter?): Observable<AutocompletePredictionBuffer> {
-        return getGoogleApiClientObservable(Places.PLACE_DETECTION_API, Places.GEO_DATA_API)
-                .flatMap { api ->
-                    fromPendingResult(Places.GeoDataApi.getAutocompletePredictions(api, query, bounds, filter))
-                }
+        return Observable.create(GetAutocompletePredictionsOnSubscribe(ctx, query, bounds, filter))
     }
 
     /**
@@ -75,10 +61,7 @@ class RxPlacesApi internal constructor(
      * @return observable that emits metadata buffer and completes
      */
     fun getPlacePhotos(placeId: String): Observable<PlacePhotoMetadataResult> {
-        return getGoogleApiClientObservable(Places.PLACE_DETECTION_API, Places.GEO_DATA_API)
-                .flatMap { api ->
-                    fromPendingResult(Places.GeoDataApi.getPlacePhotos(api, placeId))
-                }
+        return Observable.create(GetPlacePhotosOnSubscribe(ctx, placeId))
     }
 
     /**
@@ -89,41 +72,7 @@ class RxPlacesApi internal constructor(
      * *
      * @return observable that emits the photo result and completes
      */
-    fun getPhoto(placePhotoMetadata: PlacePhotoMetadata): Observable<PlacePhotoResult> {
-        return getGoogleApiClientObservable(Places.PLACE_DETECTION_API, Places.GEO_DATA_API)
-                .flatMap { api ->
-                    fromPendingResult(placePhotoMetadata.getPhoto(api))
-                }
-    }
-
-    /**
-     * Observable that emits [com.google.android.gms.common.api.GoogleApiClient] object after connection.
-     * In case of error [GoogleApiConnectionException] is emmited.
-     * When connection to Google Play Services is suspended [GoogleApiConnectionSuspendedException]
-     * is emitted as error.
-     * Do not disconnect from apis client manually - just unsubscribe.
-
-     * @param apis collection of apis to connect to
-     * *
-     * @return observable that emits apis client after successful connection
-     */
-    fun getGoogleApiClientObservable(vararg apis: Api<out Api.ApiOptions.NotRequiredOptions>): Observable<GoogleApiClient> {
-        return GoogleApiClientOnSubscribe.create(ctx, *apis)
-    }
-
-    companion object {
-        /**
-         * Util method that wraps [com.google.android.gms.common.api.PendingResult] in Observable.
-
-         * @param result pending result to wrap
-         * *
-         * @param <T>    parameter type of result
-         * *
-         * @return observable that emits pending result and completes
-        </T> */
-        @JvmStatic
-        fun <T : Result> fromPendingResult(result: PendingResult<T>): Observable<T> {
-            return Observable.create(PendingResultOnSubscribe(result))
-        }
+    fun getPlacePhoto(placePhotoMetadata: PlacePhotoMetadata): Observable<PlacePhotoResult> {
+        return Observable.create(GetPlacePhotoOnSubscribe(ctx, placePhotoMetadata))
     }
 }
