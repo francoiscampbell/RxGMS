@@ -11,12 +11,11 @@ import xyz.fcampbell.rxgms.common.onsubscribe.PendingResultOnSubscribe
 /**
  * Created by francois on 2016-12-24.
  */
-internal class FetchDriveIdOnSubscribe(
-        ctx: Context,
-        private val resourceId: String
-) : BaseDriveOnSubscribe<DriveApi.DriveIdResult>(ctx) {
-    override fun onGoogleApiClientReady(apiClient: GoogleApiClient, observer: Observer<in DriveApi.DriveIdResult>) {
-        val pendingResult = Drive.DriveApi.fetchDriveId(apiClient, resourceId)
+internal class NewDriveContentsOnSubscribe(
+        ctx: Context
+) : BaseDriveOnSubscribe<DriveApi.DriveContentsResult>(ctx) {
+    override fun onGoogleApiClientReady(apiClient: GoogleApiClient, observer: Observer<in DriveApi.DriveContentsResult>) {
+        val pendingResult = Drive.DriveApi.newDriveContents(apiClient)
         Observable.create(PendingResultOnSubscribe(pendingResult)).subscribe(observer)
     }
 }
