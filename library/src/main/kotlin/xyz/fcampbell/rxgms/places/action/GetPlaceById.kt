@@ -10,7 +10,5 @@ import xyz.fcampbell.rxgms.common.action.PendingResultOnSubscribe
  */
 internal class GetPlaceById(
         apiClient: GoogleApiClient,
-        placeId: String
-) : PendingResultOnSubscribe<PlaceBuffer>(
-        Places.GeoDataApi.getPlaceById(apiClient, placeId)
-)
+        vararg placeIds: String
+) : PendingResultOnSubscribe<PlaceBuffer>(Places.GeoDataApi.getPlaceById(apiClient, *placeIds))

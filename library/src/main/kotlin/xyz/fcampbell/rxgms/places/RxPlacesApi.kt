@@ -36,8 +36,8 @@ class RxPlacesApi internal constructor(
      * *
      * @return observable that emits places buffer and completes
      */
-    fun getPlaceById(placeId: String) = rxApiClient.flatMap {
-        Single.create(GetPlaceById(it, placeId)).toObservable()
+    fun getPlaceById(vararg placeIds: String) = rxApiClient.flatMap {
+        Single.create(GetPlaceById(it, *placeIds)).toObservable()
     }
 
     /**
