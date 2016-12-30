@@ -6,7 +6,7 @@ import com.google.android.gms.drive.FileUploadPreferences
 import com.google.android.gms.drive.query.Query
 import rx.Observable
 import rx.Single
-import xyz.fcampbell.rxgms.RxGmsApi
+import xyz.fcampbell.rxgms.common.RxGmsApi
 import xyz.fcampbell.rxgms.drive.action.*
 
 /**

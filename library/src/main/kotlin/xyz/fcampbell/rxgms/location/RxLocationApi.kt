@@ -14,7 +14,7 @@ import rx.AsyncEmitter
 import rx.Observable
 import rx.Single
 import rx.schedulers.Schedulers
-import xyz.fcampbell.rxgms.RxGmsApi
+import xyz.fcampbell.rxgms.common.RxGmsApi
 import xyz.fcampbell.rxgms.location.action.geocode.Geocode
 import xyz.fcampbell.rxgms.location.action.geocode.ReverseGeocode
 import xyz.fcampbell.rxgms.location.action.geofence.AddGeofence

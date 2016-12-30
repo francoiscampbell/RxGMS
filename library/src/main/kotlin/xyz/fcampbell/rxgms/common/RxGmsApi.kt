@@ -1,4 +1,4 @@
-package xyz.fcampbell.rxgms
+package xyz.fcampbell.rxgms.common
 
 import android.content.Context
 import com.google.android.gms.common.api.Api

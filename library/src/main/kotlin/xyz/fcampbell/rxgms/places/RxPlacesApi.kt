@@ -7,7 +7,7 @@ import com.google.android.gms.location.places.PlacePhotoMetadata
 import com.google.android.gms.location.places.Places
 import com.google.android.gms.maps.model.LatLngBounds
 import rx.Single
-import xyz.fcampbell.rxgms.RxGmsApi
+import xyz.fcampbell.rxgms.common.RxGmsApi
 import xyz.fcampbell.rxgms.location.action.location.*
 
 /**

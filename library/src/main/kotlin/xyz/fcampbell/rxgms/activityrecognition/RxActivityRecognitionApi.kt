@@ -4,8 +4,8 @@ import android.content.Context
 import com.google.android.gms.location.ActivityRecognition
 import rx.AsyncEmitter
 import rx.Observable
-import xyz.fcampbell.rxgms.RxGmsApi
 import xyz.fcampbell.rxgms.activityrecognition.action.ActivityUpdates
+import xyz.fcampbell.rxgms.common.RxGmsApi
 
 /**
  * Reactive way to access Google Play Location APIs
