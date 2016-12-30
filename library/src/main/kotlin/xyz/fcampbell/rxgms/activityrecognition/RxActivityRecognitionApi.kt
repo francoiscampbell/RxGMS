@@ -1,24 +1,28 @@
 package xyz.fcampbell.rxgms.location
 
 import android.content.Context
-import com.google.android.gms.location.ActivityRecognitionResult
+import com.google.android.gms.location.ActivityRecognition
+import rx.AsyncEmitter
 import rx.Observable
-import xyz.fcampbell.rxgms.activityrecognition.onsubscribe.ActivityUpdatesOnSubscribe
+import xyz.fcampbell.rxgms.RxGmsApi
+import xyz.fcampbell.rxgms.activityrecognition.action.ActivityUpdates
 
 /**
  * Reactive way to access Google Play Location APIs
  */
 class RxActivityRecognitionApi internal constructor(
-        private val ctx: Context
-) {
+        context: Context
+) : RxGmsApi(context, ActivityRecognition.API) {
     /**
      * Observable that can be used to observe activity provided by Actity Recognition mechanism.
 
-     * @param detectionIntervalMiliseconds detection interval
+     * @param detectionIntervalMilliseconds detection interval
      * *
      * @return observable that provides activity recognition
      */
-    fun requestActivityUpdates(detectionIntervalMiliseconds: Int): Observable<ActivityRecognitionResult> {
-        return Observable.create(ActivityUpdatesOnSubscribe(ctx, detectionIntervalMiliseconds))
+    fun requestActivityUpdates(detectionIntervalMilliseconds: Int) = rxApiClient.flatMap {
+        Observable.fromEmitter(
+                ActivityUpdates(it, detectionIntervalMilliseconds),
+                AsyncEmitter.BackpressureMode.LATEST)
     }
 }

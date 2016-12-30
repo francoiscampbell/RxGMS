@@ -10,9 +10,9 @@ import xyz.fcampbell.rxgms.location.RxPlacesApi
  * Factory of observables that can manipulate location
  * delivered by Google Play Services.
  */
-class RxGms(private val ctx: Context) {
-    val activityRecognitionApi by lazy { RxActivityRecognitionApi(ctx) }
-    val driveApi by lazy { RxDriveApi() }
-    val locationApi by lazy { RxLocationApi(ctx) }
-    val placesApi by lazy { RxPlacesApi(ctx) }
+class RxGms(private val context: Context) {
+    val activityRecognitionApi by lazy { RxActivityRecognitionApi(context) }
+    val driveApi by lazy { RxDriveApi(context) }
+    val locationApi by lazy { RxLocationApi(context) }
+    val placesApi by lazy { RxPlacesApi(context) }
 }

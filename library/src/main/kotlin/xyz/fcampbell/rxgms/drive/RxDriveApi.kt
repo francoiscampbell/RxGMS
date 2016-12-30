@@ -1,38 +1,49 @@
 package xyz.fcampbell.rxgms.drive
 
 import android.content.Context
-import com.google.android.gms.common.api.Status
 import com.google.android.gms.drive.Drive
 import com.google.android.gms.drive.FileUploadPreferences
 import com.google.android.gms.drive.query.Query
 import rx.Observable
-import xyz.fcampbell.rxgms.drive.onsubscribe.*
+import rx.Single
+import xyz.fcampbell.rxgms.RxGmsApi
+import xyz.fcampbell.rxgms.drive.action.*
 
 /**
  * Created by francois on 2016-12-22.
  */
 class RxDriveApi internal constructor(
-        private val ctx: Context
-) {
-    fun fetchDriveId(resourceId: String) = Observable.create(FetchDriveIdOnSubscribe(ctx, resourceId))
+        private val context: Context
+) : RxGmsApi(context, Drive.API) {
+    fun fetchDriveId(resourceId: String) = rxApiClient.flatMap {
+        Single.create(FetchDriveId(it, resourceId)).toObservable()
+    }
 
-    fun getAppFolder() = Observable.create(GetAppFolderOnSubscribe(ctx))
+    fun getAppFolder() = rxApiClient.map { Drive.DriveApi.getAppFolder(it) }
 
-    fun getRootFolder() = Observable.create(GetRootFolderOnSubscribe(ctx))
+    fun getRootFolder() = rxApiClient.map { Drive.DriveApi.getRootFolder(it) }
 
-    fun newCreateFileActivityBuilder() = Drive.DriveApi.newCreateFileActivityBuilder()
+    fun newCreateFileActivityBuilder() = Observable.just(Drive.DriveApi.newCreateFileActivityBuilder())
 
-    fun newDriveContents() = Observable.create(NewDriveContentsOnSubscribe(ctx))
+    fun newDriveContents() = rxApiClient.flatMap {
+        Single.create(NewDriveContents(it)).toObservable()
+    }
 
-    fun newOpenFileActivityBuilder() = Drive.DriveApi.newOpenFileActivityBuilder()
+    fun newOpenFileActivityBuilder() = Observable.just(Drive.DriveApi.newOpenFileActivityBuilder())
 
-    fun query(query: Query) = Observable.create(QueryOnSubscribe(ctx, query))
+    fun query(query: Query) = rxApiClient.flatMap {
+        Single.create(QueryOnSubscribe(it, query)).toObservable()
+    }
 
-    fun requestSync() = Observable.create(RequestSyncOnSubscribe(ctx))
+    fun requestSync() = rxApiClient.flatMap {
+        Single.create(RequestSync(it)).toObservable()
+    }
 
-    fun getFileUploadPreferences() = Observable.create(GetFileUploadPreferencesOnSubscribe(ctx))
+    fun getFileUploadPreferences() = rxApiClient.flatMap {
+        Single.create(GetFileUploadPreferences(it)).toObservable()
+    }
 
-    fun setFileUploadPreferences(fileUploadPreferences: FileUploadPreferences): Observable<Status> {
-        return Observable.create(SetFileUploadPreferencesOnSubscribe(ctx, fileUploadPreferences))
+    fun setFileUploadPreferences(fileUploadPreferences: FileUploadPreferences) = rxApiClient.flatMap {
+        Single.create(SetFileUploadPreferences(it, fileUploadPreferences)).toObservable()
     }
 }
