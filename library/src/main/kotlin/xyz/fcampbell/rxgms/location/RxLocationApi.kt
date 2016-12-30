@@ -174,6 +174,7 @@ class RxLocationApi internal constructor(
                 ReverseGeocode(context, locale, lat, lng, maxResults),
                 AsyncEmitter.BackpressureMode.BUFFER)
                 .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.trampoline())
     }
 
     /**
@@ -195,6 +196,7 @@ class RxLocationApi internal constructor(
     @JvmOverloads fun geocode(locationName: String, maxResults: Int, bounds: LatLngBounds? = null): Observable<List<Address>> {
         return Single.create(Geocode(context, locationName, maxResults, bounds))
                 .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.trampoline())
                 .toObservable()
     }
 
