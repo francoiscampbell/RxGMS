@@ -13,7 +13,7 @@ abstract class BaseActivity : AppCompatActivity() {
                 .getInstance(this)
                 .request(Manifest.permission.ACCESS_FINE_LOCATION)
                 .subscribe { granted ->
-                    if (granted!!) {
+                    if (granted) {
                         onLocationPermissionGranted()
                     } else {
                         Toast.makeText(this@BaseActivity, "Sorry, no demo without permission...", Toast.LENGTH_SHORT).show()

@@ -3,65 +3,58 @@ package xyz.fcampbell.rxgms.sample
 import android.location.Location
 import android.os.Bundle
 import android.text.TextUtils
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import com.google.android.gms.location.places.AutocompletePredictionBuffer
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import com.jakewharton.rxbinding.widget.RxTextView
+import kotlinx.android.synthetic.main.activity_places.*
 import rx.Observable
-import rx.functions.Func1
 import rx.subscriptions.CompositeSubscription
 import xyz.fcampbell.rxgms.RxGms
-import xyz.fcampbell.rxgms.sample.utils.UnsubscribeIfPresent
 import java.util.*
 import java.util.concurrent.TimeUnit
 
 class PlacesActivity : BaseActivity() {
+    private val rxGms = RxGms(this)
 
-    private lateinit var currentPlaceView: TextView
-    private lateinit var queryView: EditText
-    private lateinit var placeSuggestionsList: ListView
-    private lateinit var rxGms: RxGms
-    private lateinit var compositeSubscription: CompositeSubscription
+    private val compositeSubscription = CompositeSubscription()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_places)
-        currentPlaceView = findViewById(R.id.current_place_view) as TextView
-        queryView = findViewById(R.id.place_query_view) as EditText
-        placeSuggestionsList = findViewById(R.id.place_suggestions_list) as ListView
-        placeSuggestionsList.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
+        place_suggestions_list.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
             val info = parent.adapter.getItem(position) as AutocompleteInfo
             startActivity(PlacesResultActivity.getStartIntent(this@PlacesActivity, info.id))
         }
-
-        rxGms = RxGms(this)
     }
 
     override fun onLocationPermissionGranted() {
-        compositeSubscription = CompositeSubscription()
         compositeSubscription.add(
-                rxGms.getCurrentPlace(null)
+                rxGms.placesApi.
+                        getCurrentPlace(null)
                         .subscribe { buffer ->
                             val likelihood = buffer.get(0)
                             if (likelihood != null) {
-                                currentPlaceView.text = likelihood.place.name
+                                current_place_view.text = likelihood.place.name
                             }
                             buffer.release()
                         }
         )
 
         val queryObservable = RxTextView
-                .textChanges(queryView)
+                .textChanges(place_query_view)
                 .map { charSequence -> charSequence.toString() }
                 .debounce(1, TimeUnit.SECONDS)
                 .filter { s -> !TextUtils.isEmpty(s) }
-        val lastKnownLocationObservable = rxGms.getLastKnownLocation()
+        val lastKnownLocationObservable = rxGms.locationApi.getLastKnownLocation()
         val suggestionsObservable = Observable
                 .combineLatest(queryObservable, lastKnownLocationObservable) { query, currentLocation ->
                     QueryWithCurrentLocation(query, currentLocation)
-                }.flatMap(Func1<QueryWithCurrentLocation, Observable<AutocompletePredictionBuffer>> { q ->
-            if (q.location == null) return@Func1 Observable.empty<AutocompletePredictionBuffer>()
+                }
+                .flatMap({ q ->
+                    if (q.location == null) return@flatMap Observable.empty<AutocompletePredictionBuffer>()
 
             val latitude = q.location.latitude
             val longitude = q.location.longitude
@@ -69,22 +62,19 @@ class PlacesActivity : BaseActivity() {
                     LatLng(latitude - 0.05, longitude - 0.05),
                     LatLng(latitude + 0.05, longitude + 0.05)
             )
-            rxGms.getPlaceAutocompletePredictions(q.query, bounds, null)
+                    rxGms.placesApi.getPlaceAutocompletePredictions(q.query, bounds, null)
         })
 
         compositeSubscription.add(suggestionsObservable.subscribe { buffer ->
-            val infos = ArrayList<AutocompleteInfo>()
-            for (prediction in buffer) {
-                infos.add(AutocompleteInfo(prediction.getFullText(null).toString(), prediction.placeId ?: ""))
-            }
+            val infos = buffer.mapTo(ArrayList<AutocompleteInfo>()) { AutocompleteInfo(it.getFullText(null).toString(), it.placeId ?: "") }
             buffer.release()
-            placeSuggestionsList.adapter = ArrayAdapter(this@PlacesActivity, android.R.layout.simple_list_item_1, infos)
+            place_suggestions_list.adapter = ArrayAdapter(this@PlacesActivity, android.R.layout.simple_list_item_1, infos)
         })
     }
 
     override fun onStop() {
         super.onStop()
-        UnsubscribeIfPresent.unsubscribe(compositeSubscription)
+        compositeSubscription.clear()
     }
 
     private class QueryWithCurrentLocation(val query: String, val location: Location?)

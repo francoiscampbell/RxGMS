@@ -10,7 +10,6 @@ import android.widget.Toast
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofencingRequest
 import rx.Subscription
-import xyz.fcampbell.rxgms.sample.R
 import xyz.fcampbell.rxgms.RxGms
 import xyz.fcampbell.rxgms.sample.utils.DisplayTextOnViewAction
 import xyz.fcampbell.rxgms.sample.utils.LocationToStringFunc
@@ -42,9 +41,9 @@ class GeofenceActivity : BaseActivity() {
     }
 
     override fun onLocationPermissionGranted() {
-        lastKnownLocationSubscription = rxGms
+        lastKnownLocationSubscription = rxGms.locationApi
                 .getLastKnownLocation()
-                .map(LocationToStringFunc())
+                .map(LocationToStringFunc)
                 .subscribe(DisplayTextOnViewAction(lastKnownLocationView))
     }
 
@@ -54,7 +53,7 @@ class GeofenceActivity : BaseActivity() {
     }
 
     private fun clearGeofence() {
-        rxGms.removeGeofences(createNotificationBroadcastPendingIntent()).subscribe({ toast("Geofences removed") }) { throwable ->
+        rxGms.locationApi.removeGeofences(createNotificationBroadcastPendingIntent()).subscribe({ toast("Geofences removed") }) { throwable ->
             toast("Error removing geofences")
             Log.d(TAG, "Error removing geofences", throwable)
         }
@@ -72,9 +71,9 @@ class GeofenceActivity : BaseActivity() {
         val geofencingRequest = createGeofencingRequest() ?: return
 
         val pendingIntent = createNotificationBroadcastPendingIntent()
-        rxGms
+        rxGms.locationApi
                 .removeGeofences(pendingIntent)
-                .flatMap { rxGms.addGeofences(pendingIntent, geofencingRequest) }
+                .flatMap { rxGms.locationApi.addGeofences(pendingIntent, geofencingRequest) }
                 .subscribe({ addGeofenceResult -> toast("Geofence added, success: " + addGeofenceResult.isSuccess) }) { throwable ->
                     toast("Error adding geofence.")
                     Log.d(TAG, "Error adding geofence.", throwable)

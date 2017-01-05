@@ -14,7 +14,6 @@ import rx.functions.Action1
 import rx.functions.Func1
 import rx.functions.Func2
 import rx.subjects.PublishSubject
-import xyz.fcampbell.rxgms.sample.R
 import xyz.fcampbell.rxgms.RxGms
 import xyz.fcampbell.rxgms.sample.utils.DisplayTextOnViewAction
 import xyz.fcampbell.rxgms.sample.utils.LocationToStringFunc
@@ -30,7 +29,7 @@ class MockLocationsActivity : BaseActivity() {
     private lateinit var mockModeToggleButton: ToggleButton
     private lateinit var setLocationButton: Button
 
-    private lateinit var locationProvider: RxGms
+    private lateinit var rxGms: RxGms
     private lateinit var mockLocationObservable: Observable<Location>
     private lateinit var mockLocationSubscription: Subscription
     private lateinit var updatedLocationSubscription: Subscription
@@ -41,7 +40,7 @@ class MockLocationsActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mocklocations)
 
-        locationProvider = RxGms(this)
+        rxGms = RxGms(this)
         mockLocationSubject = PublishSubject.create<Location>()
 
         mockLocationObservable = mockLocationSubject.asObservable()
@@ -70,9 +69,9 @@ class MockLocationsActivity : BaseActivity() {
         val locationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                 .setInterval(2000)
-        updatedLocationSubscription = locationProvider
-                .getUpdatedLocation(locationRequest)
-                .map(LocationToStringFunc())
+        updatedLocationSubscription = rxGms.locationApi
+                .requestLocationUpdates(locationRequest)
+                .map(LocationToStringFunc)
                 .map(object : Func1<String, String> {
                     internal var count = 0
 
@@ -94,12 +93,12 @@ class MockLocationsActivity : BaseActivity() {
 
     private fun setMockMode(toggle: Boolean) {
         if (toggle) {
-            mockLocationSubscription = Observable.zip(locationProvider.mockLocation(mockLocationObservable),
+            mockLocationSubscription = Observable.zip(rxGms.locationApi.mockLocation(mockLocationObservable),
                     mockLocationObservable, object : Func2<Status, Location, String> {
                 internal var count = 0
 
                 override fun call(result: Status, location: Location): String {
-                    return LocationToStringFunc().call(location) + " " + count++
+                    return LocationToStringFunc.call(location) + " " + count++
                 }
             })
                     .subscribe(DisplayTextOnViewAction(mockLocationView), ErrorHandler())

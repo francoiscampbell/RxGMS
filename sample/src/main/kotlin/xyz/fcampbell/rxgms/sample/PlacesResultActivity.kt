@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.TextView
 import rx.subscriptions.CompositeSubscription
-import xyz.fcampbell.rxgms.sample.R
 import xyz.fcampbell.rxgms.RxGms
 import xyz.fcampbell.rxgms.sample.utils.UnsubscribeIfPresent
 
@@ -42,7 +41,7 @@ class PlacesResultActivity : BaseActivity() {
 
     override fun onLocationPermissionGranted() {
         compositeSubscription = CompositeSubscription()
-        compositeSubscription.add(rxGms.getPlaceById(placeId)
+        compositeSubscription.add(rxGms.placesApi.getPlaceById(placeId ?: "")
                 .subscribe { buffer ->
                     val place = buffer.get(0)
                     if (place != null) {

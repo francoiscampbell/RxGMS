@@ -1,11 +1,12 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 def getGooglePlayServicesApiKey() {
-    if (project.hasProperty('REACTIVE_LOCATION_GMS_API_KEY') 
-        && REACTIVE_LOCATION_GMS_API_KEY != null 
-        && !REACTIVE_LOCATION_GMS_API_KEY.isEmpty()) {
-        return REACTIVE_LOCATION_GMS_API_KEY;
+    if (project.hasProperty('RXGMS_API_KEY')
+            && RXGMS_API_KEY != null
+            && !RXGMS_API_KEY.isEmpty()) {
+        return RXGMS_API_KEY;
     }
     return ""
 }
@@ -30,6 +31,9 @@ android {
     lintOptions {
         abortOnError false
     }
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
 }
 
 dependencies {
@@ -41,5 +45,6 @@ dependencies {
 
     compile project(':library')
     compile "com.google.android.gms:play-services-location:$vGooglePlayServices"
-//    compile "com.google.android.gms:play-services-places:$vGooglePlayServices"
+    compile "com.google.android.gms:play-services-places:$vGooglePlayServices"
+    compile "com.google.android.gms:play-services-drive:$vGooglePlayServices"
 }

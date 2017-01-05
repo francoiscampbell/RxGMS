@@ -4,10 +4,8 @@ import android.location.Location
 
 import rx.functions.Func1
 
-class LocationToStringFunc : Func1<Location, String> {
+object LocationToStringFunc : Func1<Location, String> {
     override fun call(location: Location?): String {
-        if (location != null)
-            return location.latitude.toString() + " " + location.longitude + " (" + location.accuracy + ")"
-        return "no location available"
+        return if (location != null) "${location.latitude}-${location.longitude} (${location.accuracy})" else "no location available"
     }
 }

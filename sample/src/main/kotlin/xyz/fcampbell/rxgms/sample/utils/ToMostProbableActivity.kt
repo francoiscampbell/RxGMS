@@ -5,7 +5,7 @@ import com.google.android.gms.location.DetectedActivity
 
 import rx.functions.Func1
 
-class ToMostProbableActivity : Func1<ActivityRecognitionResult, DetectedActivity> {
+object ToMostProbableActivity : Func1<ActivityRecognitionResult, DetectedActivity> {
     override fun call(activityRecognitionResult: ActivityRecognitionResult): DetectedActivity {
         return activityRecognitionResult.mostProbableActivity
     }

@@ -4,7 +4,7 @@ import com.google.android.gms.location.DetectedActivity
 
 import rx.functions.Func1
 
-class DetectedActivityToString : Func1<DetectedActivity, String> {
+object DetectedActivityToString : Func1<DetectedActivity, String> {
     override fun call(detectedActivity: DetectedActivity): String {
         return getNameFromType(detectedActivity.type) + " with confidence " + detectedActivity.confidence
     }

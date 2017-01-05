@@ -4,7 +4,7 @@ import android.location.Address
 
 import rx.functions.Func1
 
-class AddressToStringFunc : Func1<Address?, String> {
+object AddressToStringFunc : Func1<Address?, String> {
     override fun call(address: Address?): String {
         if (address == null) return ""
 
