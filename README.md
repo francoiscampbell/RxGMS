@@ -31,9 +31,10 @@ All observables are already there. Examples are worth more than 1000 words:
 
 ### Getting last known location
 
-```java
-ReactiveLocationProvider locationProvider = new ReactiveLocationProvider(context);
-locationProvider.getLastKnownLocation()
+```
+RxGms rxGms = new RxGms(context);
+rxGms.getLocationApi()
+    .getLastKnownLocation()
     .subscribe(new Action1<Location>() {
         @Override
         public void call(Location location) {
@@ -47,18 +48,17 @@ absolutely no Google Play Services LocationClient callbacks hell and there is no
 clean-up you have to do.
 
 ### Subscribing for location updates
-
-```java
+```
 LocationRequest request = LocationRequest.create() //standard GMS LocationRequest
                                   .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                                   .setNumUpdates(5)
                                   .setInterval(100);
 
-ReactiveLocationProvider locationProvider = new ReactiveLocationProvider(context);
-Subscription subscription = locationProvider.getUpdatedLocation(request)
+Subscription subscription = rxGms.getLocationApi()
+    .getUpdatedLocation(request)
     .filter(...)    // you can filter location updates
     .map(...)       // you can map location to sth different
-    .flatMap(...)   // or event flat map
+    .flatMap(...)   // or even flat map
     ...             // and do everything else that is provided by RxJava
     .subscribe(new Action1<Location>() {
         @Override
@@ -70,7 +70,7 @@ Subscription subscription = locationProvider.getUpdatedLocation(request)
 
 When you are done (for example in ```onStop()```) remember to unsubscribe.
 
-```java
+```
 subscription.unsubscribe();
 ```
 
@@ -78,13 +78,12 @@ subscription.unsubscribe();
 
 Getting activity recognition is just as simple
 
-```java
-
-ReactiveLocationProvider locationProvider = new ReactiveLocationProvider(context);
-Subscription subscription = locationProvider.getDetectedActivity(0) // detectionIntervalMillis
+```
+rxGms.getActivityRecognitionApi()
+    .getDetectedActivity(0) // detectionIntervalMillis
     .filter(...)    // you can filter location updates
     .map(...)       // you can map location to sth different
-    .flatMap(...)   // or event flat map
+    .flatMap(...)   // or even flat map
     ...             // and do everything else that is provided by RxJava
     .subscribe(new Action1<ActivityRecognitionResult>() {
         @Override
@@ -98,11 +97,9 @@ Subscription subscription = locationProvider.getDetectedActivity(0) // detection
 
 Do you need address for location?
 
-```java
-Observable<List<Address>> reverseGeocodeObservable = locationProvider
-    .getReverseGeocodeObservable(location.getLatitude(), location.getLongitude(), MAX_ADDRESSES);
-
-reverseGeocodeObservable
+```
+rxGms.getLocationApi()
+    .reverseGeocode(location.getLatitude(), location.getLongitude(), MAX_ADDRESSES)
     .subscribeOn(Schedulers.io())               // use I/O thread to query for addresses
     .observeOn(AndroidSchedulers.mainThread())  // return result in main android thread to manipulate UI
     .subscribe(...);
@@ -112,11 +109,9 @@ reverseGeocodeObservable
 
 Do you need address for a text search query?
 
-```java
-Observable<List<Address>> geocodeObservable = locationProvider
-    .getGeocodeObservable(String userQuery, MAX_ADDRESSES);
-
-geocodeObservable
+```
+rxGms.getLocationApi()
+    .geocode(String userQuery, MAX_ADDRESSES)
     .subscribeOn(Schedulers.io())
     .observeOn(AndroidSchedulers.mainThread())
     .subscribe(...);
@@ -156,9 +151,9 @@ from Places API. For usage example see ```PlacesActivity``` sample.
 
 You can fetch current place or place suggestions using:
 
-* ```ReactiveLocationProvider.getCurrentPlace()```
-* ```ReactiveLocationProvider.getPlaceAutocompletePredictions()```
-* ```ReactiveLocationProvider.getPlaceById()```
+* ```rxGms.getPlacesApi().getCurrentPlace()```
+* ```rxGms.getPlacesApi().getPlaceAutocompletePredictions()```
+* ```rxGms.getPlacesApi().getPlaceById()```
 
 For more info see sample project and ```PlacesActivity```.
 
@@ -166,24 +161,24 @@ For more info see sample project and ```PlacesActivity```.
 
 Do you need location with certain accuracy but don't want to wait for it more than 4 sec? No problem.
 
-```java
+```
 LocationRequest req = LocationRequest.create()
                          .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                          .setExpirationDuration(TimeUnit.SECONDS.toMillis(LOCATION_TIMEOUT_IN_SECONDS))
                          .setInterval(LOCATION_UPDATE_INTERVAL);
 
-Observable<Location> goodEnoughQuicklyOrNothingObservable = locationProvider.getUpdatedLocation(req)
-            .filter(new Func1<Location, Boolean>() {
-                @Override
-                public Boolean call(Location location) {
-                    return location.getAccuracy() < SUFFICIENT_ACCURACY;
-                }
-            })
-            .timeout(LOCATION_TIMEOUT_IN_SECONDS, TimeUnit.SECONDS, Observable.just((Location) null), AndroidSchedulers.mainThread())
-            .first()
-            .observeOn(AndroidSchedulers.mainThread());
-
-goodEnoughQuicklyOrNothingObservable.subscribe(...);
+rxGms.getLocationApi()
+    .getUpdatedLocation(req)
+    .filter(new Func1<Location, Boolean>() {
+        @Override
+        public Boolean call(Location location) {
+            return location.getAccuracy() < SUFFICIENT_ACCURACY;
+        }
+    })
+    .timeout(LOCATION_TIMEOUT_IN_SECONDS, TimeUnit.SECONDS, Observable.just((Location) null), AndroidSchedulers.mainThread())
+    .first()
+    .observeOn(AndroidSchedulers.mainThread())
+    .subscribe(...);
 ```
 
 
