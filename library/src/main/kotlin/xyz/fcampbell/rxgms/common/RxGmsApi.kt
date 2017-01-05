@@ -22,7 +22,6 @@ open class RxGmsApi(
             .subscribeOn(Schedulers.io()) //TODO maybe not necessary?
             .toObservable()
             .replay()
-            .publish()
             .autoConnect(1, { subscription ->
                 currentSubscription = subscription
             })

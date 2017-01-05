@@ -1,11 +1,9 @@
 package xyz.fcampbell.rxgms.location
 
 import android.content.Context
-import com.google.android.gms.location.places.AutocompleteFilter
-import com.google.android.gms.location.places.PlaceFilter
-import com.google.android.gms.location.places.PlacePhotoMetadata
-import com.google.android.gms.location.places.Places
+import com.google.android.gms.location.places.*
 import com.google.android.gms.maps.model.LatLngBounds
+import rx.Observable
 import rx.Single
 import xyz.fcampbell.rxgms.common.RxGmsApi
 import xyz.fcampbell.rxgms.location.action.location.*
@@ -25,8 +23,10 @@ class RxPlacesApi internal constructor(
      * *
      * @return observable that emits current places buffer and completes
      */
-    fun getCurrentPlace(placeFilter: PlaceFilter?) = rxApiClient.flatMap {
-        Single.create(GetCurrentPlace(it, placeFilter)).toObservable()
+    fun getCurrentPlace(placeFilter: PlaceFilter?): Observable<PlaceLikelihoodBuffer> {
+        return rxApiClient.flatMap {
+            Single.create(GetCurrentPlace(it, placeFilter)).toObservable()
+        }
     }
 
     /**
@@ -36,8 +36,10 @@ class RxPlacesApi internal constructor(
      * *
      * @return observable that emits places buffer and completes
      */
-    fun getPlaceById(vararg placeIds: String) = rxApiClient.flatMap {
-        Single.create(GetPlaceById(it, *placeIds)).toObservable()
+    fun getPlaceById(vararg placeIds: String): Observable<PlaceBuffer> {
+        return rxApiClient.flatMap {
+            Single.create(GetPlaceById(it, *placeIds)).toObservable()
+        }
     }
 
     /**
@@ -53,8 +55,10 @@ class RxPlacesApi internal constructor(
      * *
      * @return observable with suggestions buffer and completes
      */
-    fun getPlaceAutocompletePredictions(query: String, bounds: LatLngBounds, filter: AutocompleteFilter?) = rxApiClient.flatMap {
-        Single.create(GetAutocompletePredictions(it, query, bounds, filter)).toObservable()
+    fun getPlaceAutocompletePredictions(query: String, bounds: LatLngBounds, filter: AutocompleteFilter?): Observable<AutocompletePredictionBuffer> {
+        return rxApiClient.flatMap {
+            Single.create(GetAutocompletePredictions(it, query, bounds, filter)).toObservable()
+        }
     }
 
     /**
@@ -64,8 +68,10 @@ class RxPlacesApi internal constructor(
      * *
      * @return observable that emits metadata buffer and completes
      */
-    fun getPlacePhotos(placeId: String) = rxApiClient.flatMap {
-        Single.create(GetPlacePhotos(it, placeId)).toObservable()
+    fun getPlacePhotos(placeId: String): Observable<PlacePhotoMetadataResult> {
+        return rxApiClient.flatMap {
+            Single.create(GetPlacePhotos(it, placeId)).toObservable()
+        }
     }
 
     /**
@@ -76,7 +82,9 @@ class RxPlacesApi internal constructor(
      * *
      * @return observable that emits the photo result and completes
      */
-    fun getPlacePhoto(placePhotoMetadata: PlacePhotoMetadata) = rxApiClient.flatMap {
-        Single.create(GetPlacePhoto(it, placePhotoMetadata)).toObservable()
+    fun getPlacePhoto(placePhotoMetadata: PlacePhotoMetadata): Observable<PlacePhotoResult> {
+        return rxApiClient.flatMap {
+            Single.create(GetPlacePhoto(it, placePhotoMetadata)).toObservable()
+        }
     }
 }

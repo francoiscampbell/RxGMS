@@ -5,10 +5,8 @@ import android.content.Context
 import android.location.Address
 import android.location.Location
 import android.support.annotation.RequiresPermission
-import com.google.android.gms.location.GeofencingRequest
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.LocationSettingsRequest
+import com.google.android.gms.common.api.Status
+import com.google.android.gms.location.*
 import com.google.android.gms.maps.model.LatLngBounds
 import rx.AsyncEmitter
 import rx.Observable
@@ -43,7 +41,9 @@ class RxLocationApi internal constructor(
      * @return observable that serves last known location
      */
     @RequiresPermission(anyOf = arrayOf("android.permission.ACCESS_COARSE_LOCATION", "android.permission.ACCESS_FINE_LOCATION"))
-    fun getLastKnownLocation() = rxApiClient.map { LocationServices.FusedLocationApi.getLastLocation(it) }
+    fun getLastKnownLocation(): Observable<Location> {
+        return rxApiClient.map { LocationServices.FusedLocationApi.getLastLocation(it) }
+    }
 
     /**
      * Returns an observable which activates mock location mode when subscribed to, using the
@@ -67,10 +67,12 @@ class RxLocationApi internal constructor(
      * @return observable that emits [com.google.android.gms.common.api.Status]
      */
     @RequiresPermission(allOf = arrayOf("android.permission.ACCESS_COARSE_LOCATION", "android.permission.ACCESS_MOCK_LOCATION"))
-    fun mockLocation(sourceLocationObservable: Observable<Location>) = rxApiClient.flatMap {
-        Observable.fromEmitter(
-                MockLocation(it, sourceLocationObservable),
-                AsyncEmitter.BackpressureMode.LATEST)
+    fun mockLocation(sourceLocationObservable: Observable<Location>): Observable<Status> {
+        return rxApiClient.flatMap {
+            Observable.fromEmitter(
+                    MockLocation(it, sourceLocationObservable),
+                    AsyncEmitter.BackpressureMode.LATEST)
+        }
     }
 
     /**
@@ -89,10 +91,12 @@ class RxLocationApi internal constructor(
      * @return observable that serves infinite stream of location updates
      */
     @RequiresPermission(anyOf = arrayOf("android.permission.ACCESS_COARSE_LOCATION", "android.permission.ACCESS_FINE_LOCATION"))
-    fun requestLocationUpdates(locationRequest: LocationRequest) = rxApiClient.flatMap {
-        Observable.fromEmitter(
-                LocationUpdates(it, locationRequest),
-                AsyncEmitter.BackpressureMode.LATEST)
+    fun requestLocationUpdates(locationRequest: LocationRequest): Observable<Location> {
+        return rxApiClient.flatMap {
+            Observable.fromEmitter(
+                    LocationUpdates(it, locationRequest),
+                    AsyncEmitter.BackpressureMode.LATEST)
+        }
     }
 
     /**
@@ -115,8 +119,10 @@ class RxLocationApi internal constructor(
      * @return observable that adds the request and PendingIntent
      */
     @RequiresPermission(anyOf = arrayOf("android.permission.ACCESS_COARSE_LOCATION", "android.permission.ACCESS_FINE_LOCATION"))
-    fun requestLocationUpdates(locationRequest: LocationRequest, intent: PendingIntent) = rxApiClient.flatMap {
-        Single.create(AddLocationIntentUpdates(it, locationRequest, intent)).toObservable()
+    fun requestLocationUpdates(locationRequest: LocationRequest, intent: PendingIntent): Observable<Status> {
+        return rxApiClient.flatMap {
+            Single.create(AddLocationIntentUpdates(it, locationRequest, intent)).toObservable()
+        }
     }
 
     /**
@@ -129,10 +135,12 @@ class RxLocationApi internal constructor(
      * *
      * @return observable that removes the PendingIntent
      */
-    fun removeLocationUpdates(intent: PendingIntent) = rxApiClient.flatMap {
-        Observable.fromEmitter(
-                RemoveLocationIntentUpdates(it, intent),
-                AsyncEmitter.BackpressureMode.LATEST)
+    fun removeLocationUpdates(intent: PendingIntent): Observable<Status> {
+        return rxApiClient.flatMap {
+            Observable.fromEmitter(
+                    RemoveLocationIntentUpdates(it, intent),
+                    AsyncEmitter.BackpressureMode.LATEST)
+        }
     }
 
     /**
@@ -220,8 +228,10 @@ class RxLocationApi internal constructor(
      * @return observable that adds request
      */
     @RequiresPermission("android.permission.ACCESS_FINE_LOCATION")
-    fun addGeofences(geofenceTransitionPendingIntent: PendingIntent, request: GeofencingRequest) = rxApiClient.flatMap {
-        Single.create(AddGeofence(it, request, geofenceTransitionPendingIntent)).toObservable()
+    fun addGeofences(geofenceTransitionPendingIntent: PendingIntent, request: GeofencingRequest): Observable<Status> {
+        return rxApiClient.flatMap {
+            Single.create(AddGeofence(it, request, geofenceTransitionPendingIntent)).toObservable()
+        }
     }
 
     /**
@@ -240,8 +250,10 @@ class RxLocationApi internal constructor(
      * *
      * @return observable that removed geofences
      */
-    fun removeGeofences(pendingIntent: PendingIntent) = rxApiClient.flatMap {
-        Single.create(RemoveGeofenceByPendingIntent(it, pendingIntent)).toObservable()
+    fun removeGeofences(pendingIntent: PendingIntent): Observable<Status> {
+        return rxApiClient.flatMap {
+            Single.create(RemoveGeofenceByPendingIntent(it, pendingIntent)).toObservable()
+        }
     }
 
     /**
@@ -260,8 +272,10 @@ class RxLocationApi internal constructor(
      * *
      * @return observable that removed geofences
      */
-    fun removeGeofences(requestIds: List<String>) = rxApiClient.flatMap {
-        Single.create(RemoveGeofenceRequestIds(it, requestIds)).toObservable()
+    fun removeGeofences(requestIds: List<String>): Observable<Status> {
+        return rxApiClient.flatMap {
+            Single.create(RemoveGeofenceRequestIds(it, requestIds)).toObservable()
+        }
     }
 
     /**
@@ -273,7 +287,9 @@ class RxLocationApi internal constructor(
      * *
      * @see com.google.android.gms.location.SettingsApi
      */
-    fun checkLocationSettings(locationRequest: LocationSettingsRequest) = rxApiClient.flatMap {
-        Single.create(CheckLocationSettings(it, locationRequest)).toObservable()
+    fun checkLocationSettings(locationRequest: LocationSettingsRequest): Observable<LocationSettingsResult> {
+        return rxApiClient.flatMap {
+            Single.create(CheckLocationSettings(it, locationRequest)).toObservable()
+        }
     }
 }
