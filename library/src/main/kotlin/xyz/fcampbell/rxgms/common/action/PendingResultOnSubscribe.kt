@@ -1,6 +1,7 @@
 package xyz.fcampbell.rxgms.common.action
 
 import com.google.android.gms.common.api.PendingResult
+import com.google.android.gms.common.api.Releasable
 import com.google.android.gms.common.api.Result
 import rx.Single
 import rx.SingleSubscriber
@@ -15,6 +16,7 @@ internal open class PendingResultOnSubscribe<T : Result>(
     override fun call(subscriber: SingleSubscriber<in T>) {
         pendingResult.setResultCallback { result ->
             if (result.status.isSuccess) {
+                handleResourceCleanupIfNecessary(result, subscriber)
                 subscriber.onSuccess(result)
                 complete = true
             } else {
@@ -26,5 +28,11 @@ internal open class PendingResultOnSubscribe<T : Result>(
                 pendingResult.cancel()
             }
         })
+    }
+
+    private fun handleResourceCleanupIfNecessary(result: T, subscriber: SingleSubscriber<in T>) {
+        when (result) {
+            is Releasable -> subscriber.add(Subscriptions.create { result.release() })
+        }
     }
 }
