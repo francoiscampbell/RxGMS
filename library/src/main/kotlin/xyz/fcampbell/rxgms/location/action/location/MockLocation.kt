@@ -42,7 +42,11 @@ internal class MockLocation(
                             observer.onError(StatusException(status))
                         }
                     }
-        }, { throwable -> observer.onError(throwable) }) { observer.onCompleted() }
+        }, { throwable ->
+            observer.onError(throwable)
+        }, {
+            observer.onCompleted()
+        })
     }
 
     override fun onUnsubscribe() {

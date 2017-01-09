@@ -5,8 +5,8 @@ import android.os.Bundle
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.Api
 import com.google.android.gms.common.api.GoogleApiClient
-import rx.Single
-import rx.SingleSubscriber
+import rx.Observable
+import rx.Subscriber
 import rx.subscriptions.Subscriptions
 import xyz.fcampbell.rxgms.common.exception.GoogleApiConnectionException
 import xyz.fcampbell.rxgms.common.exception.GoogleApiConnectionSuspendedException
@@ -15,9 +15,9 @@ import xyz.fcampbell.rxgms.common.exception.GoogleApiConnectionSuspendedExceptio
 internal open class GoogleApiClientOnSubscribe(
         private val context: Context,
         private vararg val services: Api<out Api.ApiOptions.NotRequiredOptions>
-) : Single.OnSubscribe<GoogleApiClient> {
+) : Observable.OnSubscribe<GoogleApiClient> {
 
-    override fun call(subscriber: SingleSubscriber<in GoogleApiClient>) {
+    override fun call(subscriber: Subscriber<in GoogleApiClient>) {
         val apiClient = createApiClient(subscriber)
         try {
             apiClient.connect()
@@ -32,7 +32,7 @@ internal open class GoogleApiClientOnSubscribe(
         })
     }
 
-    private fun createApiClient(subscriber: SingleSubscriber<in GoogleApiClient>): GoogleApiClient {
+    private fun createApiClient(subscriber: Subscriber<in GoogleApiClient>): GoogleApiClient {
         val apiClientConnectionCallbacks = ApiClientConnectionCallbacks(subscriber)
 
         val apiClient = GoogleApiClient.Builder(
@@ -55,7 +55,7 @@ internal open class GoogleApiClientOnSubscribe(
     }
 
     private inner class ApiClientConnectionCallbacks(
-            private val subscriber: SingleSubscriber<in GoogleApiClient>
+            private val subscriber: Subscriber<in GoogleApiClient>
     ) : GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
@@ -63,7 +63,8 @@ internal open class GoogleApiClientOnSubscribe(
 
         override fun onConnected(bundle: Bundle?) {
             try {
-                subscriber.onSuccess(apiClient)
+                subscriber.onNext(apiClient)
+                //don't call onCompleted
             } catch (ex: Throwable) {
                 subscriber.onError(ex)
             }

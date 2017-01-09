@@ -4,64 +4,56 @@ import android.content.Context
 import com.google.android.gms.common.api.Status
 import com.google.android.gms.drive.*
 import com.google.android.gms.drive.query.Query
-import rx.Observable
 import rx.Single
 import xyz.fcampbell.rxgms.common.RxGmsApi
+import xyz.fcampbell.rxgms.common.util.flatMapSingle
+import xyz.fcampbell.rxgms.common.util.mapSingle
 import xyz.fcampbell.rxgms.drive.action.*
 
 /**
  * Created by francois on 2016-12-22.
  */
+@Suppress("unused")
 class RxDriveApi internal constructor(
-        private val context: Context
+        context: Context
 ) : RxGmsApi(context, Drive.API) {
-    fun fetchDriveId(resourceId: String) = rxApiClient.flatMap {
-        Single.create(FetchDriveId(it, resourceId)).toObservable()
+    fun fetchDriveId(resourceId: String): Single<DriveApi.DriveIdResult> {
+        return rxApiClient.flatMapSingle { Single.create(FetchDriveId(it, resourceId)) }
     }
 
-    fun getAppFolder(): Observable<DriveFolder> {
-        return rxApiClient.map { Drive.DriveApi.getAppFolder(it) }
+    fun getAppFolder(): Single<DriveFolder> {
+        return rxApiClient.mapSingle { Drive.DriveApi.getAppFolder(it) }
     }
 
-    fun getRootFolder(): Observable<DriveFolder> {
-        return rxApiClient.map { Drive.DriveApi.getRootFolder(it) }
+    fun getRootFolder(): Single<DriveFolder> {
+        return rxApiClient.mapSingle { Drive.DriveApi.getRootFolder(it) }
     }
 
-    fun newCreateFileActivityBuilder(): Observable<CreateFileActivityBuilder> {
-        return Observable.just(Drive.DriveApi.newCreateFileActivityBuilder())
+    fun newCreateFileActivityBuilder(): Single<CreateFileActivityBuilder> {
+        return Single.just(Drive.DriveApi.newCreateFileActivityBuilder())
     }
 
-    fun newDriveContents(): Observable<DriveApi.DriveContentsResult> {
-        return rxApiClient.flatMap {
-            Single.create(NewDriveContents(it)).toObservable()
-        }
+    fun newDriveContents(): Single<DriveApi.DriveContentsResult> {
+        return rxApiClient.flatMapSingle { Single.create(NewDriveContents(it)) }
     }
 
-    fun newOpenFileActivityBuilder(): Observable<OpenFileActivityBuilder> {
-        return Observable.just(Drive.DriveApi.newOpenFileActivityBuilder())
+    fun newOpenFileActivityBuilder(): Single<OpenFileActivityBuilder> {
+        return Single.just(Drive.DriveApi.newOpenFileActivityBuilder())
     }
 
-    fun query(query: Query): Observable<DriveApi.MetadataBufferResult> {
-        return rxApiClient.flatMap {
-            Single.create(QueryOnSubscribe(it, query)).toObservable()
-        }
+    fun query(query: Query): Single<DriveApi.MetadataBufferResult> {
+        return rxApiClient.flatMapSingle { Single.create(QueryOnSubscribe(it, query)) }
     }
 
-    fun requestSync(): Observable<Status> {
-        return rxApiClient.flatMap {
-            Single.create(RequestSync(it)).toObservable()
-        }
+    fun requestSync(): Single<Status> {
+        return rxApiClient.flatMapSingle { Single.create(RequestSync(it)) }
     }
 
-    fun getFileUploadPreferences(): Observable<DrivePreferencesApi.FileUploadPreferencesResult> {
-        return rxApiClient.flatMap {
-            Single.create(GetFileUploadPreferences(it)).toObservable()
-        }
+    fun getFileUploadPreferences(): Single<DrivePreferencesApi.FileUploadPreferencesResult> {
+        return rxApiClient.flatMapSingle { Single.create(GetFileUploadPreferences(it)) }
     }
 
-    fun setFileUploadPreferences(fileUploadPreferences: FileUploadPreferences): Observable<Status> {
-        return rxApiClient.flatMap {
-            Single.create(SetFileUploadPreferences(it, fileUploadPreferences)).toObservable()
-        }
+    fun setFileUploadPreferences(fileUploadPreferences: FileUploadPreferences): Single<Status> {
+        return rxApiClient.flatMapSingle { Single.create(SetFileUploadPreferences(it, fileUploadPreferences)) }
     }
 }

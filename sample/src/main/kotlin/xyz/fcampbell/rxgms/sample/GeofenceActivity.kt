@@ -42,7 +42,7 @@ class GeofenceActivity : BaseActivity() {
 
     override fun onLocationPermissionGranted() {
         lastKnownLocationSubscription = rxGms.locationApi
-                .getLastKnownLocation()
+                .getLastLocation()
                 .map(LocationToStringFunc)
                 .subscribe(DisplayTextOnViewAction(lastKnownLocationView))
     }

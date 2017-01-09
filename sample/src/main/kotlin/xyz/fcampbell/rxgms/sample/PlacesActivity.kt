@@ -48,22 +48,22 @@ class PlacesActivity : BaseActivity() {
                 .map { charSequence -> charSequence.toString() }
                 .debounce(1, TimeUnit.SECONDS)
                 .filter { s -> !TextUtils.isEmpty(s) }
-        val lastKnownLocationObservable = rxGms.locationApi.getLastKnownLocation()
+        val lastKnownLocationObservable = rxGms.locationApi.getLastLocation().toObservable()
         val suggestionsObservable = Observable
                 .combineLatest(queryObservable, lastKnownLocationObservable) { query, currentLocation ->
                     QueryWithCurrentLocation(query, currentLocation)
                 }
-                .flatMap({ q ->
-                    if (q.location == null) return@flatMap Observable.empty<AutocompletePredictionBuffer>()
+                .flatMap { query ->
+                    if (query.location == null) return@flatMap Observable.empty<AutocompletePredictionBuffer>()
 
-            val latitude = q.location.latitude
-            val longitude = q.location.longitude
-            val bounds = LatLngBounds(
-                    LatLng(latitude - 0.05, longitude - 0.05),
-                    LatLng(latitude + 0.05, longitude + 0.05)
-            )
-                    rxGms.placesApi.getPlaceAutocompletePredictions(q.query, bounds, null)
-        })
+                    val latitude = query.location.latitude
+                    val longitude = query.location.longitude
+                    val bounds = LatLngBounds(
+                            LatLng(latitude - 0.05, longitude - 0.05),
+                            LatLng(latitude + 0.05, longitude + 0.05)
+                    )
+                    return@flatMap rxGms.placesApi.getPlaceAutocompletePredictions(query.query, bounds, null).toObservable()
+                }
 
         compositeSubscription.add(suggestionsObservable.subscribe { buffer ->
             val infos = buffer.mapTo(ArrayList<AutocompleteInfo>()) { AutocompleteInfo(it.getFullText(null).toString(), it.placeId ?: "") }

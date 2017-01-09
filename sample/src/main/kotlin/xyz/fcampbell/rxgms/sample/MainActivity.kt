@@ -34,7 +34,8 @@ class MainActivity : BaseActivity() {
     }
 
     override fun onLocationPermissionGranted() {
-        lastKnownLocationSubscription = rxGms.locationApi.getLastKnownLocation()
+        lastKnownLocationSubscription = rxGms.locationApi
+                .getLastLocation()
                 .map(LocationToStringFunc)
                 .subscribe(DisplayTextOnViewAction(last_known_location_view), ErrorHandler())
 
@@ -47,9 +48,9 @@ class MainActivity : BaseActivity() {
                 .checkLocationSettings(
                         LocationSettingsRequest.Builder()
                                 .addLocationRequest(locationRequest)
-                                .setAlwaysShow(true)  //Refrence: http://stackoverflow.com/questions/29824408/google-play-services-locationservices-api-new-option-never
+                                .setAlwaysShow(true)  //Reference: http://stackoverflow.com/questions/29824408/google-play-services-locationservices-api-new-option-never
                                 .build())
-                .doOnNext { locationSettingsResult ->
+                .doOnSuccess { locationSettingsResult ->
                     val status = locationSettingsResult.status
                     if (status.statusCode == LocationSettingsStatusCodes.RESOLUTION_REQUIRED) {
                         try {
@@ -60,7 +61,7 @@ class MainActivity : BaseActivity() {
 
                     }
                 }
-                .flatMap { rxGms.locationApi.requestLocationUpdates(locationRequest) }
+                .flatMapObservable { rxGms.locationApi.requestLocationUpdates(locationRequest) }
                 .map(LocationToStringFunc)
                 .map(object : Func1<String, String> {
                     private var count = 0
@@ -72,7 +73,8 @@ class MainActivity : BaseActivity() {
                 .subscribe(DisplayTextOnViewAction(updated_location_view), ErrorHandler())
 
 
-        addressSubscription = rxGms.locationApi.requestLocationUpdates(locationRequest)
+        addressSubscription = rxGms.locationApi
+                .requestLocationUpdates(locationRequest)
                 .flatMap { location -> rxGms.locationApi.reverseGeocode(location.latitude, location.longitude, 1) }
                 .map { addresses -> if (addresses != null && !addresses.isEmpty()) addresses[0] else null }
                 .map(AddressToStringFunc)

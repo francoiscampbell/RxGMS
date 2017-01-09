@@ -11,6 +11,7 @@ import xyz.fcampbell.rxgms.common.RxGmsApi
 /**
  * Reactive way to access Google Play Location APIs
  */
+@Suppress("unused")
 class RxActivityRecognitionApi internal constructor(
         context: Context
 ) : RxGmsApi(context, ActivityRecognition.API) {
