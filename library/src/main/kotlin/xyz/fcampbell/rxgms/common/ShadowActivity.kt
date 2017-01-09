@@ -31,9 +31,11 @@ class ShadowActivity() : Activity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode != REQUEST_CODE_RESOLUTION) return
-
-        LocalBroadcastManager.getInstance(this).sendBroadcast(Intent(ACTION_TRY_RECONNECT))
-        finish()
+        if (requestCode == REQUEST_CODE_RESOLUTION) {
+            if (resultCode == RESULT_OK) {
+                LocalBroadcastManager.getInstance(this).sendBroadcast(Intent(ACTION_TRY_RECONNECT))
+            }
+            finish()
+        }
     }
 }
