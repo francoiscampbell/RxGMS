@@ -1,10 +1,13 @@
 package xyz.fcampbell.rxgms.drive
 
 import android.content.Context
+import com.google.android.gms.common.api.Api
+import com.google.android.gms.common.api.Scope
 import com.google.android.gms.common.api.Status
 import com.google.android.gms.drive.*
 import com.google.android.gms.drive.query.Query
 import rx.Single
+import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.RxGmsApi
 import xyz.fcampbell.rxgms.common.util.flatMapSingle
 import xyz.fcampbell.rxgms.common.util.mapSingle
@@ -15,8 +18,13 @@ import xyz.fcampbell.rxgms.drive.action.*
  */
 @Suppress("unused")
 class RxDriveApi internal constructor(
-        context: Context
-) : RxGmsApi(context, Drive.API) {
+        context: Context,
+        accountName: String = "",
+        vararg scopes: Scope
+) : RxGmsApi<Api.ApiOptions.NoOptions>(
+        context,
+        ApiDescriptor(arrayOf(ApiDescriptor.OptionsHolder(Drive.API)), accountName, *scopes)
+) {
     fun fetchDriveId(resourceId: String): Single<DriveApi.DriveIdResult> {
         return rxApiClient.flatMapSingle { Single.create(FetchDriveId(it, resourceId)) }
     }

@@ -10,11 +10,11 @@ import xyz.fcampbell.rxgms.common.action.GoogleApiClientOnSubscribe
 /**
  * Created by francois on 2016-12-29.
  */
-open class RxGmsApi(
+open class RxGmsApi<O : Api.ApiOptions>(
         context: Context,
-        vararg services: Api<out Api.ApiOptions.NotRequiredOptions>
+        api: ApiDescriptor<O>
 ) {
-    val rxApiClient: Observable<GoogleApiClient> = Observable.create(GoogleApiClientOnSubscribe(context, *services))
+    val rxApiClient: Observable<GoogleApiClient> = Observable.create(GoogleApiClientOnSubscribe(context, api))
             .subscribeOn(Schedulers.io())
             .replay(1)
             .refCount()

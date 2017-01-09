@@ -26,7 +26,7 @@ internal class ReverseGeocode(
             emitter.onNext(geocoder.getFromLocation(latitude, longitude, maxResults))
             emitter.onCompleted()
         } catch (e: IOException) {
-            // If it's a service not available error try a different approach using google web api
+            // If it's a service not available error try a different approach using google web service
             if (e.message.equals("Service not Available", ignoreCase = true)) {
                 Observable
                         .fromEmitter(

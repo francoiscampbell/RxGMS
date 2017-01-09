@@ -2,23 +2,15 @@ package xyz.fcampbell.rxgms.sample
 
 import android.app.Activity
 import android.content.Intent
-import android.content.IntentSender
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
 import android.view.Menu
 import android.widget.Toast
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationSettingsRequest
-import com.google.android.gms.location.LocationSettingsStatusCodes
-import kotlinx.android.synthetic.main.activity_main.*
+import com.google.android.gms.drive.Drive
 import rx.Subscription
-import rx.android.schedulers.AndroidSchedulers
 import rx.functions.Action1
-import rx.functions.Func1
-import rx.schedulers.Schedulers
 import xyz.fcampbell.rxgms.RxGms
-import xyz.fcampbell.rxgms.sample.utils.*
 
 class MainActivity : BaseActivity() {
     private val rxGms = RxGms(this)
@@ -34,59 +26,72 @@ class MainActivity : BaseActivity() {
     }
 
     override fun onLocationPermissionGranted() {
-        lastKnownLocationSubscription = rxGms.locationApi
-                .getLastLocation()
-                .map(LocationToStringFunc)
-                .subscribe(DisplayTextOnViewAction(last_known_location_view), ErrorHandler())
+        getDriveFolder()
 
-        val locationRequest = LocationRequest.create()
-                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                .setNumUpdates(5)
-                .setInterval(100)
+//        lastKnownLocationSubscription = rxGms.locationApi
+//                .getLastLocation()
+//                .map(LocationToStringFunc)
+//                .subscribe(DisplayTextOnViewAction(last_known_location_view), ErrorHandler())
+//
+//        val locationRequest = LocationRequest.create()
+//                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+//                .setNumUpdates(5)
+//                .setInterval(100)
+//
+//        updatableLocationSubscription = rxGms.locationApi
+//                .checkLocationSettings(
+//                        LocationSettingsRequest.Builder()
+//                                .addLocationRequest(locationRequest)
+//                                .setAlwaysShow(true)  //Reference: http://stackoverflow.com/questions/29824408/google-play-services-locationservices-api-new-option-never
+//                                .build())
+//                .doOnSuccess { locationSettingsResult ->
+//                    val status = locationSettingsResult.status
+//                    if (status.statusCode == LocationSettingsStatusCodes.RESOLUTION_REQUIRED) {
+//                        try {
+//                            status.startResolutionForResult(this@MainActivity, REQUEST_CHECK_SETTINGS)
+//                        } catch (th: IntentSender.SendIntentException) {
+//                            Log.e("MainActivity", "Error opening settings activity.", th)
+//                        }
+//
+//                    }
+//                }
+//                .flatMapObservable { rxGms.locationApi.requestLocationUpdates(locationRequest) }
+//                .map(LocationToStringFunc)
+//                .map(object : Func1<String, String> {
+//                    private var count = 0
+//
+//                    override fun call(s: String): String {
+//                        return s + " " + count++
+//                    }
+//                })
+//                .subscribe(DisplayTextOnViewAction(updated_location_view), ErrorHandler())
+//
+//
+//        addressSubscription = rxGms.locationApi
+//                .requestLocationUpdates(locationRequest)
+//                .flatMap { location -> rxGms.locationApi.reverseGeocode(location.latitude, location.longitude, 1) }
+//                .map { addresses -> if (addresses != null && !addresses.isEmpty()) addresses[0] else null }
+//                .map(AddressToStringFunc)
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(DisplayTextOnViewAction(address_for_location_view), ErrorHandler())
+//
+//        activitySubscription = rxGms.activityRecognitionApi
+//                .requestActivityUpdates(50)
+//                .map(ToMostProbableActivity)
+//                .map(DetectedActivityToString)
+//                .subscribe(DisplayTextOnViewAction(activity_recent_view), ErrorHandler())
+    }
 
-        updatableLocationSubscription = rxGms.locationApi
-                .checkLocationSettings(
-                        LocationSettingsRequest.Builder()
-                                .addLocationRequest(locationRequest)
-                                .setAlwaysShow(true)  //Reference: http://stackoverflow.com/questions/29824408/google-play-services-locationservices-api-new-option-never
-                                .build())
-                .doOnSuccess { locationSettingsResult ->
-                    val status = locationSettingsResult.status
-                    if (status.statusCode == LocationSettingsStatusCodes.RESOLUTION_REQUIRED) {
-                        try {
-                            status.startResolutionForResult(this@MainActivity, REQUEST_CHECK_SETTINGS)
-                        } catch (th: IntentSender.SendIntentException) {
-                            Log.e("MainActivity", "Error opening settings activity.", th)
-                        }
-
-                    }
-                }
-                .flatMapObservable { rxGms.locationApi.requestLocationUpdates(locationRequest) }
-                .map(LocationToStringFunc)
-                .map(object : Func1<String, String> {
-                    private var count = 0
-
-                    override fun call(s: String): String {
-                        return s + " " + count++
-                    }
+    //TODO move to new activity
+    private fun getDriveFolder() {
+        rxGms.getDriveApi("", Drive.SCOPE_APPFOLDER)
+                .getAppFolder()
+                .subscribe({
+                    Log.d(TAG, "Got appfolder: $it")
+                }, { throwable ->
+                    Log.d(TAG, "Error", throwable)
                 })
-                .subscribe(DisplayTextOnViewAction(updated_location_view), ErrorHandler())
-
-
-        addressSubscription = rxGms.locationApi
-                .requestLocationUpdates(locationRequest)
-                .flatMap { location -> rxGms.locationApi.reverseGeocode(location.latitude, location.longitude, 1) }
-                .map { addresses -> if (addresses != null && !addresses.isEmpty()) addresses[0] else null }
-                .map(AddressToStringFunc)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(DisplayTextOnViewAction(address_for_location_view), ErrorHandler())
-
-        activitySubscription = rxGms.activityRecognitionApi
-                .requestActivityUpdates(50)
-                .map(ToMostProbableActivity)
-                .map(DetectedActivityToString)
-                .subscribe(DisplayTextOnViewAction(activity_recent_view), ErrorHandler())
     }
 
     override fun onStop() {
@@ -125,7 +130,7 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             REQUEST_CHECK_SETTINGS ->
                 //Reference: https://developers.google.com/android/reference/com/google/android/gms/location/SettingsApi

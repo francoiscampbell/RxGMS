@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="xyz.fcampbell.android.rxgms">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="xyz.fcampbell.rxgms">
 
-    <application></application>
+    <application>
+        <activity
+            android:name=".common.ShadowActivity"
+            android:launchMode="singleTask"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+    </application>
 </manifest>

@@ -9,7 +9,7 @@ import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.ActivityRecognition
 import com.google.android.gms.location.ActivityRecognitionResult
 import rx.AsyncEmitter
-import xyz.fcampbell.android.rxgms.BuildConfig
+import xyz.fcampbell.rxgms.BuildConfig
 import xyz.fcampbell.rxgms.common.action.FromEmitter
 
 internal class ActivityUpdates(

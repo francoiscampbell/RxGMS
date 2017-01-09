@@ -4,6 +4,7 @@ import android.content.Context
 import com.google.android.gms.location.places.*
 import com.google.android.gms.maps.model.LatLngBounds
 import rx.Single
+import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.RxGmsApi
 import xyz.fcampbell.rxgms.common.util.flatMapSingle
 import xyz.fcampbell.rxgms.location.action.location.*
@@ -14,7 +15,10 @@ import xyz.fcampbell.rxgms.location.action.location.*
 @Suppress("unused")
 class RxPlacesApi internal constructor(
         context: Context
-) : RxGmsApi(context, Places.GEO_DATA_API, Places.PLACE_DETECTION_API) {
+) : RxGmsApi<PlacesOptions>(
+        context,
+        ApiDescriptor(arrayOf(ApiDescriptor.OptionsHolder(Places.GEO_DATA_API), ApiDescriptor.OptionsHolder(Places.PLACE_DETECTION_API)))
+) {
     /**
      * Returns observable that fetches current place from Places API. To flatmap and auto release
      * buffer to [com.google.android.gms.location.places.PlaceLikelihood] observable use

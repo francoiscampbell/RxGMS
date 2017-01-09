@@ -1,22 +1,28 @@
 package xyz.fcampbell.rxgms.common.action
 
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
+import android.support.v4.content.LocalBroadcastManager
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.Api
 import com.google.android.gms.common.api.GoogleApiClient
+import com.google.android.gms.common.api.Scope
 import rx.Observable
 import rx.Subscriber
 import rx.subscriptions.Subscriptions
+import xyz.fcampbell.rxgms.common.ApiDescriptor
+import xyz.fcampbell.rxgms.common.ShadowActivity
 import xyz.fcampbell.rxgms.common.exception.GoogleApiConnectionException
 import xyz.fcampbell.rxgms.common.exception.GoogleApiConnectionSuspendedException
 
 
-internal open class GoogleApiClientOnSubscribe(
+internal open class GoogleApiClientOnSubscribe<O : Api.ApiOptions>(
         private val context: Context,
-        private vararg val services: Api<out Api.ApiOptions.NotRequiredOptions>
+        private val apiDescriptor: ApiDescriptor<O>
 ) : Observable.OnSubscribe<GoogleApiClient> {
-
     override fun call(subscriber: Subscriber<in GoogleApiClient>) {
         val apiClient = createApiClient(subscriber)
         try {
@@ -39,7 +45,9 @@ internal open class GoogleApiClientOnSubscribe(
                 context,
                 apiClientConnectionCallbacks,
                 apiClientConnectionCallbacks)
-                .addApis(*services)
+                .addApis(apiDescriptor.apis)
+                .addScopes(apiDescriptor.scopes)
+                .setAccountNameIfSpecified(apiDescriptor.accountName)
                 .build()
 
         apiClientConnectionCallbacks.apiClient = apiClient
@@ -47,9 +55,28 @@ internal open class GoogleApiClientOnSubscribe(
         return apiClient
     }
 
-    private fun GoogleApiClient.Builder.addApis(vararg apis: Api<out Api.ApiOptions.NotRequiredOptions>): GoogleApiClient.Builder {
+    @Suppress("UNCHECKED_CAST")
+    private fun GoogleApiClient.Builder.addApis(apis: Array<ApiDescriptor.OptionsHolder<O>>): GoogleApiClient.Builder {
         for (api in apis) {
-            addApi(api)
+            if (api.options == null) {
+                addApi(api.service as Api<Api.ApiOptions.NotRequiredOptions>)
+            } else {
+                addApi(api.service as Api<Api.ApiOptions.HasOptions>, api.options as Api.ApiOptions.HasOptions)
+            }
+        }
+        return this
+    }
+
+    private fun GoogleApiClient.Builder.addScopes(scopes: Array<out Scope>): GoogleApiClient.Builder {
+        for (scope in scopes) {
+            addScope(scope)
+        }
+        return this
+    }
+
+    private fun GoogleApiClient.Builder.setAccountNameIfSpecified(accountName: String): GoogleApiClient.Builder {
+        if (!accountName.isNullOrEmpty()) {
+            setAccountName(accountName)
         }
         return this
     }
@@ -61,6 +88,17 @@ internal open class GoogleApiClientOnSubscribe(
 
         lateinit var apiClient: GoogleApiClient
 
+        private val reconnectReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                apiClient.connect()
+            }
+        }
+
+        init {
+            LocalBroadcastManager.getInstance(context)
+                    .registerReceiver(reconnectReceiver, IntentFilter(ShadowActivity.ACTION_TRY_RECONNECT))
+        }
+
         override fun onConnected(bundle: Bundle?) {
             try {
                 subscriber.onNext(apiClient)
@@ -68,7 +106,6 @@ internal open class GoogleApiClientOnSubscribe(
             } catch (ex: Throwable) {
                 subscriber.onError(ex)
             }
-
         }
 
         override fun onConnectionSuspended(cause: Int) {
@@ -76,7 +113,14 @@ internal open class GoogleApiClientOnSubscribe(
         }
 
         override fun onConnectionFailed(connectionResult: ConnectionResult) {
-            subscriber.onError(GoogleApiConnectionException(connectionResult, "Error connecting to GoogleApiClient."))
+            if (connectionResult.hasResolution()) {
+                context.startActivity(
+                        Intent(context, ShadowActivity::class.java)
+                                .putExtra(ShadowActivity.KEY_CONNECTION_RESULT, connectionResult)
+                                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+            } else {
+                subscriber.onError(GoogleApiConnectionException(connectionResult, "Error connecting to GoogleApiClient."))
+            }
         }
     }
 }

@@ -5,6 +5,7 @@ import android.content.Context
 import android.location.Address
 import android.location.Location
 import android.support.annotation.RequiresPermission
+import com.google.android.gms.common.api.Api
 import com.google.android.gms.common.api.Status
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.model.LatLngBounds
@@ -12,6 +13,7 @@ import rx.AsyncEmitter
 import rx.Observable
 import rx.Single
 import rx.schedulers.Schedulers
+import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.RxGmsApi
 import xyz.fcampbell.rxgms.common.util.flatMapSingle
 import xyz.fcampbell.rxgms.common.util.mapSingle
@@ -29,7 +31,10 @@ import java.util.*
 @Suppress("unused")
 class RxLocationApi internal constructor(
         private val context: Context
-) : RxGmsApi(context, LocationServices.API) {
+) : RxGmsApi<Api.ApiOptions.NoOptions>(
+        context,
+        ApiDescriptor(arrayOf(ApiDescriptor.OptionsHolder(LocationServices.API)))
+) {
     /**
      * Creates observable that obtains last known location and than completes.
      * Delivered location is never null - when it is unavailable Observable completes without emitting
@@ -151,7 +156,7 @@ class RxLocationApi internal constructor(
     /**
      * Creates observable that translates latitude and longitude to list of possible addresses using
      * included Geocoder class. In case geocoder fails with IOException("Service not Available") fallback
-     * decoder is used using google web api. You should subscribe for this observable on I/O thread.
+     * decoder is used using google web service. You should subscribe for this observable on I/O thread.
      * The stream finishes after address list is available.
 
      * @param lat        latitude
@@ -169,7 +174,7 @@ class RxLocationApi internal constructor(
     /**
      * Creates observable that translates latitude and longitude to list of possible addresses using
      * included Geocoder class. In case geocoder fails with IOException("Service not Available") fallback
-     * decoder is used using google web api. You should subscribe for this observable on I/O thread.
+     * decoder is used using google web service. You should subscribe for this observable on I/O thread.
      * The stream finishes after address list is available.
 
      * @param locale     locale for address language
