@@ -8,7 +8,6 @@ import android.text.TextUtils
 import android.util.Log
 import android.view.Menu
 import android.widget.Toast
-import com.google.android.gms.drive.Drive
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsStatusCodes
@@ -20,6 +19,7 @@ import rx.functions.Func1
 import rx.schedulers.Schedulers
 import xyz.fcampbell.rxgms.RxGms
 import xyz.fcampbell.rxgms.common.exception.StatusException
+import xyz.fcampbell.rxgms.sample.drive.DriveActivity
 import xyz.fcampbell.rxgms.sample.utils.*
 
 class MainActivity : BaseActivity() {
@@ -37,7 +37,6 @@ class MainActivity : BaseActivity() {
 
     override fun onLocationPermissionGranted() {
         getLocation()
-        getDriveFolder()
     }
 
     private fun getLocation() {
@@ -96,17 +95,6 @@ class MainActivity : BaseActivity() {
                 .subscribe(DisplayTextOnViewAction(activity_recent_view), ErrorHandler())
     }
 
-    //TODO move to new activity
-    private fun getDriveFolder() {
-        rxGms.getDriveApi("", Drive.SCOPE_APPFOLDER)
-                .getAppFolder()
-                .subscribe({
-                    Log.d(TAG, "Got appfolder: $it")
-                }, { throwable ->
-                    Log.d(TAG, "Error", throwable)
-                })
-    }
-
     override fun onStop() {
         super.onStop()
 
@@ -119,7 +107,7 @@ class MainActivity : BaseActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menu.add("Geofencing").setOnMenuItemClickListener {
             startActivity(Intent(this@MainActivity, GeofenceActivity::class.java))
-            true
+            return@setOnMenuItemClickListener true
         }
         menu.add("Places").setOnMenuItemClickListener {
             if (TextUtils.isEmpty(getString(R.string.API_KEY))) {
@@ -127,11 +115,15 @@ class MainActivity : BaseActivity() {
             } else {
                 startActivity(Intent(this@MainActivity, PlacesActivity::class.java))
             }
-            true
+            return@setOnMenuItemClickListener true
         }
         menu.add("Mock Locations").setOnMenuItemClickListener {
             startActivity(Intent(this@MainActivity, MockLocationsActivity::class.java))
-            true
+            return@setOnMenuItemClickListener true
+        }
+        menu.add("Drive").setOnMenuItemClickListener {
+            startActivity(Intent(this@MainActivity, DriveActivity::class.java))
+            return@setOnMenuItemClickListener true
         }
         return true
     }
