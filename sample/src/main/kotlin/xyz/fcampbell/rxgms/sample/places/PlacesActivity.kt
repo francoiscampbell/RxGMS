@@ -1,5 +1,6 @@
-package xyz.fcampbell.rxgms.sample
+package xyz.fcampbell.rxgms.sample.places
 
+import android.R
 import android.location.Location
 import android.os.Bundle
 import android.text.TextUtils
@@ -13,24 +14,25 @@ import kotlinx.android.synthetic.main.activity_places.*
 import rx.Observable
 import rx.subscriptions.CompositeSubscription
 import xyz.fcampbell.rxgms.RxGms
+import xyz.fcampbell.rxgms.sample.PermittedActivity
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-class PlacesActivity : BaseActivity() {
+class PlacesActivity : PermittedActivity() {
     private val rxGms = RxGms(this)
 
     private val compositeSubscription = CompositeSubscription()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_places)
+        setContentView(xyz.fcampbell.rxgms.sample.R.layout.activity_places)
         place_suggestions_list.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
             val info = parent.adapter.getItem(position) as AutocompleteInfo
             startActivity(PlacesResultActivity.getStartIntent(this@PlacesActivity, info.id))
         }
     }
 
-    override fun onLocationPermissionGranted() {
+    override fun onPermissionsGranted() {
         compositeSubscription.add(
                 rxGms.placesApi.
                         getCurrentPlace(null)
@@ -68,7 +70,7 @@ class PlacesActivity : BaseActivity() {
         compositeSubscription.add(suggestionsObservable.subscribe { buffer ->
             val infos = buffer.mapTo(ArrayList<AutocompleteInfo>()) { AutocompleteInfo(it.getFullText(null).toString(), it.placeId ?: "") }
             buffer.release()
-            place_suggestions_list.adapter = ArrayAdapter(this@PlacesActivity, android.R.layout.simple_list_item_1, infos)
+            place_suggestions_list.adapter = ArrayAdapter(this@PlacesActivity, R.layout.simple_list_item_1, infos)
         })
     }
 

@@ -1,4 +1,4 @@
-package xyz.fcampbell.rxgms.sample
+package xyz.fcampbell.rxgms.sample.location
 
 import android.app.PendingIntent
 import android.content.Intent
@@ -7,15 +7,18 @@ import android.util.Log
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
-import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofencingRequest
 import rx.Subscription
 import xyz.fcampbell.rxgms.RxGms
+import xyz.fcampbell.rxgms.sample.PermittedActivity
+import xyz.fcampbell.rxgms.sample.R
 import xyz.fcampbell.rxgms.sample.utils.DisplayTextOnViewAction
 import xyz.fcampbell.rxgms.sample.utils.LocationToStringFunc
 import xyz.fcampbell.rxgms.sample.utils.UnsubscribeIfPresent
+import java.lang.Double
+import java.lang.Float
 
-class GeofenceActivity : BaseActivity() {
+class GeofenceActivity : PermittedActivity() {
 
     private lateinit var rxGms: RxGms
     private lateinit var latitudeInput: EditText
@@ -40,7 +43,7 @@ class GeofenceActivity : BaseActivity() {
         findViewById(R.id.clear_button).setOnClickListener { clearGeofence() }
     }
 
-    override fun onLocationPermissionGranted() {
+    override fun onPermissionsGranted() {
         lastKnownLocationSubscription = rxGms.locationApi
                 .getLastLocation()
                 .map(LocationToStringFunc)
@@ -85,11 +88,11 @@ class GeofenceActivity : BaseActivity() {
             val longitude = java.lang.Double.parseDouble(longitudeInput.text.toString())
             val latitude = java.lang.Double.parseDouble(latitudeInput.text.toString())
             val radius = java.lang.Float.parseFloat(radiusInput.text.toString())
-            val geofence = Geofence.Builder()
+            val geofence = com.google.android.gms.location.Geofence.Builder()
                     .setRequestId("GEOFENCE")
                     .setCircularRegion(latitude, longitude, radius)
-                    .setExpirationDuration(Geofence.NEVER_EXPIRE)
-                    .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER or Geofence.GEOFENCE_TRANSITION_EXIT)
+                    .setExpirationDuration(com.google.android.gms.location.Geofence.NEVER_EXPIRE)
+                    .setTransitionTypes(com.google.android.gms.location.Geofence.GEOFENCE_TRANSITION_ENTER or com.google.android.gms.location.Geofence.GEOFENCE_TRANSITION_EXIT)
                     .build()
             return GeofencingRequest.Builder().addGeofence(geofence).build()
         } catch (ex: NumberFormatException) {

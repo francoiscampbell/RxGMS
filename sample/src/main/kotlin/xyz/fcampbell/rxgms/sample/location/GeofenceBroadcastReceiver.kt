@@ -1,11 +1,10 @@
-package xyz.fcampbell.rxgms.sample
+package xyz.fcampbell.rxgms.sample.location
 
 import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.support.v4.app.NotificationCompat
-import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofencingEvent
 import xyz.fcampbell.rxgms.sample.R
 
@@ -26,8 +25,8 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
 
     private fun mapTransition(event: Int): String {
         when (event) {
-            Geofence.GEOFENCE_TRANSITION_ENTER -> return "ENTER"
-            Geofence.GEOFENCE_TRANSITION_EXIT -> return "EXIT"
+            com.google.android.gms.location.Geofence.GEOFENCE_TRANSITION_ENTER -> return "ENTER"
+            com.google.android.gms.location.Geofence.GEOFENCE_TRANSITION_EXIT -> return "EXIT"
             else -> return "UNKNOWN"
         }
     }

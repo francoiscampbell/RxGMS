@@ -1,4 +1,4 @@
-package xyz.fcampbell.rxgms.sample
+package xyz.fcampbell.rxgms.sample.places
 
 import android.content.Context
 import android.content.Intent
@@ -6,9 +6,11 @@ import android.os.Bundle
 import android.widget.TextView
 import rx.subscriptions.CompositeSubscription
 import xyz.fcampbell.rxgms.RxGms
+import xyz.fcampbell.rxgms.sample.PermittedActivity
+import xyz.fcampbell.rxgms.sample.R
 import xyz.fcampbell.rxgms.sample.utils.UnsubscribeIfPresent
 
-class PlacesResultActivity : BaseActivity() {
+class PlacesResultActivity : PermittedActivity() {
 
     private lateinit var rxGms: RxGms
     private lateinit var compositeSubscription: CompositeSubscription
@@ -39,7 +41,7 @@ class PlacesResultActivity : BaseActivity() {
         }
     }
 
-    override fun onLocationPermissionGranted() {
+    override fun onPermissionsGranted() {
         compositeSubscription = CompositeSubscription()
         compositeSubscription.add(rxGms.placesApi.getPlaceById(placeId ?: "")
                 .subscribe { buffer ->

@@ -33,8 +33,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="xyz.fcampbell.rxgms.sample.GeofenceActivity"/>
-        <activity android:name="xyz.fcampbell.rxgms.sample.PlacesActivity"/>
+        <activity android:name="xyz.fcampbell.rxgms.sample.location.GeofenceActivity"/>
+        <activity android:name="xyz.fcampbell.rxgms.sample.places.PlacesActivity"/>
         <activity android:name="xyz.fcampbell.rxgms.sample.PlacesResultActivity"/>
         <activity android:name="xyz.fcampbell.rxgms.sample.MockLocationsActivity"/>
         <activity android:name="xyz.fcampbell.rxgms.sample.drive.DriveActivity"/>

@@ -1,4 +1,4 @@
-package xyz.fcampbell.rxgms.sample
+package xyz.fcampbell.rxgms.sample.location
 
 import android.location.Location
 import android.os.Build
@@ -15,12 +15,14 @@ import rx.functions.Func1
 import rx.functions.Func2
 import rx.subjects.PublishSubject
 import xyz.fcampbell.rxgms.RxGms
+import xyz.fcampbell.rxgms.sample.PermittedActivity
+import xyz.fcampbell.rxgms.sample.R
 import xyz.fcampbell.rxgms.sample.utils.DisplayTextOnViewAction
 import xyz.fcampbell.rxgms.sample.utils.LocationToStringFunc
 import xyz.fcampbell.rxgms.sample.utils.UnsubscribeIfPresent.unsubscribe
 import java.util.*
 
-class MockLocationsActivity : BaseActivity() {
+class MockLocationsActivity : PermittedActivity() {
 
     private lateinit var latitudeInput: EditText
     private lateinit var longitudeInput: EditText
@@ -63,7 +65,7 @@ class MockLocationsActivity : BaseActivity() {
         setLocationButton.setOnClickListener { addMockLocation() }
     }
 
-    override fun onLocationPermissionGranted() {
+    override fun onPermissionsGranted() {
         mockModeToggleButton.isChecked = true
 
         val locationRequest = LocationRequest.create()

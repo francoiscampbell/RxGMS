@@ -1,5 +1,6 @@
 package xyz.fcampbell.rxgms.sample
 
+import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.content.IntentSender
@@ -20,9 +21,14 @@ import rx.schedulers.Schedulers
 import xyz.fcampbell.rxgms.RxGms
 import xyz.fcampbell.rxgms.common.exception.StatusException
 import xyz.fcampbell.rxgms.sample.drive.DriveActivity
+import xyz.fcampbell.rxgms.sample.location.GeofenceActivity
+import xyz.fcampbell.rxgms.sample.location.MockLocationsActivity
+import xyz.fcampbell.rxgms.sample.places.PlacesActivity
 import xyz.fcampbell.rxgms.sample.utils.*
 
-class MainActivity : BaseActivity() {
+class MainActivity : PermittedActivity() {
+    override val permissionsToRequest = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
+
     private val rxGms = RxGms(this)
 
     private var lastKnownLocationSubscription: Subscription? = null
@@ -35,8 +41,10 @@ class MainActivity : BaseActivity() {
         setContentView(R.layout.activity_main)
     }
 
-    override fun onLocationPermissionGranted() {
-        getLocation()
+    override fun onPermissionsGranted(vararg permissions: String) {
+        if (permissions.contains(Manifest.permission.ACCESS_FINE_LOCATION)) {
+            getLocation()
+        }
     }
 
     private fun getLocation() {
