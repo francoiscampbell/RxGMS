@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v4.content.LocalBroadcastManager
 import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.GoogleApiAvailability
 
 /**
  * Created by francois on 2017-01-09.
@@ -27,7 +28,13 @@ class ShadowActivity() : Activity() {
 
     private fun handleIntent(intent: Intent) {
         val connectionResult = intent.getParcelableExtra<ConnectionResult>(KEY_CONNECTION_RESULT)
-        connectionResult.startResolutionForResult(this, REQUEST_CODE_RESOLUTION)
+        if (connectionResult.hasResolution()) {
+            connectionResult.startResolutionForResult(this, REQUEST_CODE_RESOLUTION)
+        } else {
+            GoogleApiAvailability.getInstance()
+                    .getErrorDialog(this, connectionResult.errorCode, REQUEST_CODE_RESOLUTION)
+                    ?.show()
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

@@ -113,12 +113,11 @@ internal open class GoogleApiClientOnSubscribe<O : Api.ApiOptions>(
         }
 
         override fun onConnectionFailed(connectionResult: ConnectionResult) {
-            if (connectionResult.hasResolution()) {
-                context.startActivity(
-                        Intent(context, ShadowActivity::class.java)
-                                .putExtra(ShadowActivity.KEY_CONNECTION_RESULT, connectionResult)
-                                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
-            } else {
+            context.startActivity(
+                    Intent(context, ShadowActivity::class.java)
+                            .putExtra(ShadowActivity.KEY_CONNECTION_RESULT, connectionResult)
+                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+            if (!connectionResult.hasResolution()) {
                 subscriber.onError(GoogleApiConnectionException(connectionResult, "Error connecting to GoogleApiClient."))
             }
         }
