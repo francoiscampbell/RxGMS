@@ -1,5 +1,6 @@
 package xyz.fcampbell.rxgms.sample.places
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -11,6 +12,7 @@ import xyz.fcampbell.rxgms.sample.R
 import xyz.fcampbell.rxgms.sample.utils.UnsubscribeIfPresent
 
 class PlacesResultActivity : PermittedActivity() {
+    override val permissionsToRequest = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
 
     private lateinit var rxGms: RxGms
     private lateinit var compositeSubscription: CompositeSubscription
@@ -41,7 +43,9 @@ class PlacesResultActivity : PermittedActivity() {
         }
     }
 
-    override fun onPermissionsGranted() {
+    override fun onPermissionsGranted(vararg permissions: String) {
+        if (!permissions.contains(Manifest.permission.ACCESS_FINE_LOCATION)) return
+
         compositeSubscription = CompositeSubscription()
         compositeSubscription.add(rxGms.placesApi.getPlaceById(placeId ?: "")
                 .subscribe { buffer ->

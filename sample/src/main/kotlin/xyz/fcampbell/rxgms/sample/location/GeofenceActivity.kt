@@ -1,5 +1,6 @@
 package xyz.fcampbell.rxgms.sample.location
 
+import android.Manifest
 import android.app.PendingIntent
 import android.content.Intent
 import android.os.Bundle
@@ -19,6 +20,7 @@ import java.lang.Double
 import java.lang.Float
 
 class GeofenceActivity : PermittedActivity() {
+    override val permissionsToRequest = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
 
     private lateinit var rxGms: RxGms
     private lateinit var latitudeInput: EditText
@@ -43,7 +45,9 @@ class GeofenceActivity : PermittedActivity() {
         findViewById(R.id.clear_button).setOnClickListener { clearGeofence() }
     }
 
-    override fun onPermissionsGranted() {
+    override fun onPermissionsGranted(vararg permissions: String) {
+        if (!permissions.contains(Manifest.permission.ACCESS_FINE_LOCATION)) return
+
         lastKnownLocationSubscription = rxGms.locationApi
                 .getLastLocation()
                 .map(LocationToStringFunc)

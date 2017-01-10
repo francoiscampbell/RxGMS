@@ -1,5 +1,6 @@
 package xyz.fcampbell.rxgms.sample.places
 
+import android.Manifest
 import android.R
 import android.location.Location
 import android.os.Bundle
@@ -19,6 +20,8 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 class PlacesActivity : PermittedActivity() {
+    override val permissionsToRequest = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
+
     private val rxGms = RxGms(this)
 
     private val compositeSubscription = CompositeSubscription()
@@ -32,7 +35,9 @@ class PlacesActivity : PermittedActivity() {
         }
     }
 
-    override fun onPermissionsGranted() {
+    override fun onPermissionsGranted(vararg permissions: String) {
+        if (!permissions.contains(Manifest.permission.ACCESS_FINE_LOCATION)) return
+
         compositeSubscription.add(
                 rxGms.placesApi.
                         getCurrentPlace(null)

@@ -1,5 +1,6 @@
 package xyz.fcampbell.rxgms.sample.location
 
+import android.Manifest
 import android.location.Location
 import android.os.Build
 import android.os.Bundle
@@ -23,6 +24,7 @@ import xyz.fcampbell.rxgms.sample.utils.UnsubscribeIfPresent.unsubscribe
 import java.util.*
 
 class MockLocationsActivity : PermittedActivity() {
+    override val permissionsToRequest = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
 
     private lateinit var latitudeInput: EditText
     private lateinit var longitudeInput: EditText
@@ -65,7 +67,9 @@ class MockLocationsActivity : PermittedActivity() {
         setLocationButton.setOnClickListener { addMockLocation() }
     }
 
-    override fun onPermissionsGranted() {
+    override fun onPermissionsGranted(vararg permissions: String) {
+        if (!permissions.contains(Manifest.permission.ACCESS_FINE_LOCATION)) return
+
         mockModeToggleButton.isChecked = true
 
         val locationRequest = LocationRequest.create()

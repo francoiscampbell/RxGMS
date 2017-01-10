@@ -42,9 +42,9 @@ class MainActivity : PermittedActivity() {
     }
 
     override fun onPermissionsGranted(vararg permissions: String) {
-        if (permissions.contains(Manifest.permission.ACCESS_FINE_LOCATION)) {
-            getLocation()
-        }
+        if (!permissions.contains(Manifest.permission.ACCESS_FINE_LOCATION)) return
+
+        getLocation()
     }
 
     private fun getLocation() {
