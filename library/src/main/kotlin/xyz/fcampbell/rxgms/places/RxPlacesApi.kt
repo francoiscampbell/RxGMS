@@ -6,8 +6,7 @@ import com.google.android.gms.maps.model.LatLngBounds
 import rx.Single
 import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.RxGmsApi
-import xyz.fcampbell.rxgms.common.util.flatMapSingle
-import xyz.fcampbell.rxgms.location.action.location.*
+import xyz.fcampbell.rxgms.common.util.pendingResultToSingle
 
 /**
  * Reactive way to access Google Play Location APIs
@@ -29,7 +28,7 @@ class RxPlacesApi internal constructor(
      * @return observable that emits current places buffer and completes
      */
     fun getCurrentPlace(placeFilter: PlaceFilter?): Single<PlaceLikelihoodBuffer> {
-        return rxApiClient.flatMapSingle { Single.create(GetCurrentPlace(it, placeFilter)) }
+        return rxApiClient.pendingResultToSingle { Places.PlaceDetectionApi.getCurrentPlace(it, placeFilter) }
     }
 
     /**
@@ -40,7 +39,7 @@ class RxPlacesApi internal constructor(
      * @return observable that emits places buffer and completes
      */
     fun getPlaceById(vararg placeIds: String): Single<PlaceBuffer> {
-        return rxApiClient.flatMapSingle { Single.create(GetPlaceById(it, *placeIds)) }
+        return rxApiClient.pendingResultToSingle { Places.GeoDataApi.getPlaceById(it, *placeIds) }
     }
 
     /**
@@ -57,7 +56,7 @@ class RxPlacesApi internal constructor(
      * @return observable with suggestions buffer and completes
      */
     fun getPlaceAutocompletePredictions(query: String, bounds: LatLngBounds, filter: AutocompleteFilter?): Single<AutocompletePredictionBuffer> {
-        return rxApiClient.flatMapSingle { Single.create(GetAutocompletePredictions(it, query, bounds, filter)) }
+        return rxApiClient.pendingResultToSingle { Places.GeoDataApi.getAutocompletePredictions(it, query, bounds, filter) }
     }
 
     /**
@@ -68,7 +67,7 @@ class RxPlacesApi internal constructor(
      * @return observable that emits metadata buffer and completes
      */
     fun getPlacePhotos(placeId: String): Single<PlacePhotoMetadataResult> {
-        return rxApiClient.flatMapSingle { Single.create(GetPlacePhotos(it, placeId)) }
+        return rxApiClient.pendingResultToSingle { Places.GeoDataApi.getPlacePhotos(it, placeId) }
     }
 
     /**
@@ -80,6 +79,6 @@ class RxPlacesApi internal constructor(
      * @return observable that emits the photo result and completes
      */
     fun getPlacePhoto(placePhotoMetadata: PlacePhotoMetadata): Single<PlacePhotoResult> {
-        return rxApiClient.flatMapSingle { Single.create(GetPlacePhoto(it, placePhotoMetadata)) }
+        return rxApiClient.pendingResultToSingle { placePhotoMetadata.getPhoto(it) }
     }
 }

@@ -8,7 +8,7 @@ import rx.SingleSubscriber
 import rx.subscriptions.Subscriptions
 import xyz.fcampbell.rxgms.common.exception.StatusException
 
-internal open class PendingResultOnSubscribe<T : Result>(
+class PendingResultOnSubscribe<T : Result>(
         private val pendingResult: PendingResult<T>
 ) : Single.OnSubscribe<T> {
     private var complete = false

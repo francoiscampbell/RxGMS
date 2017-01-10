@@ -15,14 +15,13 @@ import rx.Single
 import rx.schedulers.Schedulers
 import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.RxGmsApi
-import xyz.fcampbell.rxgms.common.util.flatMapSingle
 import xyz.fcampbell.rxgms.common.util.mapSingle
+import xyz.fcampbell.rxgms.common.util.pendingResultToSingle
 import xyz.fcampbell.rxgms.location.action.geocode.Geocode
 import xyz.fcampbell.rxgms.location.action.geocode.ReverseGeocode
-import xyz.fcampbell.rxgms.location.action.geofence.AddGeofence
-import xyz.fcampbell.rxgms.location.action.geofence.RemoveGeofenceByPendingIntent
-import xyz.fcampbell.rxgms.location.action.geofence.RemoveGeofenceRequestIds
-import xyz.fcampbell.rxgms.location.action.location.*
+import xyz.fcampbell.rxgms.location.action.location.LocationUpdates
+import xyz.fcampbell.rxgms.location.action.location.MockLocation
+import xyz.fcampbell.rxgms.location.action.location.RemoveLocationIntentUpdates
 import java.util.*
 
 /**
@@ -124,14 +123,14 @@ class RxLocationApi internal constructor(
 
      * @param locationRequest request object with info about what kind of location you need
      * *
-     * @param intent          PendingIntent that will be called with location updates
+     * @param pendingIntent          PendingIntent that will be called with location updates
      * *
      * @return observable that adds the request and PendingIntent
      */
     @RequiresPermission(anyOf = arrayOf("android.permission.ACCESS_COARSE_LOCATION", "android.permission.ACCESS_FINE_LOCATION"))
-    fun requestLocationUpdates(locationRequest: LocationRequest, intent: PendingIntent): Single<Status> {
-        return rxApiClient.flatMapSingle {
-            Single.create(AddLocationIntentUpdates(it, locationRequest, intent))
+    fun requestLocationUpdates(locationRequest: LocationRequest, pendingIntent: PendingIntent): Single<Status> {
+        return rxApiClient.pendingResultToSingle {
+            LocationServices.FusedLocationApi.requestLocationUpdates(it, locationRequest, pendingIntent)
         }
     }
 
@@ -238,7 +237,9 @@ class RxLocationApi internal constructor(
      */
     @RequiresPermission("android.permission.ACCESS_FINE_LOCATION")
     fun addGeofences(geofenceTransitionPendingIntent: PendingIntent, request: GeofencingRequest): Single<Status> {
-        return rxApiClient.flatMapSingle { Single.create(AddGeofence(it, request, geofenceTransitionPendingIntent)) }
+        return rxApiClient.pendingResultToSingle {
+            LocationServices.GeofencingApi.addGeofences(it, request, geofenceTransitionPendingIntent)
+        }
     }
 
     /**
@@ -258,7 +259,7 @@ class RxLocationApi internal constructor(
      * @return observable that removed geofences
      */
     fun removeGeofences(pendingIntent: PendingIntent): Single<Status> {
-        return rxApiClient.flatMapSingle { Single.create(RemoveGeofenceByPendingIntent(it, pendingIntent)) }
+        return rxApiClient.pendingResultToSingle { LocationServices.GeofencingApi.removeGeofences(it, pendingIntent) }
     }
 
     /**
@@ -278,7 +279,7 @@ class RxLocationApi internal constructor(
      * @return observable that removed geofences
      */
     fun removeGeofences(requestIds: List<String>): Single<Status> {
-        return rxApiClient.flatMapSingle { Single.create(RemoveGeofenceRequestIds(it, requestIds)) }
+        return rxApiClient.pendingResultToSingle { LocationServices.GeofencingApi.removeGeofences(it, requestIds) }
     }
 
     /**
@@ -291,6 +292,6 @@ class RxLocationApi internal constructor(
      * @see com.google.android.gms.location.SettingsApi
      */
     fun checkLocationSettings(locationRequest: LocationSettingsRequest): Single<LocationSettingsResult> {
-        return rxApiClient.flatMapSingle { Single.create(CheckLocationSettings(it, locationRequest)) }
+        return rxApiClient.pendingResultToSingle { LocationServices.SettingsApi.checkLocationSettings(it, locationRequest) }
     }
 }

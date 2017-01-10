@@ -9,9 +9,8 @@ import com.google.android.gms.drive.query.Query
 import rx.Single
 import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.RxGmsApi
-import xyz.fcampbell.rxgms.common.util.flatMapSingle
 import xyz.fcampbell.rxgms.common.util.mapSingle
-import xyz.fcampbell.rxgms.drive.action.*
+import xyz.fcampbell.rxgms.common.util.pendingResultToSingle
 
 /**
  * Created by francois on 2016-12-22.
@@ -26,7 +25,7 @@ class RxDriveApi internal constructor(
         ApiDescriptor(arrayOf(ApiDescriptor.OptionsHolder(Drive.API)), accountName, *scopes)
 ) {
     fun fetchDriveId(resourceId: String): Single<DriveApi.DriveIdResult> {
-        return rxApiClient.flatMapSingle { Single.create(FetchDriveId(it, resourceId)) }
+        return rxApiClient.pendingResultToSingle { Drive.DriveApi.fetchDriveId(it, resourceId) }
     }
 
     fun getAppFolder(): Single<DriveFolder> {
@@ -42,7 +41,7 @@ class RxDriveApi internal constructor(
     }
 
     fun newDriveContents(): Single<DriveApi.DriveContentsResult> {
-        return rxApiClient.flatMapSingle { Single.create(NewDriveContents(it)) }
+        return rxApiClient.pendingResultToSingle { Drive.DriveApi.newDriveContents(it) }
     }
 
     fun newOpenFileActivityBuilder(): Single<OpenFileActivityBuilder> {
@@ -50,18 +49,18 @@ class RxDriveApi internal constructor(
     }
 
     fun query(query: Query): Single<DriveApi.MetadataBufferResult> {
-        return rxApiClient.flatMapSingle { Single.create(QueryOnSubscribe(it, query)) }
+        return rxApiClient.pendingResultToSingle { Drive.DriveApi.query(it, query) }
     }
 
     fun requestSync(): Single<Status> {
-        return rxApiClient.flatMapSingle { Single.create(RequestSync(it)) }
+        return rxApiClient.pendingResultToSingle { Drive.DriveApi.requestSync(it) }
     }
 
     fun getFileUploadPreferences(): Single<DrivePreferencesApi.FileUploadPreferencesResult> {
-        return rxApiClient.flatMapSingle { Single.create(GetFileUploadPreferences(it)) }
+        return rxApiClient.pendingResultToSingle { Drive.DrivePreferencesApi.getFileUploadPreferences(it) }
     }
 
     fun setFileUploadPreferences(fileUploadPreferences: FileUploadPreferences): Single<Status> {
-        return rxApiClient.flatMapSingle { Single.create(SetFileUploadPreferences(it, fileUploadPreferences)) }
+        return rxApiClient.pendingResultToSingle { Drive.DrivePreferencesApi.setFileUploadPreferences(it, fileUploadPreferences) }
     }
 }
