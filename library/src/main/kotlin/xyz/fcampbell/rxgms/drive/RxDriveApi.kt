@@ -9,8 +9,10 @@ import com.google.android.gms.drive.query.Query
 import rx.Single
 import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.RxGmsApi
+import xyz.fcampbell.rxgms.common.util.flatMapSingle
 import xyz.fcampbell.rxgms.common.util.mapSingle
 import xyz.fcampbell.rxgms.common.util.pendingResultToSingle
+import xyz.fcampbell.rxgms.common.util.toSingle
 
 /**
  * Created by francois on 2016-12-22.
@@ -24,24 +26,32 @@ class RxDriveApi internal constructor(
         context,
         ApiDescriptor(arrayOf(ApiDescriptor.OptionsHolder(Drive.API)), accountName, *scopes)
 ) {
-    fun fetchDriveId(resourceId: String): Single<DriveApi.DriveIdResult> {
-        return rxApiClient.pendingResultToSingle { Drive.DriveApi.fetchDriveId(it, resourceId) }
+    fun fetchDriveId(resourceId: String): Single<RxDriveId> {
+        return rxApiClient.flatMapSingle { googleApiClient ->
+            Drive.DriveApi.fetchDriveId(googleApiClient, resourceId)
+                    .toSingle()
+                    .map { RxDriveId(googleApiClient, it.driveId) }
+        }
     }
 
-    fun getAppFolder(): Single<DriveFolder> {
-        return rxApiClient.mapSingle { Drive.DriveApi.getAppFolder(it) }
+    fun getAppFolder(): Single<RxDriveFolder> {
+        return rxApiClient.mapSingle { RxDriveFolder(it, Drive.DriveApi.getAppFolder(it)) }
     }
 
-    fun getRootFolder(): Single<DriveFolder> {
-        return rxApiClient.mapSingle { Drive.DriveApi.getRootFolder(it) }
+    fun getRootFolder(): Single<RxDriveFolder> {
+        return rxApiClient.mapSingle { RxDriveFolder(it, Drive.DriveApi.getRootFolder(it)) }
     }
 
     fun newCreateFileActivityBuilder(): Single<CreateFileActivityBuilder> {
         return Single.just(Drive.DriveApi.newCreateFileActivityBuilder())
     }
 
-    fun newDriveContents(): Single<DriveApi.DriveContentsResult> {
-        return rxApiClient.pendingResultToSingle { Drive.DriveApi.newDriveContents(it) }
+    fun newDriveContents(): Single<RxDriveContents> {
+        return rxApiClient.flatMapSingle { googleApiClient ->
+            Drive.DriveApi.newDriveContents(googleApiClient)
+                    .toSingle()
+                    .map { RxDriveContents(googleApiClient, it.driveContents) }
+        }
     }
 
     fun newOpenFileActivityBuilder(): Single<OpenFileActivityBuilder> {

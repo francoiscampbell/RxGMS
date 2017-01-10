@@ -18,5 +18,9 @@ inline fun <T, R> Observable<T>.flatMapSingle(crossinline func: (T) -> Single<R>
 }
 
 inline fun <T, R : Result> Observable<T>.pendingResultToSingle(crossinline func: (T) -> PendingResult<R>): Single<R> {
-    return flatMapSingle { Single.create(PendingResultOnSubscribe(func(it))) }
+    return flatMapSingle { func(it).toSingle() }
+}
+
+fun <T : Result> PendingResult<T>.toSingle(): Single<T> {
+    return Single.create(PendingResultOnSubscribe(this))
 }
