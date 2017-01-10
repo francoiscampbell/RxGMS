@@ -25,11 +25,11 @@
         <activity
             android:name="xyz.fcampbell.rxgms.sample.MainActivity"
             android:label="@string/app_name">
-            <pendingIntent-filter>
-                <action android:name="android.pendingIntent.action.MAIN"/>
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.pendingIntent.category.LAUNCHER"/>
-            </pendingIntent-filter>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
         </activity>
 
         <activity android:name="xyz.fcampbell.rxgms.sample.GeofenceActivity" />
