@@ -1,11 +1,7 @@
 package xyz.fcampbell.rxgms.common.action
 
-import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import android.os.Bundle
-import android.support.v4.content.LocalBroadcastManager
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.Api
 import com.google.android.gms.common.api.GoogleApiClient
@@ -14,9 +10,9 @@ import rx.Observable
 import rx.Subscriber
 import rx.subscriptions.Subscriptions
 import xyz.fcampbell.rxgms.common.ApiDescriptor
-import xyz.fcampbell.rxgms.common.ShadowActivity
 import xyz.fcampbell.rxgms.common.exception.GoogleApiConnectionException
 import xyz.fcampbell.rxgms.common.exception.GoogleApiConnectionSuspendedException
+import xyz.fcampbell.rxgms.common.util.ErrorResolver
 
 
 internal open class GoogleApiClientOnSubscribe<O : Api.ApiOptions>(
@@ -87,17 +83,7 @@ internal open class GoogleApiClientOnSubscribe<O : Api.ApiOptions>(
         GoogleApiClient.OnConnectionFailedListener {
 
         lateinit var apiClient: GoogleApiClient
-
-        private val reconnectReceiver = object : BroadcastReceiver() {
-            override fun onReceive(context: Context?, intent: Intent?) {
-                apiClient.connect()
-            }
-        }
-
-        init {
-            LocalBroadcastManager.getInstance(context)
-                    .registerReceiver(reconnectReceiver, IntentFilter(ShadowActivity.ACTION_TRY_RECONNECT))
-        }
+        private val shadowResolver = ErrorResolver(context)
 
         override fun onConnected(bundle: Bundle?) {
             try {
@@ -113,10 +99,7 @@ internal open class GoogleApiClientOnSubscribe<O : Api.ApiOptions>(
         }
 
         override fun onConnectionFailed(connectionResult: ConnectionResult) {
-            context.startActivity(
-                    Intent(context, ShadowActivity::class.java)
-                            .putExtra(ShadowActivity.KEY_CONNECTION_RESULT, connectionResult)
-                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+            shadowResolver.startResolution(connectionResult) { apiClient.connect() }
             if (!connectionResult.hasResolution()) {
                 subscriber.onError(GoogleApiConnectionException(connectionResult, "Error connecting to GoogleApiClient."))
             }

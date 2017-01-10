@@ -4,7 +4,7 @@
 
     <application>
         <activity
-            android:name=".common.ShadowActivity"
+            android:name=".common.util.ErrorResolver$ShadowActivity"
             android:launchMode="singleTask"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
     </application>
