@@ -6,15 +6,12 @@ import com.google.android.gms.drive.Drive
 import com.google.android.gms.drive.MetadataBuffer
 import com.google.android.gms.drive.MetadataChangeSet
 import rx.Observable
-import rx.Subscription
 import xyz.fcampbell.rxgms.RxGms
 
 /**
  * Created by francois on 2017-01-10.
  */
 class DriveActivity : AppCompatActivity() {
-    private var fileUploadPrefsSub: Subscription? = null
-    private var driveContentsSub: Subscription? = null
 
     private val driveApi = RxGms(this).getDriveApi("", Drive.SCOPE_FILE, Drive.SCOPE_APPFOLDER)
 
@@ -25,17 +22,17 @@ class DriveActivity : AppCompatActivity() {
     }
 
     private fun getRootFolder() {
-//        fileUploadPrefsSub = driveApi.getFileUploadPreferences()
-//                .subscribe({
-//                    Log.d(TAG, "Got file upload prefs: $it")
-//                    Log.d(TAG, "batteryUsagePreference: ${it.batteryUsagePreference}")
-//                    Log.d(TAG, "isRoamingAllowed: ${it.isRoamingAllowed}")
-//                    Log.d(TAG, "networkTypePreference: ${it.networkTypePreference}")
-//                }, { throwable ->
-//                    Log.d(TAG, "Error", throwable)
-//                })
+        driveApi.getFileUploadPreferences()
+                .subscribe({
+                    Log.d(TAG, "Got file upload prefs: $it")
+                    Log.d(TAG, "batteryUsagePreference: ${it.batteryUsagePreference}")
+                    Log.d(TAG, "isRoamingAllowed: ${it.isRoamingAllowed}")
+                    Log.d(TAG, "networkTypePreference: ${it.networkTypePreference}")
+                }, { throwable ->
+                    Log.d(TAG, "Error", throwable)
+                })
 
-        driveContentsSub = driveApi.getAppFolder()
+        driveApi.getAppFolder()
                 .flatMap { appFolder ->
                     appFolder.listChildren()
                             .flatMap {
@@ -45,21 +42,9 @@ class DriveActivity : AppCompatActivity() {
                                     Observable.just(it)
                                 }
                             }
-                            .doOnSubscribe {
-                                Log.d(TAG, "Sub to listChildren")
-                            }
-                            .doOnUnsubscribe {
-                                Log.d(TAG, "Unsub from listChildren")
-                            }
                             .retryWhen { errors ->
                                 errors.flatMap {
                                     driveApi.newDriveContents()
-                                            .doOnSubscribe {
-                                                Log.d(TAG, "Sub to newDriveContents")
-                                            }
-                                            .doOnUnsubscribe {
-                                                Log.d(TAG, "Unsub from newDriveContents")
-                                            }
                                 }.doOnNext {
                                     val changeSet = MetadataChangeSet.Builder()
                                             .setTitle("CreatedFile")
@@ -68,12 +53,6 @@ class DriveActivity : AppCompatActivity() {
                                     appFolder.createFile(changeSet, it.driveContents)
                                 }
                             }
-                }
-                .doOnSubscribe {
-                    Log.d(TAG, "Sub to getAppFolder")
-                }
-                .doOnUnsubscribe {
-                    Log.d(TAG, "Unsub from getAppFolder")
                 }
                 .subscribe({
                     Log.d(TAG, "Got root folder: $it")
@@ -86,8 +65,6 @@ class DriveActivity : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
 
-//        fileUploadPrefsSub?.unsubscribe()
-//        driveContentsSub?.unsubscribe()
         driveApi.disconnect()
     }
 

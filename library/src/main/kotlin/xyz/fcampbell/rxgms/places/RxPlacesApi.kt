@@ -28,7 +28,7 @@ class RxPlacesApi internal constructor(
      * @return observable that emits current places buffer and completes
      */
     fun getCurrentPlace(placeFilter: PlaceFilter?): Observable<PlaceLikelihoodBuffer> {
-        return rxApiClient.pendingResultToObservable { Places.PlaceDetectionApi.getCurrentPlace(it, placeFilter) }
+        return apiClient.pendingResultToObservable { Places.PlaceDetectionApi.getCurrentPlace(it, placeFilter) }
     }
 
     /**
@@ -39,7 +39,7 @@ class RxPlacesApi internal constructor(
      * @return observable that emits places buffer and completes
      */
     fun getPlaceById(vararg placeIds: String): Observable<PlaceBuffer> {
-        return rxApiClient.pendingResultToObservable { Places.GeoDataApi.getPlaceById(it, *placeIds) }
+        return apiClient.pendingResultToObservable { Places.GeoDataApi.getPlaceById(it, *placeIds) }
     }
 
     /**
@@ -56,7 +56,7 @@ class RxPlacesApi internal constructor(
      * @return observable with suggestions buffer and completes
      */
     fun getPlaceAutocompletePredictions(query: String, bounds: LatLngBounds, filter: AutocompleteFilter?): Observable<AutocompletePredictionBuffer> {
-        return rxApiClient.pendingResultToObservable { Places.GeoDataApi.getAutocompletePredictions(it, query, bounds, filter) }
+        return apiClient.pendingResultToObservable { Places.GeoDataApi.getAutocompletePredictions(it, query, bounds, filter) }
     }
 
     /**
@@ -67,7 +67,7 @@ class RxPlacesApi internal constructor(
      * @return observable that emits metadata buffer and completes
      */
     fun getPlacePhotos(placeId: String): Observable<PlacePhotoMetadataResult> {
-        return rxApiClient.pendingResultToObservable { Places.GeoDataApi.getPlacePhotos(it, placeId) }
+        return apiClient.pendingResultToObservable { Places.GeoDataApi.getPlacePhotos(it, placeId) }
     }
 
     /**
@@ -79,6 +79,6 @@ class RxPlacesApi internal constructor(
      * @return observable that emits the photo result and completes
      */
     fun getPlacePhoto(placePhotoMetadata: PlacePhotoMetadata): Observable<PlacePhotoResult> {
-        return rxApiClient.pendingResultToObservable { placePhotoMetadata.getPhoto(it) }
+        return apiClient.pendingResultToObservable { placePhotoMetadata.getPhoto(it) }
     }
 }

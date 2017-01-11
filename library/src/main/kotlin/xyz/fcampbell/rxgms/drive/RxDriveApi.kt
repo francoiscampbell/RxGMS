@@ -25,7 +25,7 @@ class RxDriveApi internal constructor(
         ApiDescriptor(arrayOf(ApiDescriptor.OptionsHolder(Drive.API)), accountName, *scopes)
 ) {
     fun fetchDriveId(resourceId: String): Observable<RxDriveId> {
-        return rxApiClient.flatMap { googleApiClient ->
+        return apiClient.flatMap { googleApiClient ->
             Drive.DriveApi.fetchDriveId(googleApiClient, resourceId)
                     .toObservable()
                     .map { RxDriveId(googleApiClient, it.driveId) }
@@ -33,13 +33,11 @@ class RxDriveApi internal constructor(
     }
 
     fun getAppFolder(): Observable<RxDriveFolder> {
-        return rxApiClient.map { RxDriveFolder(it, Drive.DriveApi.getAppFolder(it)) }
+        return apiClient.map { RxDriveFolder(it, Drive.DriveApi.getAppFolder(it)) }
     }
 
     fun getRootFolder(): Observable<RxDriveFolder> {
-        return rxApiClient.map {
-            RxDriveFolder(it, Drive.DriveApi.getRootFolder(it))
-        }
+        return apiClient.map { RxDriveFolder(it, Drive.DriveApi.getRootFolder(it)) }
     }
 
     fun newCreateFileActivityBuilder(): Observable<CreateFileActivityBuilder> {
@@ -47,7 +45,7 @@ class RxDriveApi internal constructor(
     }
 
     fun newDriveContents(): Observable<RxDriveContents> {
-        return rxApiClient.flatMap { googleApiClient ->
+        return apiClient.flatMap { googleApiClient ->
             Drive.DriveApi.newDriveContents(googleApiClient)
                     .toObservable()
                     .map {
@@ -61,20 +59,20 @@ class RxDriveApi internal constructor(
     }
 
     fun query(query: Query): Observable<MetadataBuffer> {
-        return rxApiClient.pendingResultToObservable { Drive.DriveApi.query(it, query) }
+        return apiClient.pendingResultToObservable { Drive.DriveApi.query(it, query) }
                 .map { it.metadataBuffer }
     }
 
     fun requestSync(): Observable<Status> {
-        return rxApiClient.pendingResultToObservable { Drive.DriveApi.requestSync(it) }
+        return apiClient.pendingResultToObservable { Drive.DriveApi.requestSync(it) }
     }
 
     fun getFileUploadPreferences(): Observable<FileUploadPreferences> {
-        return rxApiClient.pendingResultToObservable { Drive.DrivePreferencesApi.getFileUploadPreferences(it) }
+        return apiClient.pendingResultToObservable { Drive.DrivePreferencesApi.getFileUploadPreferences(it) }
                 .map { it.fileUploadPreferences }
     }
 
     fun setFileUploadPreferences(fileUploadPreferences: FileUploadPreferences): Observable<Status> {
-        return rxApiClient.pendingResultToObservable { Drive.DrivePreferencesApi.setFileUploadPreferences(it, fileUploadPreferences) }
+        return apiClient.pendingResultToObservable { Drive.DrivePreferencesApi.setFileUploadPreferences(it, fileUploadPreferences) }
     }
 }

@@ -28,7 +28,7 @@ class RxActivityRecognitionApi internal constructor(
      * @return observable that provides activity recognition
      */
     fun requestActivityUpdates(detectionIntervalMilliseconds: Int): Observable<ActivityRecognitionResult> {
-        return rxApiClient.flatMap {
+        return apiClient.flatMap {
             Observable.fromEmitter(
                     ActivityUpdates(it, detectionIntervalMilliseconds),
                     AsyncEmitter.BackpressureMode.LATEST)
