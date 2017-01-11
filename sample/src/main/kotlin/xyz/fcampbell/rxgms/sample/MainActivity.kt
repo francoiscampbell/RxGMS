@@ -64,7 +64,7 @@ class MainActivity : PermittedActivity() {
                                 .addLocationRequest(locationRequest)
                                 .setAlwaysShow(true)  //Reference: http://stackoverflow.com/questions/29824408/google-play-services-locationservices-api-new-option-never
                                 .build())
-                .doOnSuccess { locationSettingsResult ->
+                .doOnNext { locationSettingsResult ->
                     val status = locationSettingsResult.status
                     if (status.statusCode == LocationSettingsStatusCodes.RESOLUTION_REQUIRED) {
                         try {
@@ -75,7 +75,7 @@ class MainActivity : PermittedActivity() {
 
                     }
                 }
-                .flatMapObservable { rxGms.locationApi.requestLocationUpdates(locationRequest) }
+                .flatMap { rxGms.locationApi.requestLocationUpdates(locationRequest) }
                 .map(LocationToStringFunc)
                 .map(object : Func1<String, String> {
                     private var count = 0

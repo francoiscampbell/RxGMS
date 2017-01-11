@@ -35,11 +35,13 @@
 
         <activity android:name="xyz.fcampbell.rxgms.sample.location.GeofenceActivity"/>
         <activity android:name="xyz.fcampbell.rxgms.sample.places.PlacesActivity"/>
-        <activity android:name="xyz.fcampbell.rxgms.sample.PlacesResultActivity"/>
-        <activity android:name="xyz.fcampbell.rxgms.sample.MockLocationsActivity"/>
-        <activity android:name="xyz.fcampbell.rxgms.sample.drive.DriveActivity"/>
+        <activity android:name="xyz.fcampbell.rxgms.sample.places.PlacesResultActivity"/>
+        <activity android:name="xyz.fcampbell.rxgms.sample.location.MockLocationsActivity"/>
+        <activity
+            android:name="xyz.fcampbell.rxgms.sample.drive.DriveActivity"
+            android:exported="true"/>
 
-        <receiver android:name="xyz.fcampbell.rxgms.sample.GeofenceBroadcastReceiver"/>
+        <receiver android:name="xyz.fcampbell.rxgms.sample.location.GeofenceBroadcastReceiver"/>
     </application>
 
 </manifest>

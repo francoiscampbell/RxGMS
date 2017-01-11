@@ -2,7 +2,7 @@ package xyz.fcampbell.rxgms.drive
 
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.drive.DriveId
-import rx.Single
+import rx.Observable
 
 /**
  * Created by francois on 2017-01-10.
@@ -12,15 +12,15 @@ class RxDriveId(
         private val googleApiClient: GoogleApiClient,
         val driveId: DriveId
 ) {
-    fun asDriveFile(): Single<RxDriveFile> {
-        return Single.just(RxDriveFile(googleApiClient, driveId.asDriveFile()))
+    fun asDriveFile(): Observable<RxDriveFile> {
+        return Observable.just(RxDriveFile(googleApiClient, driveId.asDriveFile()))
     }
 
-    fun asDriveFolder(): Single<RxDriveFolder> {
-        return Single.just(RxDriveFolder(googleApiClient, driveId.asDriveFolder()))
+    fun asDriveFolder(): Observable<RxDriveFolder> {
+        return Observable.just(RxDriveFolder(googleApiClient, driveId.asDriveFolder()))
     }
 
-    fun asDriveResource(): Single<RxDriveResource> {
-        return Single.just(RxDriveResource(googleApiClient, driveId.asDriveResource()))
+    fun asDriveResource(): Observable<RxDriveResource> {
+        return Observable.just(RxDriveResource(googleApiClient, driveId.asDriveResource()))
     }
 }

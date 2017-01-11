@@ -71,7 +71,7 @@ internal open class GoogleApiClientOnSubscribe<O : Api.ApiOptions>(
     }
 
     private fun GoogleApiClient.Builder.setAccountNameIfSpecified(accountName: String): GoogleApiClient.Builder {
-        if (!accountName.isNullOrEmpty()) {
+        if (accountName.isNotEmpty()) {
             setAccountName(accountName)
         }
         return this
@@ -83,7 +83,7 @@ internal open class GoogleApiClientOnSubscribe<O : Api.ApiOptions>(
         GoogleApiClient.OnConnectionFailedListener {
 
         lateinit var apiClient: GoogleApiClient
-        private val shadowResolver = ErrorResolver(context)
+        private val errorResolver = ErrorResolver(context)
 
         override fun onConnected(bundle: Bundle?) {
             try {
@@ -99,8 +99,9 @@ internal open class GoogleApiClientOnSubscribe<O : Api.ApiOptions>(
         }
 
         override fun onConnectionFailed(connectionResult: ConnectionResult) {
-            shadowResolver.startResolution(connectionResult) { apiClient.connect() }
-            if (!connectionResult.hasResolution()) {
+            if (connectionResult.hasResolution()) {
+                errorResolver.startResolution(connectionResult) { apiClient.connect() }
+            } else {
                 subscriber.onError(GoogleApiConnectionException(connectionResult, "Error connecting to GoogleApiClient."))
             }
         }

@@ -11,12 +11,10 @@ import com.google.android.gms.location.*
 import com.google.android.gms.maps.model.LatLngBounds
 import rx.AsyncEmitter
 import rx.Observable
-import rx.Single
 import rx.schedulers.Schedulers
 import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.RxGmsApi
-import xyz.fcampbell.rxgms.common.util.mapSingle
-import xyz.fcampbell.rxgms.common.util.pendingResultToSingle
+import xyz.fcampbell.rxgms.common.util.pendingResultToObservable
 import xyz.fcampbell.rxgms.location.action.geocode.Geocode
 import xyz.fcampbell.rxgms.location.action.geocode.ReverseGeocode
 import xyz.fcampbell.rxgms.location.action.location.LocationUpdates
@@ -48,8 +46,8 @@ class RxLocationApi internal constructor(
      * @return observable that serves last known location
      */
     @RequiresPermission(anyOf = arrayOf("android.permission.ACCESS_COARSE_LOCATION", "android.permission.ACCESS_FINE_LOCATION"))
-    fun getLastLocation(): Single<Location> {
-        return rxApiClient.mapSingle {
+    fun getLastLocation(): Observable<Location> {
+        return rxApiClient.map {
             LocationServices.FusedLocationApi.getLastLocation(it)
         }
     }
@@ -128,8 +126,8 @@ class RxLocationApi internal constructor(
      * @return observable that adds the request and PendingIntent
      */
     @RequiresPermission(anyOf = arrayOf("android.permission.ACCESS_COARSE_LOCATION", "android.permission.ACCESS_FINE_LOCATION"))
-    fun requestLocationUpdates(locationRequest: LocationRequest, pendingIntent: PendingIntent): Single<Status> {
-        return rxApiClient.pendingResultToSingle {
+    fun requestLocationUpdates(locationRequest: LocationRequest, pendingIntent: PendingIntent): Observable<Status> {
+        return rxApiClient.pendingResultToObservable {
             LocationServices.FusedLocationApi.requestLocationUpdates(it, locationRequest, pendingIntent)
         }
     }
@@ -210,8 +208,8 @@ class RxLocationApi internal constructor(
      * *
      * @return observable that serves list of address based on location name
      */
-    @JvmOverloads fun geocode(locationName: String, maxResults: Int, bounds: LatLngBounds? = null): Single<List<Address>> {
-        return Single.create(Geocode(context, locationName, maxResults, bounds))
+    @JvmOverloads fun geocode(locationName: String, maxResults: Int, bounds: LatLngBounds? = null): Observable<List<Address>> {
+        return Observable.create(Geocode(context, locationName, maxResults, bounds))
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.trampoline())
     }
@@ -236,8 +234,8 @@ class RxLocationApi internal constructor(
      * @return observable that adds request
      */
     @RequiresPermission("android.permission.ACCESS_FINE_LOCATION")
-    fun addGeofences(geofenceTransitionPendingIntent: PendingIntent, request: GeofencingRequest): Single<Status> {
-        return rxApiClient.pendingResultToSingle {
+    fun addGeofences(geofenceTransitionPendingIntent: PendingIntent, request: GeofencingRequest): Observable<Status> {
+        return rxApiClient.pendingResultToObservable {
             LocationServices.GeofencingApi.addGeofences(it, request, geofenceTransitionPendingIntent)
         }
     }
@@ -258,8 +256,8 @@ class RxLocationApi internal constructor(
      * *
      * @return observable that removed geofences
      */
-    fun removeGeofences(pendingIntent: PendingIntent): Single<Status> {
-        return rxApiClient.pendingResultToSingle { LocationServices.GeofencingApi.removeGeofences(it, pendingIntent) }
+    fun removeGeofences(pendingIntent: PendingIntent): Observable<Status> {
+        return rxApiClient.pendingResultToObservable { LocationServices.GeofencingApi.removeGeofences(it, pendingIntent) }
     }
 
     /**
@@ -278,8 +276,8 @@ class RxLocationApi internal constructor(
      * *
      * @return observable that removed geofences
      */
-    fun removeGeofences(requestIds: List<String>): Single<Status> {
-        return rxApiClient.pendingResultToSingle { LocationServices.GeofencingApi.removeGeofences(it, requestIds) }
+    fun removeGeofences(requestIds: List<String>): Observable<Status> {
+        return rxApiClient.pendingResultToObservable { LocationServices.GeofencingApi.removeGeofences(it, requestIds) }
     }
 
     /**
@@ -291,7 +289,7 @@ class RxLocationApi internal constructor(
      * *
      * @see com.google.android.gms.location.SettingsApi
      */
-    fun checkLocationSettings(locationRequest: LocationSettingsRequest): Single<LocationSettingsResult> {
-        return rxApiClient.pendingResultToSingle { LocationServices.SettingsApi.checkLocationSettings(it, locationRequest) }
+    fun checkLocationSettings(locationRequest: LocationSettingsRequest): Observable<LocationSettingsResult> {
+        return rxApiClient.pendingResultToObservable { LocationServices.SettingsApi.checkLocationSettings(it, locationRequest) }
     }
 }

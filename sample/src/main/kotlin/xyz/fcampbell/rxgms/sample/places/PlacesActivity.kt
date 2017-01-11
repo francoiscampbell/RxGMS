@@ -55,7 +55,7 @@ class PlacesActivity : PermittedActivity() {
                 .map { charSequence -> charSequence.toString() }
                 .debounce(1, TimeUnit.SECONDS)
                 .filter { s -> !TextUtils.isEmpty(s) }
-        val lastKnownLocationObservable = rxGms.locationApi.getLastLocation().toObservable()
+        val lastKnownLocationObservable = rxGms.locationApi.getLastLocation()
         val suggestionsObservable = Observable
                 .combineLatest(queryObservable, lastKnownLocationObservable) { query, currentLocation ->
                     QueryWithCurrentLocation(query, currentLocation)
@@ -69,7 +69,7 @@ class PlacesActivity : PermittedActivity() {
                             LatLng(latitude - 0.05, longitude - 0.05),
                             LatLng(latitude + 0.05, longitude + 0.05)
                     )
-                    return@flatMap rxGms.placesApi.getPlaceAutocompletePredictions(query.query, bounds, null).toObservable()
+                    return@flatMap rxGms.placesApi.getPlaceAutocompletePredictions(query.query, bounds, null)
                 }
 
         compositeSubscription.add(suggestionsObservable.subscribe { buffer ->

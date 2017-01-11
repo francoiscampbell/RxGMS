@@ -2,13 +2,10 @@ package xyz.fcampbell.rxgms.drive
 
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.common.api.Status
-import com.google.android.gms.drive.DriveApi
-import com.google.android.gms.drive.DriveId
-import com.google.android.gms.drive.DriveResource
-import com.google.android.gms.drive.MetadataChangeSet
+import com.google.android.gms.drive.*
 import com.google.android.gms.drive.events.ChangeListener
-import rx.Single
-import xyz.fcampbell.rxgms.common.util.toSingle
+import rx.Observable
+import xyz.fcampbell.rxgms.common.util.toObservable
 
 /**
  * Created by francois on 2017-01-10.
@@ -16,53 +13,59 @@ import xyz.fcampbell.rxgms.common.util.toSingle
 @Suppress("unused")
 open class RxDriveResource(
         protected val googleApiClient: GoogleApiClient,
-        private val driveResource: DriveResource
+        val driveResource: DriveResource
 ) {
-    fun getMetadata(): Single<DriveResource.MetadataResult> {
-        return driveResource.getMetadata(googleApiClient).toSingle()
+    fun getMetadata(): Observable<Metadata> {
+        return driveResource.getMetadata(googleApiClient)
+                .toObservable()
+                .map { it.metadata }
     }
 
-    fun updateMetadata(metadataChangeSet: MetadataChangeSet): Single<DriveResource.MetadataResult> {
-        return driveResource.updateMetadata(googleApiClient, metadataChangeSet).toSingle()
+    fun updateMetadata(metadataChangeSet: MetadataChangeSet): Observable<Metadata> {
+        return driveResource.updateMetadata(googleApiClient, metadataChangeSet)
+                .toObservable()
+                .map { it.metadata }
     }
 
-    fun getDriveId(): Single<DriveId> {
-        return Single.just(driveResource.driveId)
+    fun getDriveId(): Observable<DriveId> {
+        return Observable.just(driveResource.driveId)
     }
 
-    fun listParents(): Single<DriveApi.MetadataBufferResult> {
-        return driveResource.listParents(googleApiClient).toSingle()
+    fun listParents(): Observable<MetadataBuffer> {
+        return driveResource.listParents(googleApiClient)
+                .toObservable()
+                .map { it.metadataBuffer }
     }
 
-    fun delete(): Single<Status> {
-        return driveResource.delete(googleApiClient).toSingle()
+    fun delete(): Observable<Status> {
+        return driveResource.delete(googleApiClient).toObservable()
     }
 
-    fun setParents(parents: Set<DriveId>): Single<Status> {
-        return driveResource.setParents(googleApiClient, parents).toSingle()
+    fun setParents(parents: Set<DriveId>): Observable<Status> {
+        return driveResource.setParents(googleApiClient, parents).toObservable()
     }
 
-    fun addChangeListener(changeListener: ChangeListener): Single<Status> {
-        return driveResource.addChangeListener(googleApiClient, changeListener).toSingle()
+    fun addChangeListener(changeListener: ChangeListener): Observable<Status> {
+        return driveResource.addChangeListener(googleApiClient, changeListener).toObservable()
     }
 
-    fun removeChangeListener(changeListener: ChangeListener): Single<Status> {
-        return driveResource.removeChangeListener(googleApiClient, changeListener).toSingle()
+    fun removeChangeListener(changeListener: ChangeListener): Observable<Status> {
+        return driveResource.removeChangeListener(googleApiClient, changeListener).toObservable()
     }
 
-    fun addChangeSubscription(): Single<Status> {
-        return driveResource.addChangeSubscription(googleApiClient).toSingle()
+    fun addChangeSubscription(): Observable<Status> {
+        return driveResource.addChangeSubscription(googleApiClient).toObservable()
     }
 
-    fun removeChangeSubscription(): Single<Status> {
-        return driveResource.removeChangeSubscription(googleApiClient).toSingle()
+    fun removeChangeSubscription(): Observable<Status> {
+        return driveResource.removeChangeSubscription(googleApiClient).toObservable()
     }
 
-    fun trash(): Single<Status> {
-        return driveResource.trash(googleApiClient).toSingle()
+    fun trash(): Observable<Status> {
+        return driveResource.trash(googleApiClient).toObservable()
     }
 
-    fun untrash(): Single<Status> {
-        return driveResource.untrash(googleApiClient).toSingle()
+    fun untrash(): Observable<Status> {
+        return driveResource.untrash(googleApiClient).toObservable()
     }
 }

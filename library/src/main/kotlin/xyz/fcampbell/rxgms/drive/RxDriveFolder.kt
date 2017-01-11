@@ -3,8 +3,8 @@ package xyz.fcampbell.rxgms.drive
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.drive.*
 import com.google.android.gms.drive.query.Query
-import rx.Single
-import xyz.fcampbell.rxgms.common.util.toSingle
+import rx.Observable
+import xyz.fcampbell.rxgms.common.util.toObservable
 
 /**
  * Created by francois on 2017-01-10.
@@ -14,23 +14,33 @@ class RxDriveFolder(
         googleApiClient: GoogleApiClient,
         val driveFolder: DriveFolder
 ) : RxDriveResource(googleApiClient, driveFolder) {
-    fun listChildren(): Single<DriveApi.MetadataBufferResult> {
-        return driveFolder.listChildren(googleApiClient).toSingle()
+    fun listChildren(): Observable<MetadataBuffer> {
+        return driveFolder.listChildren(googleApiClient)
+                .toObservable()
+                .map { it.metadataBuffer }
     }
 
-    fun queryChildren(query: Query): Single<DriveApi.MetadataBufferResult> {
-        return driveFolder.queryChildren(googleApiClient, query).toSingle()
+    fun queryChildren(query: Query): Observable<MetadataBuffer> {
+        return driveFolder.queryChildren(googleApiClient, query)
+                .toObservable()
+                .map { it.metadataBuffer }
     }
 
-    fun createFile(changeSet: MetadataChangeSet, driveContents: DriveContents): Single<DriveFolder.DriveFileResult> {
-        return driveFolder.createFile(googleApiClient, changeSet, driveContents).toSingle()
+    fun createFile(changeSet: MetadataChangeSet, driveContents: DriveContents): Observable<RxDriveFile> {
+        return driveFolder.createFile(googleApiClient, changeSet, driveContents)
+                .toObservable()
+                .map { RxDriveFile(googleApiClient, it.driveFile) }
     }
 
-    fun createFile(changeSet: MetadataChangeSet, driveContents: DriveContents, executionOptions: ExecutionOptions): Single<DriveFolder.DriveFileResult> {
-        return driveFolder.createFile(googleApiClient, changeSet, driveContents, executionOptions).toSingle()
+    fun createFile(changeSet: MetadataChangeSet, driveContents: DriveContents, executionOptions: ExecutionOptions): Observable<RxDriveFile> {
+        return driveFolder.createFile(googleApiClient, changeSet, driveContents, executionOptions)
+                .toObservable()
+                .map { RxDriveFile(googleApiClient, it.driveFile) }
     }
 
-    fun createFolder(changeSet: MetadataChangeSet): Single<DriveFolder.DriveFolderResult> {
-        return driveFolder.createFolder(googleApiClient, changeSet).toSingle()
+    fun createFolder(changeSet: MetadataChangeSet): Observable<RxDriveFolder> {
+        return driveFolder.createFolder(googleApiClient, changeSet)
+                .toObservable()
+                .map { RxDriveFolder(googleApiClient, it.driveFolder) }
     }
 }
