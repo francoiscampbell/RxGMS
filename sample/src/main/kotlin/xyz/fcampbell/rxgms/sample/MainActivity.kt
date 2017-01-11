@@ -47,8 +47,11 @@ class MainActivity : PermittedActivity() {
         getLocation()
     }
 
+    private val locationApi = rxGms.locationApi
+    private val activityRecognitionApi = rxGms.activityRecognitionApi
+
     private fun getLocation() {
-        lastKnownLocationSubscription = rxGms.locationApi
+        lastKnownLocationSubscription = locationApi
                 .getLastLocation()
                 .map(LocationToStringFunc)
                 .subscribe(DisplayTextOnViewAction(last_known_location_view), ErrorHandler())
@@ -58,7 +61,7 @@ class MainActivity : PermittedActivity() {
                 .setNumUpdates(5)
                 .setInterval(100)
 
-        updatableLocationSubscription = rxGms.locationApi
+        updatableLocationSubscription = locationApi
                 .checkLocationSettings(
                         LocationSettingsRequest.Builder()
                                 .addLocationRequest(locationRequest)
@@ -75,7 +78,7 @@ class MainActivity : PermittedActivity() {
 
                     }
                 }
-                .flatMap { rxGms.locationApi.requestLocationUpdates(locationRequest) }
+                .flatMap { locationApi.requestLocationUpdates(locationRequest) }
                 .map(LocationToStringFunc)
                 .map(object : Func1<String, String> {
                     private var count = 0
@@ -87,16 +90,16 @@ class MainActivity : PermittedActivity() {
                 .subscribe(DisplayTextOnViewAction(updated_location_view), ErrorHandler())
 
 
-        addressSubscription = rxGms.locationApi
+        addressSubscription = locationApi
                 .requestLocationUpdates(locationRequest)
-                .flatMap { location -> rxGms.locationApi.reverseGeocode(location.latitude, location.longitude, 1) }
+                .flatMap { location -> locationApi.reverseGeocode(location.latitude, location.longitude, 1) }
                 .map { addresses -> if (addresses != null && !addresses.isEmpty()) addresses[0] else null }
                 .map(AddressToStringFunc)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(DisplayTextOnViewAction(address_for_location_view), ErrorHandler())
 
-        activitySubscription = rxGms.activityRecognitionApi
+        activitySubscription = activityRecognitionApi
                 .requestActivityUpdates(50)
                 .map(ToMostProbableActivity)
                 .map(DetectedActivityToString)
@@ -111,8 +114,8 @@ class MainActivity : PermittedActivity() {
         lastKnownLocationSubscription?.unsubscribe()
         activitySubscription?.unsubscribe()
 
-        rxGms.locationApi.disconnect()
-        rxGms.activityRecognitionApi.disconnect()
+        locationApi.disconnect()
+        activityRecognitionApi.disconnect()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

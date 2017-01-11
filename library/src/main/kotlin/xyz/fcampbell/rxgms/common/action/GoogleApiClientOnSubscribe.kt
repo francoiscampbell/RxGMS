@@ -12,10 +12,10 @@ import rx.subscriptions.Subscriptions
 import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.exception.GoogleApiConnectionException
 import xyz.fcampbell.rxgms.common.exception.GoogleApiConnectionSuspendedException
-import xyz.fcampbell.rxgms.common.util.ErrorResolver
+import xyz.fcampbell.rxgms.common.util.ResultActivity
 
 
-internal open class GoogleApiClientOnSubscribe<O : Api.ApiOptions>(
+internal class GoogleApiClientOnSubscribe<O : Api.ApiOptions>(
         private val context: Context,
         private val apiDescriptor: ApiDescriptor<O>
 ) : Observable.OnSubscribe<GoogleApiClient> {
@@ -83,7 +83,6 @@ internal open class GoogleApiClientOnSubscribe<O : Api.ApiOptions>(
         GoogleApiClient.OnConnectionFailedListener {
 
         lateinit var apiClient: GoogleApiClient
-        private val errorResolver = ErrorResolver(context)
 
         override fun onConnected(bundle: Bundle?) {
             try {
@@ -100,7 +99,7 @@ internal open class GoogleApiClientOnSubscribe<O : Api.ApiOptions>(
 
         override fun onConnectionFailed(connectionResult: ConnectionResult) {
             if (connectionResult.hasResolution()) {
-                errorResolver.startResolution(connectionResult) { apiClient.connect() }
+                ResultActivity.getResult(context, connectionResult.resolution!!.intentSender) { apiClient.connect() }
             } else {
                 subscriber.onError(GoogleApiConnectionException(connectionResult, "Error connecting to GoogleApiClient."))
             }

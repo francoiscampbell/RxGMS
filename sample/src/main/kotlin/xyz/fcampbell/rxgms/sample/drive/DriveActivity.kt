@@ -2,6 +2,7 @@ package xyz.fcampbell.rxgms.sample.drive
 
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.drive.Drive
 import com.google.android.gms.drive.MetadataBuffer
 import com.google.android.gms.drive.MetadataChangeSet
@@ -15,10 +16,16 @@ class DriveActivity : AppCompatActivity() {
 
     private val driveApi = RxGms(this).getDriveApi("", Drive.SCOPE_FILE, Drive.SCOPE_APPFOLDER)
 
+    private val gso = GoogleSignInOptions.Builder()
+            .requestEmail()
+            .build()
+    private val authApi = RxGms(this).getAuthApi("", gso)
+
     override fun onStart() {
         super.onStart()
 
         getRootFolder()
+        getGoogleAccount()
     }
 
     private fun getRootFolder() {
@@ -59,6 +66,15 @@ class DriveActivity : AppCompatActivity() {
                     it.forEach { Log.d(TAG, "Item: ${it.title}") }
                 }, { throwable ->
                     Log.d(TAG, "Error", throwable)
+                })
+    }
+
+    private fun getGoogleAccount() {
+        authApi.signIn()
+                .subscribe({ account ->
+                    Log.d(TAG, account.email)
+                }, { throwable ->
+                    Log.d(TAG, "Error: $throwable")
                 })
     }
 

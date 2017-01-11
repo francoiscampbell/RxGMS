@@ -21,6 +21,7 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile 'io.reactivex:rxjava:1.2.0'
 
+    provided "com.google.android.gms:play-services-auth:$vGooglePlayServices"
     provided "com.google.android.gms:play-services-location:$vGooglePlayServices"
     provided "com.google.android.gms:play-services-places:$vGooglePlayServices"
     provided "com.google.android.gms:play-services-drive:$vGooglePlayServices"

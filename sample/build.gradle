@@ -44,6 +44,7 @@ dependencies {
     compile 'com.tbruyelle.rxpermissions:rxpermissions:0.7.0@aar'
 
     compile project(':library')
+    compile "com.google.android.gms:play-services-auth:$vGooglePlayServices"
     compile "com.google.android.gms:play-services-location:$vGooglePlayServices"
     compile "com.google.android.gms:play-services-places:$vGooglePlayServices"
     compile "com.google.android.gms:play-services-drive:$vGooglePlayServices"

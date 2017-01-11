@@ -33,7 +33,8 @@ class MockLocationsActivity : PermittedActivity() {
     private lateinit var mockModeToggleButton: ToggleButton
     private lateinit var setLocationButton: Button
 
-    private lateinit var rxGms: RxGms
+    private val locationApi = RxGms(this).locationApi
+
     private lateinit var mockLocationObservable: Observable<Location>
     private lateinit var mockLocationSubscription: Subscription
     private lateinit var updatedLocationSubscription: Subscription
@@ -44,7 +45,6 @@ class MockLocationsActivity : PermittedActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mocklocations)
 
-        rxGms = RxGms(this)
         mockLocationSubject = PublishSubject.create<Location>()
 
         mockLocationObservable = mockLocationSubject.asObservable()
@@ -67,6 +67,7 @@ class MockLocationsActivity : PermittedActivity() {
         setLocationButton.setOnClickListener { addMockLocation() }
     }
 
+
     override fun onPermissionsGranted(vararg permissions: String) {
         if (!permissions.contains(Manifest.permission.ACCESS_FINE_LOCATION)) return
 
@@ -75,7 +76,7 @@ class MockLocationsActivity : PermittedActivity() {
         val locationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                 .setInterval(2000)
-        updatedLocationSubscription = rxGms.locationApi
+        updatedLocationSubscription = locationApi
                 .requestLocationUpdates(locationRequest)
                 .map(LocationToStringFunc)
                 .map(object : Func1<String, String> {
@@ -99,7 +100,7 @@ class MockLocationsActivity : PermittedActivity() {
 
     private fun setMockMode(toggle: Boolean) {
         if (toggle) {
-            mockLocationSubscription = Observable.zip(rxGms.locationApi.mockLocation(mockLocationObservable),
+            mockLocationSubscription = Observable.zip(locationApi.mockLocation(mockLocationObservable),
                     mockLocationObservable, object : Func2<Status, Location, String> {
                 internal var count = 0
 

@@ -8,7 +8,7 @@ import rx.Subscriber
 import rx.subscriptions.Subscriptions
 import xyz.fcampbell.rxgms.common.exception.StatusException
 
-class PendingResultOnSubscribe<T : Result>(
+internal class PendingResultOnSubscribe<T : Result>(
         private val pendingResult: PendingResult<T>
 ) : Observable.OnSubscribe<T> {
 

@@ -23,6 +23,8 @@ class PlacesActivity : PermittedActivity() {
     override val permissionsToRequest = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
 
     private val rxGms = RxGms(this)
+    private val locationApi = rxGms.locationApi
+    private val placesApi = rxGms.placesApi
 
     private val compositeSubscription = CompositeSubscription()
 
@@ -35,11 +37,12 @@ class PlacesActivity : PermittedActivity() {
         }
     }
 
+
     override fun onPermissionsGranted(vararg permissions: String) {
         if (!permissions.contains(Manifest.permission.ACCESS_FINE_LOCATION)) return
 
         compositeSubscription.add(
-                rxGms.placesApi.
+                placesApi.
                         getCurrentPlace(null)
                         .subscribe { buffer ->
                             val likelihood = buffer.get(0)
@@ -55,7 +58,7 @@ class PlacesActivity : PermittedActivity() {
                 .map { charSequence -> charSequence.toString() }
                 .debounce(1, TimeUnit.SECONDS)
                 .filter { s -> !TextUtils.isEmpty(s) }
-        val lastKnownLocationObservable = rxGms.locationApi.getLastLocation()
+        val lastKnownLocationObservable = locationApi.getLastLocation()
         val suggestionsObservable = Observable
                 .combineLatest(queryObservable, lastKnownLocationObservable) { query, currentLocation ->
                     QueryWithCurrentLocation(query, currentLocation)
@@ -69,7 +72,7 @@ class PlacesActivity : PermittedActivity() {
                             LatLng(latitude - 0.05, longitude - 0.05),
                             LatLng(latitude + 0.05, longitude + 0.05)
                     )
-                    return@flatMap rxGms.placesApi.getPlaceAutocompletePredictions(query.query, bounds, null)
+                    return@flatMap placesApi.getPlaceAutocompletePredictions(query.query, bounds, null)
                 }
 
         compositeSubscription.add(suggestionsObservable.subscribe { buffer ->
