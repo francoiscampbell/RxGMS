@@ -12,9 +12,11 @@ import xyz.fcampbell.rxgms.common.action.GoogleApiClientOnSubscribe
  * Created by francois on 2016-12-29.
  */
 open class RxGmsApi<O : Api.ApiOptions>(
-        private val context: Context,
-        private val api: ApiDescriptor<O>
+        context: Context,
+        api: ApiDescriptor<O>
 ) {
+    private val googleApiClientOnSubscribe = GoogleApiClientOnSubscribe(context, api)
+
     private var currentSubscription: Subscription = Subscriptions.unsubscribed()
     private var currentApiClient: Observable<GoogleApiClient>? = null
 
@@ -23,7 +25,7 @@ open class RxGmsApi<O : Api.ApiOptions>(
             var localRxApiClient = currentApiClient
             if (localRxApiClient != null && !currentSubscription.isUnsubscribed) return localRxApiClient
 
-            localRxApiClient = Observable.create(GoogleApiClientOnSubscribe(context, api))
+            localRxApiClient = Observable.create(googleApiClientOnSubscribe)
                     .replay(1)
                     .autoConnect(1) { subscription ->
                         currentSubscription = subscription //to unsub from main client and disconnect from GMS

@@ -110,6 +110,9 @@ class MainActivity : PermittedActivity() {
         addressSubscription?.unsubscribe()
         lastKnownLocationSubscription?.unsubscribe()
         activitySubscription?.unsubscribe()
+
+        rxGms.locationApi.disconnect()
+        rxGms.activityRecognitionApi.disconnect()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
