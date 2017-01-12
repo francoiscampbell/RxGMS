@@ -33,7 +33,7 @@ All observables are already there. Examples are worth more than 1000 words:
 
 ```
 RxGms rxGms = new RxGms(context);
-rxGms.getLocationApi()
+rxGms.getLocationServices()
     .getLastKnownLocation()
     .subscribe(new Action1<Location>() {
         @Override
@@ -54,7 +54,7 @@ LocationRequest request = LocationRequest.create() //standard GMS LocationReques
                                   .setNumUpdates(5)
                                   .setInterval(100);
 
-Subscription subscription = rxGms.getLocationApi()
+Subscription subscription = rxGms.getLocationServices()
     .getUpdatedLocation(request)
     .filter(...)    // you can filter location updates
     .map(...)       // you can map location to sth different
@@ -79,7 +79,7 @@ subscription.unsubscribe();
 Getting activity recognition is just as simple
 
 ```
-rxGms.getActivityRecognitionApi()
+rxGms.getActivityRecognition()
     .getDetectedActivity(0) // detectionIntervalMillis
     .filter(...)    // you can filter location updates
     .map(...)       // you can map location to sth different
@@ -98,7 +98,7 @@ rxGms.getActivityRecognitionApi()
 Do you need address for location?
 
 ```
-rxGms.getLocationApi()
+rxGms.getLocationServices()
     .reverseGeocode(location.getLatitude(), location.getLongitude(), MAX_ADDRESSES)
     .subscribeOn(Schedulers.io())               // use I/O thread to query for addresses
     .observeOn(AndroidSchedulers.mainThread())  // return result in main android thread to manipulate UI
@@ -110,7 +110,7 @@ rxGms.getLocationApi()
 Do you need address for a text search query?
 
 ```
-rxGms.getLocationApi()
+rxGms.getLocationServices()
     .geocode(String userQuery, MAX_ADDRESSES)
     .subscribeOn(Schedulers.io())
     .observeOn(AndroidSchedulers.mainThread())
@@ -151,9 +151,9 @@ from Places API. For usage example see ```PlacesActivity``` sample.
 
 You can fetch current place or place suggestions using:
 
-* ```rxGms.getPlacesApi().getCurrentPlace()```
-* ```rxGms.getPlacesApi().getPlaceAutocompletePredictions()```
-* ```rxGms.getPlacesApi().getPlaceById()```
+* ```rxGms.getPlaces().getCurrentPlace()```
+* ```rxGms.getPlaces().getPlaceAutocompletePredictions()```
+* ```rxGms.getPlaces().getPlaceById()```
 
 For more info see sample project and ```PlacesActivity```.
 
@@ -167,7 +167,7 @@ LocationRequest req = LocationRequest.create()
                          .setExpirationDuration(TimeUnit.SECONDS.toMillis(LOCATION_TIMEOUT_IN_SECONDS))
                          .setInterval(LOCATION_UPDATE_INTERVAL);
 
-rxGms.getLocationApi()
+rxGms.getLocationServices()
     .getUpdatedLocation(req)
     .filter(new Func1<Location, Boolean>() {
         @Override

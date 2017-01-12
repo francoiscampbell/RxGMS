@@ -10,25 +10,25 @@ import android.widget.TextView
 import android.widget.Toast
 import com.google.android.gms.location.GeofencingRequest
 import rx.Subscription
-import xyz.fcampbell.rxgms.RxGms
+import xyz.fcampbell.rxgms.location.RxLocation
 import xyz.fcampbell.rxgms.sample.PermittedActivity
 import xyz.fcampbell.rxgms.sample.R
 import xyz.fcampbell.rxgms.sample.utils.DisplayTextOnViewAction
 import xyz.fcampbell.rxgms.sample.utils.LocationToStringFunc
-import xyz.fcampbell.rxgms.sample.utils.UnsubscribeIfPresent
 import java.lang.Double
 import java.lang.Float
 
 class GeofenceActivity : PermittedActivity() {
     override val permissionsToRequest = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
 
-    private val locationApi = RxGms(this).locationApi
+    private val fusedLocationApi = RxLocation.FusedLocationApi(this)
+    private val geofencingApi = RxLocation.GeofencingApi(this)
 
     private lateinit var latitudeInput: EditText
     private lateinit var longitudeInput: EditText
     private lateinit var radiusInput: EditText
     private lateinit var lastKnownLocationView: TextView
-    private lateinit var lastKnownLocationSubscription: Subscription
+    private var lastKnownLocationSubscription: Subscription? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,7 +49,7 @@ class GeofenceActivity : PermittedActivity() {
     override fun onPermissionsGranted(vararg permissions: String) {
         if (!permissions.contains(Manifest.permission.ACCESS_FINE_LOCATION)) return
 
-        lastKnownLocationSubscription = locationApi
+        lastKnownLocationSubscription = fusedLocationApi
                 .getLastLocation()
                 .map(LocationToStringFunc)
                 .subscribe(DisplayTextOnViewAction(lastKnownLocationView))
@@ -57,11 +57,11 @@ class GeofenceActivity : PermittedActivity() {
 
     override fun onStop() {
         super.onStop()
-        UnsubscribeIfPresent.unsubscribe(lastKnownLocationSubscription)
+        lastKnownLocationSubscription?.unsubscribe()
     }
 
     private fun clearGeofence() {
-        locationApi.removeGeofences(createNotificationBroadcastPendingIntent())
+        geofencingApi.removeGeofences(createNotificationBroadcastPendingIntent())
                 .subscribe({
                     toast("Geofences removed")
                 }, { throwable ->
@@ -82,12 +82,15 @@ class GeofenceActivity : PermittedActivity() {
         val geofencingRequest = createGeofencingRequest() ?: return
 
         val pendingIntent = createNotificationBroadcastPendingIntent()
-        locationApi.removeGeofences(pendingIntent)
-                .flatMap { locationApi.addGeofences(pendingIntent, geofencingRequest) }
-                .subscribe({ addGeofenceResult -> toast("Geofence added, success: " + addGeofenceResult.isSuccess) }) { throwable ->
+        geofencingApi.removeGeofences(pendingIntent)
+                .flatMap { geofencingApi.addGeofences(pendingIntent, geofencingRequest) }
+                .subscribe({
+                    addGeofenceResult ->
+                    toast("Geofence added, success: " + addGeofenceResult.isSuccess)
+                }, { throwable ->
                     toast("Error adding geofence.")
                     Log.d(TAG, "Error adding geofence.", throwable)
-                }
+                })
     }
 
     private fun createGeofencingRequest(): GeofencingRequest? {

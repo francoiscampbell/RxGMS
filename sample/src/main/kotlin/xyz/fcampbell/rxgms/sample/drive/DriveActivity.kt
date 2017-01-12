@@ -7,19 +7,21 @@ import com.google.android.gms.drive.Drive
 import com.google.android.gms.drive.MetadataBuffer
 import com.google.android.gms.drive.MetadataChangeSet
 import rx.Observable
-import xyz.fcampbell.rxgms.RxGms
+import xyz.fcampbell.rxgms.auth.RxAuth
+import xyz.fcampbell.rxgms.drive.RxDrive
 
 /**
  * Created by francois on 2017-01-10.
  */
 class DriveActivity : AppCompatActivity() {
 
-    private val driveApi = RxGms(this).getDriveApi("", Drive.SCOPE_FILE, Drive.SCOPE_APPFOLDER)
+    private val driveApi = RxDrive.DriveApi(this, "", Drive.SCOPE_FILE, Drive.SCOPE_APPFOLDER)
+    private val drivePrefsApi = RxDrive.DrivePreferencesApi(this, "", Drive.SCOPE_FILE, Drive.SCOPE_APPFOLDER)
 
     private val gso = GoogleSignInOptions.Builder()
             .requestEmail()
             .build()
-    private val authApi = RxGms(this).getAuthApi("", gso)
+    private val googleSignInApi = RxAuth.GoogleSignInApi(this, "", gso)
 
     override fun onStart() {
         super.onStart()
@@ -29,7 +31,7 @@ class DriveActivity : AppCompatActivity() {
     }
 
     private fun getRootFolder() {
-        driveApi.getFileUploadPreferences()
+        drivePrefsApi.getFileUploadPreferences()
                 .subscribe({
                     Log.d(TAG, "Got file upload prefs: $it")
                     Log.d(TAG, "batteryUsagePreference: ${it.batteryUsagePreference}")
@@ -70,7 +72,7 @@ class DriveActivity : AppCompatActivity() {
     }
 
     private fun getGoogleAccount() {
-        authApi.signIn()
+        googleSignInApi.signIn()
                 .subscribe({ account ->
                     Log.d(TAG, account.email)
                 }, { throwable ->

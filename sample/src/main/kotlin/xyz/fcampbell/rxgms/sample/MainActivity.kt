@@ -18,8 +18,9 @@ import rx.android.schedulers.AndroidSchedulers
 import rx.functions.Action1
 import rx.functions.Func1
 import rx.schedulers.Schedulers
-import xyz.fcampbell.rxgms.RxGms
 import xyz.fcampbell.rxgms.common.exception.StatusException
+import xyz.fcampbell.rxgms.location.RxActivityRecognition
+import xyz.fcampbell.rxgms.location.RxLocation
 import xyz.fcampbell.rxgms.sample.drive.DriveActivity
 import xyz.fcampbell.rxgms.sample.location.GeofenceActivity
 import xyz.fcampbell.rxgms.sample.location.MockLocationsActivity
@@ -28,8 +29,6 @@ import xyz.fcampbell.rxgms.sample.utils.*
 
 class MainActivity : PermittedActivity() {
     override val permissionsToRequest = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
-
-    private val rxGms = RxGms(this)
 
     private var lastKnownLocationSubscription: Subscription? = null
     private var updatableLocationSubscription: Subscription? = null
@@ -47,11 +46,13 @@ class MainActivity : PermittedActivity() {
         getLocation()
     }
 
-    private val locationApi = rxGms.locationApi
-    private val activityRecognitionApi = rxGms.activityRecognitionApi
+    private val fusedLocationApi = RxLocation.FusedLocationApi(this)
+    private val settingsApi = RxLocation.SettingsApi(this)
+    private val activityRecognitionApi = RxActivityRecognition.ActivityRecognitionApi(this)
+    private val geocodingApi = RxLocation.GeocodingApi(this)
 
     private fun getLocation() {
-        lastKnownLocationSubscription = locationApi
+        lastKnownLocationSubscription = fusedLocationApi
                 .getLastLocation()
                 .map(LocationToStringFunc)
                 .subscribe(DisplayTextOnViewAction(last_known_location_view), ErrorHandler())
@@ -61,7 +62,7 @@ class MainActivity : PermittedActivity() {
                 .setNumUpdates(5)
                 .setInterval(100)
 
-        updatableLocationSubscription = locationApi
+        updatableLocationSubscription = settingsApi
                 .checkLocationSettings(
                         LocationSettingsRequest.Builder()
                                 .addLocationRequest(locationRequest)
@@ -78,7 +79,7 @@ class MainActivity : PermittedActivity() {
 
                     }
                 }
-                .flatMap { locationApi.requestLocationUpdates(locationRequest) }
+                .flatMap { fusedLocationApi.requestLocationUpdates(locationRequest) }
                 .map(LocationToStringFunc)
                 .map(object : Func1<String, String> {
                     private var count = 0
@@ -90,9 +91,9 @@ class MainActivity : PermittedActivity() {
                 .subscribe(DisplayTextOnViewAction(updated_location_view), ErrorHandler())
 
 
-        addressSubscription = locationApi
+        addressSubscription = fusedLocationApi
                 .requestLocationUpdates(locationRequest)
-                .flatMap { location -> locationApi.reverseGeocode(location.latitude, location.longitude, 1) }
+                .flatMap { location -> geocodingApi.reverseGeocode(location.latitude, location.longitude, 1) }
                 .map { addresses -> if (addresses != null && !addresses.isEmpty()) addresses[0] else null }
                 .map(AddressToStringFunc)
                 .subscribeOn(Schedulers.io())
@@ -114,7 +115,7 @@ class MainActivity : PermittedActivity() {
         lastKnownLocationSubscription?.unsubscribe()
         activitySubscription?.unsubscribe()
 
-        locationApi.disconnect()
+        fusedLocationApi.disconnect()
         activityRecognitionApi.disconnect()
     }
 

@@ -14,7 +14,8 @@ import com.jakewharton.rxbinding.widget.RxTextView
 import kotlinx.android.synthetic.main.activity_places.*
 import rx.Observable
 import rx.subscriptions.CompositeSubscription
-import xyz.fcampbell.rxgms.RxGms
+import xyz.fcampbell.rxgms.location.RxLocation
+import xyz.fcampbell.rxgms.location.RxPlaces
 import xyz.fcampbell.rxgms.sample.PermittedActivity
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -22,9 +23,9 @@ import java.util.concurrent.TimeUnit
 class PlacesActivity : PermittedActivity() {
     override val permissionsToRequest = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
 
-    private val rxGms = RxGms(this)
-    private val locationApi = rxGms.locationApi
-    private val placesApi = rxGms.placesApi
+    private val fusedLocationApi = RxLocation.FusedLocationApi(this)
+    private val placeDetectionApi = RxPlaces.PlaceDetectionApi(this)
+    private val geodataApi = RxPlaces.GeoDataApi(this)
 
     private val compositeSubscription = CompositeSubscription()
 
@@ -42,7 +43,7 @@ class PlacesActivity : PermittedActivity() {
         if (!permissions.contains(Manifest.permission.ACCESS_FINE_LOCATION)) return
 
         compositeSubscription.add(
-                placesApi.
+                placeDetectionApi.
                         getCurrentPlace(null)
                         .subscribe { buffer ->
                             val likelihood = buffer.get(0)
@@ -58,7 +59,7 @@ class PlacesActivity : PermittedActivity() {
                 .map { charSequence -> charSequence.toString() }
                 .debounce(1, TimeUnit.SECONDS)
                 .filter { s -> !TextUtils.isEmpty(s) }
-        val lastKnownLocationObservable = locationApi.getLastLocation()
+        val lastKnownLocationObservable = fusedLocationApi.getLastLocation()
         val suggestionsObservable = Observable
                 .combineLatest(queryObservable, lastKnownLocationObservable) { query, currentLocation ->
                     QueryWithCurrentLocation(query, currentLocation)
@@ -72,7 +73,7 @@ class PlacesActivity : PermittedActivity() {
                             LatLng(latitude - 0.05, longitude - 0.05),
                             LatLng(latitude + 0.05, longitude + 0.05)
                     )
-                    return@flatMap placesApi.getPlaceAutocompletePredictions(query.query, bounds, null)
+                    return@flatMap geodataApi.getPlaceAutocompletePredictions(query.query, bounds, null)
                 }
 
         compositeSubscription.add(suggestionsObservable.subscribe { buffer ->

@@ -15,12 +15,11 @@ import rx.functions.Action1
 import rx.functions.Func1
 import rx.functions.Func2
 import rx.subjects.PublishSubject
-import xyz.fcampbell.rxgms.RxGms
+import xyz.fcampbell.rxgms.location.RxLocation
 import xyz.fcampbell.rxgms.sample.PermittedActivity
 import xyz.fcampbell.rxgms.sample.R
 import xyz.fcampbell.rxgms.sample.utils.DisplayTextOnViewAction
 import xyz.fcampbell.rxgms.sample.utils.LocationToStringFunc
-import xyz.fcampbell.rxgms.sample.utils.UnsubscribeIfPresent.unsubscribe
 import java.util.*
 
 class MockLocationsActivity : PermittedActivity() {
@@ -33,11 +32,11 @@ class MockLocationsActivity : PermittedActivity() {
     private lateinit var mockModeToggleButton: ToggleButton
     private lateinit var setLocationButton: Button
 
-    private val locationApi = RxGms(this).locationApi
+    private val fusedLocationApi = RxLocation.FusedLocationApi(this)
 
     private lateinit var mockLocationObservable: Observable<Location>
-    private lateinit var mockLocationSubscription: Subscription
-    private lateinit var updatedLocationSubscription: Subscription
+    private var mockLocationSubscription: Subscription? = null
+    private var updatedLocationSubscription: Subscription? = null
 
     private lateinit var mockLocationSubject: PublishSubject<Location>
 
@@ -76,7 +75,7 @@ class MockLocationsActivity : PermittedActivity() {
         val locationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                 .setInterval(2000)
-        updatedLocationSubscription = locationApi
+        updatedLocationSubscription = fusedLocationApi
                 .requestLocationUpdates(locationRequest)
                 .map(LocationToStringFunc)
                 .map(object : Func1<String, String> {
@@ -100,7 +99,7 @@ class MockLocationsActivity : PermittedActivity() {
 
     private fun setMockMode(toggle: Boolean) {
         if (toggle) {
-            mockLocationSubscription = Observable.zip(locationApi.mockLocation(mockLocationObservable),
+            mockLocationSubscription = Observable.zip(fusedLocationApi.mockLocation(mockLocationObservable),
                     mockLocationObservable, object : Func2<Status, Location, String> {
                 internal var count = 0
 
@@ -110,7 +109,7 @@ class MockLocationsActivity : PermittedActivity() {
             })
                     .subscribe(DisplayTextOnViewAction(mockLocationView), ErrorHandler())
         } else {
-            mockLocationSubscription.unsubscribe()
+            mockLocationSubscription?.unsubscribe()
         }
     }
 
@@ -138,8 +137,8 @@ class MockLocationsActivity : PermittedActivity() {
 
     override fun onStop() {
         super.onStop()
-        unsubscribe(mockLocationSubscription)
-        unsubscribe(updatedLocationSubscription)
+        mockLocationSubscription?.unsubscribe()
+        updatedLocationSubscription?.unsubscribe()
     }
 
     private inner class ErrorHandler : Action1<Throwable> {

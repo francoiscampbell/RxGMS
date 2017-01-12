@@ -6,20 +6,20 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.TextView
 import rx.subscriptions.CompositeSubscription
-import xyz.fcampbell.rxgms.RxGms
+import xyz.fcampbell.rxgms.location.RxPlaces
 import xyz.fcampbell.rxgms.sample.PermittedActivity
 import xyz.fcampbell.rxgms.sample.R
-import xyz.fcampbell.rxgms.sample.utils.UnsubscribeIfPresent
 
 class PlacesResultActivity : PermittedActivity() {
     override val permissionsToRequest = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
 
-    private lateinit var rxGms: RxGms
-    private lateinit var compositeSubscription: CompositeSubscription
+    private val compositeSubscription = CompositeSubscription()
     private lateinit var placeNameView: TextView
     private lateinit var placeLocationView: TextView
     private lateinit var placeAddressView: TextView
     private var placeId: String? = null
+
+    private val geodataApi = RxPlaces.GeoDataApi(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,8 +28,6 @@ class PlacesResultActivity : PermittedActivity() {
         placeNameView = findViewById(R.id.place_name_view) as TextView
         placeLocationView = findViewById(R.id.place_location_view) as TextView
         placeAddressView = findViewById(R.id.place_address_view) as TextView
-
-        rxGms = RxGms(this)
 
         getPlaceIdFromIntent()
     }
@@ -46,8 +44,7 @@ class PlacesResultActivity : PermittedActivity() {
     override fun onPermissionsGranted(vararg permissions: String) {
         if (!permissions.contains(Manifest.permission.ACCESS_FINE_LOCATION)) return
 
-        compositeSubscription = CompositeSubscription()
-        compositeSubscription.add(rxGms.placesApi.getPlaceById(placeId ?: "")
+        compositeSubscription.add(geodataApi.getPlaceById(placeId ?: "")
                 .subscribe { buffer ->
                     val place = buffer.get(0)
                     if (place != null) {
@@ -61,7 +58,7 @@ class PlacesResultActivity : PermittedActivity() {
 
     override fun onStop() {
         super.onStop()
-        UnsubscribeIfPresent.unsubscribe(compositeSubscription)
+        compositeSubscription.unsubscribe()
     }
 
     companion object {
