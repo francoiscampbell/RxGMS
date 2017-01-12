@@ -6,9 +6,10 @@ import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock
 import android.util.Log
-import android.widget.*
+import android.widget.Toast
 import com.google.android.gms.common.api.Status
 import com.google.android.gms.location.LocationRequest
+import kotlinx.android.synthetic.main.activity_mocklocations.*
 import rx.Observable
 import rx.Subscription
 import rx.functions.Action1
@@ -24,13 +25,6 @@ import java.util.*
 
 class MockLocationsActivity : PermittedActivity() {
     override val permissionsToRequest = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
-
-    private lateinit var latitudeInput: EditText
-    private lateinit var longitudeInput: EditText
-    private lateinit var mockLocationView: TextView
-    private lateinit var updatedLocationView: TextView
-    private lateinit var mockModeToggleButton: ToggleButton
-    private lateinit var setLocationButton: Button
 
     private val fusedLocationApi = RxLocation.FusedLocationApi(this)
 
@@ -52,25 +46,18 @@ class MockLocationsActivity : PermittedActivity() {
     }
 
     private fun initViews() {
-        latitudeInput = findViewById(R.id.latitude_input) as EditText
-        longitudeInput = findViewById(R.id.longitude_input) as EditText
-        mockLocationView = findViewById(R.id.mock_location_view) as TextView
-        updatedLocationView = findViewById(R.id.updated_location_view) as TextView
-        mockModeToggleButton = findViewById(R.id.toggle_button) as ToggleButton
-        setLocationButton = findViewById(R.id.set_location_button) as Button
-
-        mockModeToggleButton.setOnCheckedChangeListener { buttonView, isChecked ->
+        toggle_button.setOnCheckedChangeListener { buttonView, isChecked ->
             setMockMode(isChecked)
-            setLocationButton.isEnabled = isChecked
+            set_location_button.isEnabled = isChecked
         }
-        setLocationButton.setOnClickListener { addMockLocation() }
+        set_location_button.setOnClickListener { addMockLocation() }
     }
 
 
     override fun onPermissionsGranted(vararg permissions: String) {
         if (!permissions.contains(Manifest.permission.ACCESS_FINE_LOCATION)) return
 
-        mockModeToggleButton.isChecked = true
+        toggle_button.isChecked = true
 
         val locationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
@@ -85,7 +72,7 @@ class MockLocationsActivity : PermittedActivity() {
                         return s + " " + count++
                     }
                 })
-                .subscribe(DisplayTextOnViewAction(updatedLocationView))
+                .subscribe(DisplayTextOnViewAction(updated_location_view))
     }
 
     private fun addMockLocation() {
@@ -107,15 +94,15 @@ class MockLocationsActivity : PermittedActivity() {
                     return LocationToStringFunc.call(location) + " " + count++
                 }
             })
-                    .subscribe(DisplayTextOnViewAction(mockLocationView), ErrorHandler())
+                    .subscribe(DisplayTextOnViewAction(mock_location_view), ErrorHandler())
         } else {
             mockLocationSubscription?.unsubscribe()
         }
     }
 
     private fun createMockLocation(): Location {
-        val longitudeString = longitudeInput.text.toString()
-        val latitudeString = latitudeInput.text.toString()
+        val longitudeString = longitude_input.text.toString()
+        val latitudeString = latitude_input.text.toString()
 
         if (!longitudeString.isEmpty() && !latitudeString.isEmpty()) {
             val longitude = Location.convert(longitudeString)

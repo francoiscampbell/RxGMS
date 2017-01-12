@@ -5,10 +5,9 @@ import android.app.PendingIntent
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
 import com.google.android.gms.location.GeofencingRequest
+import kotlinx.android.synthetic.main.activity_geofence.*
 import rx.Subscription
 import xyz.fcampbell.rxgms.location.RxLocation
 import xyz.fcampbell.rxgms.sample.PermittedActivity
@@ -24,10 +23,6 @@ class GeofenceActivity : PermittedActivity() {
     private val fusedLocationApi = RxLocation.FusedLocationApi(this)
     private val geofencingApi = RxLocation.GeofencingApi(this)
 
-    private lateinit var latitudeInput: EditText
-    private lateinit var longitudeInput: EditText
-    private lateinit var radiusInput: EditText
-    private lateinit var lastKnownLocationView: TextView
     private var lastKnownLocationSubscription: Subscription? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,12 +32,8 @@ class GeofenceActivity : PermittedActivity() {
     }
 
     private fun initViews() {
-        lastKnownLocationView = findViewById(R.id.last_known_location_view) as TextView
-        latitudeInput = findViewById(R.id.latitude_input) as EditText
-        longitudeInput = findViewById(R.id.longitude_input) as EditText
-        radiusInput = findViewById(R.id.radius_input) as EditText
-        findViewById(R.id.add_button).setOnClickListener { addGeofence() }
-        findViewById(R.id.clear_button).setOnClickListener { clearGeofence() }
+        add_button.setOnClickListener { addGeofence() }
+        clear_button.setOnClickListener { clearGeofence() }
     }
 
 
@@ -52,7 +43,7 @@ class GeofenceActivity : PermittedActivity() {
         lastKnownLocationSubscription = fusedLocationApi
                 .getLastLocation()
                 .map(LocationToStringFunc)
-                .subscribe(DisplayTextOnViewAction(lastKnownLocationView))
+                .subscribe(DisplayTextOnViewAction(last_known_location_view))
     }
 
     override fun onStop() {
@@ -95,9 +86,9 @@ class GeofenceActivity : PermittedActivity() {
 
     private fun createGeofencingRequest(): GeofencingRequest? {
         try {
-            val longitude = java.lang.Double.parseDouble(longitudeInput.text.toString())
-            val latitude = java.lang.Double.parseDouble(latitudeInput.text.toString())
-            val radius = java.lang.Float.parseFloat(radiusInput.text.toString())
+            val longitude = java.lang.Double.parseDouble(longitude_input.text.toString())
+            val latitude = java.lang.Double.parseDouble(latitude_input.text.toString())
+            val radius = java.lang.Float.parseFloat(radius_input.text.toString())
             val geofence = com.google.android.gms.location.Geofence.Builder()
                     .setRequestId("GEOFENCE")
                     .setCircularRegion(latitude, longitude, radius)

@@ -4,7 +4,7 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.widget.TextView
+import kotlinx.android.synthetic.main.activity_places_result.*
 import rx.subscriptions.CompositeSubscription
 import xyz.fcampbell.rxgms.location.RxPlaces
 import xyz.fcampbell.rxgms.sample.PermittedActivity
@@ -14,9 +14,6 @@ class PlacesResultActivity : PermittedActivity() {
     override val permissionsToRequest = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
 
     private val compositeSubscription = CompositeSubscription()
-    private lateinit var placeNameView: TextView
-    private lateinit var placeLocationView: TextView
-    private lateinit var placeAddressView: TextView
     private var placeId: String? = null
 
     private val geodataApi = RxPlaces.GeoDataApi(this)
@@ -24,10 +21,6 @@ class PlacesResultActivity : PermittedActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_places_result)
-
-        placeNameView = findViewById(R.id.place_name_view) as TextView
-        placeLocationView = findViewById(R.id.place_location_view) as TextView
-        placeAddressView = findViewById(R.id.place_address_view) as TextView
 
         getPlaceIdFromIntent()
     }
@@ -48,9 +41,9 @@ class PlacesResultActivity : PermittedActivity() {
                 .subscribe { buffer ->
                     val place = buffer.get(0)
                     if (place != null) {
-                        placeNameView.text = place.name
-                        placeLocationView.text = place.latLng.latitude.toString() + ", " + place.latLng.longitude
-                        placeAddressView.text = place.address
+                        place_name_view.text = place.name
+                        place_location_view.text = place.latLng.latitude.toString() + ", " + place.latLng.longitude
+                        place_address_view.text = place.address
                     }
                     buffer.release()
                 })
