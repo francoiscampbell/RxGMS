@@ -48,9 +48,7 @@ class RxDriveApi internal constructor(
         return apiClient.flatMap { googleApiClient ->
             Drive.DriveApi.newDriveContents(googleApiClient)
                     .toObservable()
-                    .map {
-                        RxDriveContents(googleApiClient, it.driveContents)
-                    }
+                    .map { RxDriveContents(googleApiClient, it.driveContents) }
         }
     }
 

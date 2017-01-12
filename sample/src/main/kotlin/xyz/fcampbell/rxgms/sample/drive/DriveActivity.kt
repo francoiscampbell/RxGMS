@@ -25,7 +25,7 @@ class DriveActivity : AppCompatActivity() {
         super.onStart()
 
         getRootFolder()
-        getGoogleAccount()
+        getGoogleAccount() //todo move to other activity
     }
 
     private fun getRootFolder() {
