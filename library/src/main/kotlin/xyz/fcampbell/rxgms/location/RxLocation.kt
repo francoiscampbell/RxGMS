@@ -31,7 +31,7 @@ class RxLocation private constructor() {
             context: Context
     ) : RxGmsApi<Api.ApiOptions.NoOptions>(
             context,
-            ApiDescriptor(arrayOf(ApiDescriptor.OptionsHolder(LocationServices.API)))
+            ApiDescriptor(LocationServices.API)
     ) {
         /**
          * Creates observable that obtains last known location and than completes.
@@ -156,7 +156,7 @@ class RxLocation private constructor() {
             context: Context
     ) : RxGmsApi<Api.ApiOptions.NoOptions>(
             context,
-            ApiDescriptor(arrayOf(ApiDescriptor.OptionsHolder(LocationServices.API)))
+            ApiDescriptor(LocationServices.API)
     ) {
         /**
          * Creates observable that adds request and completes when the action is done.
@@ -229,7 +229,7 @@ class RxLocation private constructor() {
             context: Context
     ) : RxGmsApi<Api.ApiOptions.NoOptions>(
             context,
-            ApiDescriptor(arrayOf(ApiDescriptor.OptionsHolder(LocationServices.API)))
+            ApiDescriptor(LocationServices.API)
     ) {
         /**
          * Observable that can be used to check settings state for given location request.
@@ -249,7 +249,7 @@ class RxLocation private constructor() {
             private val context: Context
     ) : RxGmsApi<Api.ApiOptions.NoOptions>(
             context,
-            ApiDescriptor(arrayOf(ApiDescriptor.OptionsHolder(LocationServices.API)))
+            ApiDescriptor(LocationServices.API)
     ) {
         /**
          * Creates observable that translates latitude and longitude to list of possible addresses using

@@ -19,7 +19,7 @@ class RxActivityRecognition private constructor() {
             context: Context
     ) : RxGmsApi<Api.ApiOptions.NoOptions>(
             context,
-            ApiDescriptor(arrayOf(ApiDescriptor.OptionsHolder(ActivityRecognition.API)))
+            ApiDescriptor(ActivityRecognition.API)
     ) {
         /**
          * Observable that can be used to observe activity provided by Actity Recognition mechanism.

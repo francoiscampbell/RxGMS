@@ -17,7 +17,7 @@ class RxPlaces private constructor() {
             context: Context
     ) : RxGmsApi<PlacesOptions>(
             context,
-            ApiDescriptor(arrayOf(ApiDescriptor.OptionsHolder(Places.PLACE_DETECTION_API)))
+            ApiDescriptor(Places.PLACE_DETECTION_API)
     ) {
         /**
          * Returns observable that fetches current place from Places API. To flatmap and auto release
@@ -37,7 +37,7 @@ class RxPlaces private constructor() {
             context: Context
     ) : RxGmsApi<PlacesOptions>(
             context,
-            ApiDescriptor(arrayOf(ApiDescriptor.OptionsHolder(Places.GEO_DATA_API)))
+            ApiDescriptor(Places.GEO_DATA_API)
     ) {
         /**
          * Returns observable that fetches a place from the Places API using the place ID.

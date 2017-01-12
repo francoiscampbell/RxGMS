@@ -10,7 +10,7 @@ Version 0.10
 Version 0.8.1
 ----------------------------
 * Updated dependencies
-* Added fallback reverse geocode observable that uses web apis to obtain address
+* Added fallback reverse geocode observable that uses web descriptor to obtain address
 * Added API to pass locales for reverse geocoding
 
 Version 0.8

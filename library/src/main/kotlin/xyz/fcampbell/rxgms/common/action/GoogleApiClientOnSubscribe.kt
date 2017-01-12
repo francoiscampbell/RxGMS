@@ -5,7 +5,6 @@ import android.os.Bundle
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.Api
 import com.google.android.gms.common.api.GoogleApiClient
-import com.google.android.gms.common.api.Scope
 import rx.Observable
 import rx.Subscriber
 import rx.subscriptions.Subscriptions
@@ -17,7 +16,7 @@ import xyz.fcampbell.rxgms.common.util.ResultActivity
 
 internal class GoogleApiClientOnSubscribe<O : Api.ApiOptions>(
         private val context: Context,
-        private val apiDescriptor: ApiDescriptor<O>
+        private vararg val apiDescriptors: ApiDescriptor<O>
 ) : Observable.OnSubscribe<GoogleApiClient> {
     override fun call(subscriber: Subscriber<in GoogleApiClient>) {
         val apiClient = createApiClient(subscriber)
@@ -41,9 +40,9 @@ internal class GoogleApiClientOnSubscribe<O : Api.ApiOptions>(
                 context,
                 apiClientConnectionCallbacks,
                 apiClientConnectionCallbacks)
-                .addApis(apiDescriptor.apis)
-                .addScopes(apiDescriptor.scopes)
-                .setAccountNameIfSpecified(apiDescriptor.accountName)
+                .addApis(*apiDescriptors)
+                .addScopes(*apiDescriptors)
+                .setAccountNameIfSpecified(*apiDescriptors)
                 .build()
 
         apiClientConnectionCallbacks.apiClient = apiClient
@@ -52,28 +51,24 @@ internal class GoogleApiClientOnSubscribe<O : Api.ApiOptions>(
     }
 
     @Suppress("UNCHECKED_CAST")
-    private fun GoogleApiClient.Builder.addApis(apis: Array<ApiDescriptor.OptionsHolder<O>>): GoogleApiClient.Builder {
-        for (api in apis) {
-            if (api.options == null) {
-                addApi(api.service as Api<Api.ApiOptions.NotRequiredOptions>)
+    private fun GoogleApiClient.Builder.addApis(vararg descriptors: ApiDescriptor<O>): GoogleApiClient.Builder {
+        descriptors.forEach {
+            if (it.options == null) {
+                addApi(it.api as Api<Api.ApiOptions.NotRequiredOptions>)
             } else {
-                addApi(api.service as Api<Api.ApiOptions.HasOptions>, api.options as Api.ApiOptions.HasOptions)
+                addApi(it.api as Api<Api.ApiOptions.HasOptions>, it.options as Api.ApiOptions.HasOptions)
             }
         }
         return this
     }
 
-    private fun GoogleApiClient.Builder.addScopes(scopes: Array<out Scope>): GoogleApiClient.Builder {
-        for (scope in scopes) {
-            addScope(scope)
-        }
+    private fun GoogleApiClient.Builder.addScopes(vararg descriptors: ApiDescriptor<O>): GoogleApiClient.Builder {
+        descriptors.forEach { it.scopes.forEach { addScope(it) } }
         return this
     }
 
-    private fun GoogleApiClient.Builder.setAccountNameIfSpecified(accountName: String): GoogleApiClient.Builder {
-        if (accountName.isNotEmpty()) {
-            setAccountName(accountName)
-        }
+    private fun GoogleApiClient.Builder.setAccountNameIfSpecified(vararg descriptors: ApiDescriptor<O>): GoogleApiClient.Builder {
+        setAccountName(descriptors.map { it.accountName }.firstOrNull { it.isNotEmpty() })
         return this
     }
 

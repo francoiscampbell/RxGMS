@@ -23,7 +23,7 @@ class RxDrive private constructor() {
             vararg scopes: Scope
     ) : RxGmsApi<Api.ApiOptions.NoOptions>(
             context,
-            ApiDescriptor(arrayOf(ApiDescriptor.OptionsHolder(Drive.API)), accountName, *scopes)
+            ApiDescriptor(Drive.API, null, accountName, *scopes)
     ) {
         fun fetchDriveId(resourceId: String): Observable<RxDriveId> {
             return apiClient.flatMap { googleApiClient ->
@@ -73,7 +73,7 @@ class RxDrive private constructor() {
             vararg scopes: Scope
     ) : RxGmsApi<Api.ApiOptions.NoOptions>(
             context,
-            ApiDescriptor(arrayOf(ApiDescriptor.OptionsHolder(Drive.API)), accountName, *scopes)
+            ApiDescriptor(Drive.API, null, accountName, *scopes)
     ) {
         fun getFileUploadPreferences(): Observable<FileUploadPreferences> {
             return apiClient.pendingResultToObservable { Drive.DrivePreferencesApi.getFileUploadPreferences(it) }

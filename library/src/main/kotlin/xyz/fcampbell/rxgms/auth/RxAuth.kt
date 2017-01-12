@@ -28,7 +28,7 @@ class RxAuth private constructor() {
             vararg scopes: Scope
     ) : RxGmsApi<GoogleSignInOptions>(
             context,
-            ApiDescriptor(arrayOf(ApiDescriptor.OptionsHolder(Auth.GOOGLE_SIGN_IN_API, googleSignInOptions)), accountName, *scopes)
+            ApiDescriptor(Auth.GOOGLE_SIGN_IN_API, googleSignInOptions, accountName, *scopes)
     ) {
         fun getSignInIntent(): Observable<Intent> {
             return apiClient.map { Auth.GoogleSignInApi.getSignInIntent(it) }
@@ -58,5 +58,17 @@ class RxAuth private constructor() {
         fun signOut(): Observable<Status> {
             return apiClient.pendingResultToObservable { Auth.GoogleSignInApi.signOut(it) }
         }
+    }
+
+    class CredentialsApi(
+            context: Context,
+            accountName: String = "",
+            credentialsOptions: Auth.AuthCredentialsOptions,
+            vararg scopes: Scope
+    ) : RxGmsApi<Auth.AuthCredentialsOptions>(
+            context,
+            ApiDescriptor(Auth.CREDENTIALS_API, credentialsOptions, accountName, *scopes)
+    ) {
+
     }
 }

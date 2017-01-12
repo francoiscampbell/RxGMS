@@ -11,11 +11,11 @@ import xyz.fcampbell.rxgms.common.action.GoogleApiClientOnSubscribe
 /**
  * Created by francois on 2016-12-29.
  */
-open class RxGmsApi<O : Api.ApiOptions>(
+abstract class RxGmsApi<O : Api.ApiOptions>(
         context: Context,
-        api: ApiDescriptor<O>
+        vararg apis: ApiDescriptor<O>
 ) {
-    private val googleApiClientOnSubscribe = GoogleApiClientOnSubscribe(context, api)
+    private val googleApiClientOnSubscribe = GoogleApiClientOnSubscribe(context, *apis)
 
     private var currentSubscription: Subscription = Subscriptions.unsubscribed()
     private var currentApiClient: Observable<GoogleApiClient>? = null
