@@ -1,5 +1,6 @@
 package xyz.fcampbell.rxgms.cast
 
+import android.content.Context
 import com.google.android.gms.cast.ApplicationMetadata
 import com.google.android.gms.cast.Cast
 import com.google.android.gms.cast.LaunchOptions
@@ -26,6 +27,12 @@ class RxCast private constructor() {
             apiClientDescriptor,
             ApiDescriptor(Cast.API, castOptions, *scopes)
     ) {
+        constructor(
+                context: Context,
+                castOptions: Cast.CastOptions,
+                vararg scopes: Scope
+        ) : this(ApiClientDescriptor(context), castOptions, *scopes)
+
         //        private val mediaRouter = MediaRouter.getInstance(apiClientDescriptor.context) TODO determine if this is necessary
         private val castApi: Cast.CastApi = Cast.CastApi //can't inline or else the compiler gets confused between Cast.CastApi (the class) and Cast.CastApi (the static field)
 
