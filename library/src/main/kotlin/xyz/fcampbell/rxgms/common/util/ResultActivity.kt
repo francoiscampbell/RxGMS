@@ -4,6 +4,8 @@ import android.app.Activity
 import android.content.*
 import android.os.Bundle
 import android.support.v4.content.LocalBroadcastManager
+import rx.AsyncEmitter
+import rx.Observable
 import xyz.fcampbell.rxgms.BuildConfig
 import java.util.*
 
@@ -19,33 +21,39 @@ class ResultActivity() : Activity() {
         const val KEY_REQUEST_CODE = "${BuildConfig.APPLICATION_ID}.requestCode"
         const val KEY_RESULT_CODE = "${BuildConfig.APPLICATION_ID}.resultCode"
 
-        fun getResult(context: Context, intentSender: IntentSender, onResult: (Intent?) -> Unit) {
+        fun getResult(context: Context, intentSender: IntentSender): Observable<Intent> {
             val randomRequestCode = Random().nextInt(Int.MAX_VALUE) //positive only
-            registerCallbackReceiver(context, randomRequestCode, onResult)
             context.startActivity(
                     Intent(context, ResultActivity::class.java)
                             .putExtra(KEY_REQUEST_CODE, randomRequestCode)
                             .putExtra(KEY_INTENT_SENDER, intentSender)
                             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+            return registerCallbackReceiver(context, randomRequestCode)
+
         }
 
-        private fun registerCallbackReceiver(context: Context, requestCode: Int, func: (Intent?) -> Unit) {
+        private fun registerCallbackReceiver(context: Context, requestCode: Int): Observable<Intent> {
             val localBroadcastManager = LocalBroadcastManager.getInstance(context)
-            localBroadcastManager.registerReceiver(object : BroadcastReceiver() {
-                override fun onReceive(context: Context, intent: Intent) {
-                    localBroadcastManager.unregisterReceiver(this)
+            return Observable.fromEmitter({ emitter ->
+                localBroadcastManager.registerReceiver(object : BroadcastReceiver() {
+                    override fun onReceive(context: Context, intent: Intent) {
+                        localBroadcastManager.unregisterReceiver(this)
 
-                    if (!intent.hasExtra(ResultActivity.KEY_REQUEST_CODE)) return
-                    val originalRequestCode = intent.getIntExtra(ResultActivity.KEY_REQUEST_CODE, -1)
-                    if (originalRequestCode == requestCode) {
-                        if (!intent.hasExtra(ResultActivity.KEY_RESULT_CODE)) return
-                        val resultCode = intent.getIntExtra(ResultActivity.KEY_RESULT_CODE, -1)
-                        if (resultCode == Activity.RESULT_OK) {
-                            func(intent.getParcelableExtra(KEY_RESULT_INTENT))
+                        if (!intent.hasExtra(ResultActivity.KEY_REQUEST_CODE)) return
+                        val originalRequestCode = intent.getIntExtra(ResultActivity.KEY_REQUEST_CODE, -1)
+                        if (originalRequestCode == requestCode) {
+                            if (!intent.hasExtra(ResultActivity.KEY_RESULT_CODE)) return
+                            val resultCode = intent.getIntExtra(ResultActivity.KEY_RESULT_CODE, -1)
+                            if (resultCode == Activity.RESULT_OK) {
+                                val returnedData = intent.getParcelableExtra<Intent?>(KEY_RESULT_INTENT)
+                                if (returnedData != null) emitter.onNext(returnedData)
+                                emitter.onCompleted()
+                            }
                         }
                     }
-                }
-            }, IntentFilter(ACTION_SHADOW_RESULT + requestCode))
+                }, IntentFilter(ACTION_SHADOW_RESULT + requestCode))
+            }, AsyncEmitter.BackpressureMode.LATEST)
+
         }
     }
 

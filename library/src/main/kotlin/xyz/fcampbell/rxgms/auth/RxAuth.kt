@@ -11,13 +11,12 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.Scope
 import com.google.android.gms.common.api.Status
-import rx.AsyncEmitter
 import rx.Observable
 import xyz.fcampbell.rxgms.auth.exception.SignInException
 import xyz.fcampbell.rxgms.common.ApiClientDescriptor
 import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.RxGmsApi
-import xyz.fcampbell.rxgms.common.action.GetResultFromEmitter
+import xyz.fcampbell.rxgms.common.util.ResultActivity
 import xyz.fcampbell.rxgms.common.util.pendingResultToObservable
 
 /**
@@ -47,12 +46,10 @@ class RxAuth private constructor() {
             return getSignInIntent().flatMap { intent ->
                 val pendingIntent = PendingIntent.getActivity(apiClientDescriptor.context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
                 val intentSender = pendingIntent.intentSender
-                Observable.fromEmitter(
-                        GetResultFromEmitter(apiClientDescriptor.context, intentSender),
-                        AsyncEmitter.BackpressureMode.LATEST)
-                        .map { data -> data ?: throw SignInException("sign-in intent returned was null") }
-                        .map { Auth.GoogleSignInApi.getSignInResultFromIntent(it).signInAccount }
+                ResultActivity.getResult(apiClientDescriptor.context, intentSender)
             }
+                    .switchIfEmpty(Observable.error(SignInException("sign-in intent returned was null")))
+                    .map { Auth.GoogleSignInApi.getSignInResultFromIntent(it).signInAccount }
         }
 
         fun silentSignIn(): Observable<GoogleSignInAccount> {
