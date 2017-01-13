@@ -48,7 +48,7 @@ apply from: '../maven_push.gradle'
  TODO Firebase App Indexing	com.google.firebase:firebase-appindexing:10.0.1
  TODO Google Analytics	com.google.android.gms:play-services-analytics:10.0.1
  TODO Google Awareness	com.google.android.gms:play-services-awareness:10.0.1
- TODO Google Cast	com.google.android.gms:play-services-cast:10.0.1
+ Google Cast	com.google.android.gms:play-services-cast:10.0.1
  TODO Google Cloud Messaging	com.google.android.gms:play-services-gcm:10.0.1
  Google Drive	com.google.android.gms:play-services-drive:10.0.1
  TODO Google Fit	com.google.android.gms:play-services-fitness:10.0.1
