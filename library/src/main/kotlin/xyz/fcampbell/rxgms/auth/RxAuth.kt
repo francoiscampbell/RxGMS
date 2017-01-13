@@ -4,6 +4,9 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import com.google.android.gms.auth.api.Auth
+import com.google.android.gms.auth.api.credentials.Credential
+import com.google.android.gms.auth.api.credentials.CredentialRequest
+import com.google.android.gms.auth.api.credentials.HintRequest
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.Scope
@@ -79,5 +82,26 @@ class RxAuth private constructor() {
                 credentialsOptions: Auth.AuthCredentialsOptions,
                 vararg scopes: Scope
         ) : this(ApiClientDescriptor(context), credentialsOptions, *scopes)
+
+        fun request(credentialRequest: CredentialRequest): Observable<Credential> {
+            return apiClient.pendingResultToObservable { Auth.CredentialsApi.request(it, credentialRequest) }
+                    .map { it.credential }
+        }
+
+        fun getHintPickerIntent(hintRequest: HintRequest): Observable<PendingIntent> {
+            return apiClient.map { Auth.CredentialsApi.getHintPickerIntent(it, hintRequest) }
+        }
+
+        fun save(credential: Credential): Observable<Status> {
+            return apiClient.pendingResultToObservable { Auth.CredentialsApi.save(it, credential) }
+        }
+
+        fun delete(credential: Credential): Observable<Status> {
+            return apiClient.pendingResultToObservable { Auth.CredentialsApi.delete(it, credential) }
+        }
+
+        fun disableAutoSignIn(): Observable<Status> {
+            return apiClient.pendingResultToObservable { Auth.CredentialsApi.disableAutoSignIn(it) }
+        }
     }
 }
