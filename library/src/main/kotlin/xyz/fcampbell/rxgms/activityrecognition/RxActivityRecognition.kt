@@ -7,6 +7,7 @@ import com.google.android.gms.location.ActivityRecognitionResult
 import rx.AsyncEmitter
 import rx.Observable
 import xyz.fcampbell.rxgms.activityrecognition.action.ActivityUpdates
+import xyz.fcampbell.rxgms.common.ApiClientDescriptor
 import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.RxGmsApi
 
@@ -16,11 +17,15 @@ import xyz.fcampbell.rxgms.common.RxGmsApi
 @Suppress("unused")
 class RxActivityRecognition private constructor() {
     class ActivityRecognitionApi(
-            context: Context
+            apiClientDescriptor: ApiClientDescriptor
     ) : RxGmsApi<Api.ApiOptions.NoOptions>(
-            context,
+            apiClientDescriptor,
             ApiDescriptor(ActivityRecognition.API)
     ) {
+        constructor(
+                context: Context
+        ) : this(ApiClientDescriptor(context))
+
         /**
          * Observable that can be used to observe activity provided by Actity Recognition mechanism.
 

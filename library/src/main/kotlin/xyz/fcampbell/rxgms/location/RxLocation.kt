@@ -12,6 +12,7 @@ import com.google.android.gms.maps.model.LatLngBounds
 import rx.AsyncEmitter
 import rx.Observable
 import rx.schedulers.Schedulers
+import xyz.fcampbell.rxgms.common.ApiClientDescriptor
 import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.RxGmsApi
 import xyz.fcampbell.rxgms.common.util.pendingResultToObservable
@@ -28,11 +29,15 @@ import java.util.*
 @Suppress("unused")
 class RxLocation private constructor() {
     class FusedLocationApi(
-            context: Context
+            apiClientDescriptor: ApiClientDescriptor
     ) : RxGmsApi<Api.ApiOptions.NoOptions>(
-            context,
+            apiClientDescriptor,
             ApiDescriptor(LocationServices.API)
     ) {
+        constructor(
+                context: Context
+        ) : this(ApiClientDescriptor(context))
+
         /**
          * Creates observable that obtains last known location and than completes.
          * Delivered location is never null - when it is unavailable Observable completes without emitting
@@ -153,11 +158,14 @@ class RxLocation private constructor() {
     }
 
     class GeofencingApi(
-            context: Context
+            apiClientDescriptor: ApiClientDescriptor
     ) : RxGmsApi<Api.ApiOptions.NoOptions>(
-            context,
+            apiClientDescriptor,
             ApiDescriptor(LocationServices.API)
     ) {
+        constructor(
+                context: Context
+        ) : this(ApiClientDescriptor(context))
         /**
          * Creates observable that adds request and completes when the action is done.
          *
@@ -226,11 +234,15 @@ class RxLocation private constructor() {
     }
 
     class SettingsApi(
-            context: Context
+            apiClientDescriptor: ApiClientDescriptor
     ) : RxGmsApi<Api.ApiOptions.NoOptions>(
-            context,
+            apiClientDescriptor,
             ApiDescriptor(LocationServices.API)
     ) {
+        constructor(
+                context: Context
+        ) : this(ApiClientDescriptor(context))
+
         /**
          * Observable that can be used to check settings state for given location request.
 
@@ -246,11 +258,15 @@ class RxLocation private constructor() {
     }
 
     class GeocodingApi(
-            private val context: Context
+            private val apiClientDescriptor: ApiClientDescriptor
     ) : RxGmsApi<Api.ApiOptions.NoOptions>(
-            context,
+            apiClientDescriptor,
             ApiDescriptor(LocationServices.API)
     ) {
+        constructor(
+                context: Context
+        ) : this(ApiClientDescriptor(context))
+
         /**
          * Creates observable that translates latitude and longitude to list of possible addresses using
          * included Geocoder class. In case geocoder fails with IOException("Service not Available") fallback
@@ -287,7 +303,7 @@ class RxLocation private constructor() {
          */
         fun reverseGeocode(locale: Locale, lat: Double, lng: Double, maxResults: Int): Observable<List<Address>> {
             return Observable.fromEmitter(
-                    ReverseGeocode(context, locale, lat, lng, maxResults),
+                    ReverseGeocode(apiClientDescriptor.context, locale, lat, lng, maxResults),
                     AsyncEmitter.BackpressureMode.BUFFER)
                     .subscribeOn(Schedulers.io())
                     .observeOn(Schedulers.trampoline())
@@ -310,7 +326,7 @@ class RxLocation private constructor() {
          * @return observable that serves list of address based on location name
          */
         @JvmOverloads fun geocode(locationName: String, maxResults: Int, bounds: LatLngBounds? = null): Observable<List<Address>> {
-            return Observable.create(Geocode(context, locationName, maxResults, bounds))
+            return Observable.create(Geocode(apiClientDescriptor.context, locationName, maxResults, bounds))
                     .subscribeOn(Schedulers.io())
                     .observeOn(Schedulers.trampoline())
         }

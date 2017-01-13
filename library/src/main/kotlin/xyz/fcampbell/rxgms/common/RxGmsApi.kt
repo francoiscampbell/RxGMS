@@ -1,6 +1,5 @@
 package xyz.fcampbell.rxgms.common
 
-import android.content.Context
 import com.google.android.gms.common.api.Api
 import com.google.android.gms.common.api.GoogleApiClient
 import rx.Observable
@@ -12,10 +11,10 @@ import xyz.fcampbell.rxgms.common.action.GoogleApiClientOnSubscribe
  * Created by francois on 2016-12-29.
  */
 abstract class RxGmsApi<O : Api.ApiOptions>(
-        context: Context,
+        apiClientDescriptor: ApiClientDescriptor,
         vararg apis: ApiDescriptor<O>
 ) {
-    private val googleApiClientOnSubscribe = GoogleApiClientOnSubscribe(context, *apis)
+    private val googleApiClientOnSubscribe = GoogleApiClientOnSubscribe(apiClientDescriptor, *apis)
 
     private var currentSubscription: Subscription = Subscriptions.unsubscribed()
     private var currentApiClient: Observable<GoogleApiClient>? = null

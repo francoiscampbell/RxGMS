@@ -1,6 +1,5 @@
 package xyz.fcampbell.rxgms.common.action
 
-import android.content.Context
 import android.os.Bundle
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.Api
@@ -8,6 +7,7 @@ import com.google.android.gms.common.api.GoogleApiClient
 import rx.Observable
 import rx.Subscriber
 import rx.subscriptions.Subscriptions
+import xyz.fcampbell.rxgms.common.ApiClientDescriptor
 import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.exception.GoogleApiConnectionException
 import xyz.fcampbell.rxgms.common.exception.GoogleApiConnectionSuspendedException
@@ -15,7 +15,7 @@ import xyz.fcampbell.rxgms.common.util.ResultActivity
 
 
 internal class GoogleApiClientOnSubscribe<O : Api.ApiOptions>(
-        private val context: Context,
+        private val apiClientDescriptor: ApiClientDescriptor,
         private vararg val apiDescriptors: ApiDescriptor<O>
 ) : Observable.OnSubscribe<GoogleApiClient> {
     override fun call(subscriber: Subscriber<in GoogleApiClient>) {
@@ -37,12 +37,12 @@ internal class GoogleApiClientOnSubscribe<O : Api.ApiOptions>(
         val apiClientConnectionCallbacks = ApiClientConnectionCallbacks(subscriber)
 
         val apiClient = GoogleApiClient.Builder(
-                context,
+                apiClientDescriptor.context,
                 apiClientConnectionCallbacks,
                 apiClientConnectionCallbacks)
                 .addApis(*apiDescriptors)
                 .addScopes(*apiDescriptors)
-                .setAccountNameIfSpecified(*apiDescriptors)
+                .addFromDescriptor(apiClientDescriptor)
                 .build()
 
         apiClientConnectionCallbacks.apiClient = apiClient
@@ -67,8 +67,19 @@ internal class GoogleApiClientOnSubscribe<O : Api.ApiOptions>(
         return this
     }
 
-    private fun GoogleApiClient.Builder.setAccountNameIfSpecified(vararg descriptors: ApiDescriptor<O>): GoogleApiClient.Builder {
-        setAccountName(descriptors.map { it.accountName }.firstOrNull { it.isNotEmpty() })
+    private fun GoogleApiClient.Builder.addFromDescriptor(apiClientDescriptor: ApiClientDescriptor): GoogleApiClient.Builder {
+        val handler = apiClientDescriptor.handler
+        if (handler != null) setHandler(handler)
+
+        val viewForPopups = apiClientDescriptor.viewForPopups
+        if (viewForPopups != null) setViewForPopups(viewForPopups)
+
+        val accountName = apiClientDescriptor.accountName
+        if (accountName.isNotEmpty()) setAccountName(accountName)
+
+        val gravityForPopups = apiClientDescriptor.gravityForPopups
+        if (gravityForPopups != Int.MIN_VALUE) setGravityForPopups(gravityForPopups)
+
         return this
     }
 
@@ -94,7 +105,7 @@ internal class GoogleApiClientOnSubscribe<O : Api.ApiOptions>(
 
         override fun onConnectionFailed(connectionResult: ConnectionResult) {
             if (connectionResult.hasResolution()) {
-                ResultActivity.getResult(context, connectionResult.resolution!!.intentSender) { apiClient.connect() }
+                ResultActivity.getResult(apiClientDescriptor.context, connectionResult.resolution!!.intentSender) { apiClient.connect() }
             } else {
                 subscriber.onError(GoogleApiConnectionException(connectionResult, "Error connecting to GoogleApiClient."))
             }

@@ -7,6 +7,7 @@ import com.google.android.gms.common.api.Status
 import com.google.android.gms.drive.*
 import com.google.android.gms.drive.query.Query
 import rx.Observable
+import xyz.fcampbell.rxgms.common.ApiClientDescriptor
 import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.RxGmsApi
 import xyz.fcampbell.rxgms.common.util.pendingResultToObservable
@@ -18,13 +19,17 @@ import xyz.fcampbell.rxgms.common.util.toObservable
 @Suppress("unused")
 class RxDrive private constructor() {
     class DriveApi(
-            context: Context,
-            accountName: String = "",
+            apiClientDescriptor: ApiClientDescriptor,
             vararg scopes: Scope
     ) : RxGmsApi<Api.ApiOptions.NoOptions>(
-            context,
-            ApiDescriptor(Drive.API, null, accountName, *scopes)
+            apiClientDescriptor,
+            ApiDescriptor(Drive.API, null, *scopes)
     ) {
+        constructor(
+                context: Context,
+                vararg scopes: Scope
+        ) : this(ApiClientDescriptor(context), *scopes)
+
         fun fetchDriveId(resourceId: String): Observable<RxDriveId> {
             return apiClient.flatMap { googleApiClient ->
                 Drive.DriveApi.fetchDriveId(googleApiClient, resourceId)
@@ -68,13 +73,17 @@ class RxDrive private constructor() {
     }
 
     class DrivePreferencesApi(
-            context: Context,
-            accountName: String = "",
+            apiClientDescriptor: ApiClientDescriptor,
             vararg scopes: Scope
     ) : RxGmsApi<Api.ApiOptions.NoOptions>(
-            context,
-            ApiDescriptor(Drive.API, null, accountName, *scopes)
+            apiClientDescriptor,
+            ApiDescriptor(Drive.API, null, *scopes)
     ) {
+        constructor(
+                context: Context,
+                vararg scopes: Scope
+        ) : this(ApiClientDescriptor(context), *scopes)
+
         fun getFileUploadPreferences(): Observable<FileUploadPreferences> {
             return apiClient.pendingResultToObservable { Drive.DrivePreferencesApi.getFileUploadPreferences(it) }
                     .map { it.fileUploadPreferences }

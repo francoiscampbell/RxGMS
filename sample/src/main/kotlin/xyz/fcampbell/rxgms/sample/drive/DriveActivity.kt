@@ -15,13 +15,13 @@ import xyz.fcampbell.rxgms.drive.RxDrive
  */
 class DriveActivity : AppCompatActivity() {
 
-    private val driveApi = RxDrive.DriveApi(this, "", Drive.SCOPE_FILE, Drive.SCOPE_APPFOLDER)
-    private val drivePrefsApi = RxDrive.DrivePreferencesApi(this, "", Drive.SCOPE_FILE, Drive.SCOPE_APPFOLDER)
+    private val driveApi = RxDrive.DriveApi(this, Drive.SCOPE_FILE, Drive.SCOPE_APPFOLDER)
+    private val drivePrefsApi = RxDrive.DrivePreferencesApi(this, Drive.SCOPE_FILE, Drive.SCOPE_APPFOLDER)
 
     private val gso = GoogleSignInOptions.Builder()
             .requestEmail()
             .build()
-    private val googleSignInApi = RxAuth.GoogleSignInApi(this, "", gso)
+    private val googleSignInApi = RxAuth.GoogleSignInApi(this, gso)
 
     override fun onStart() {
         super.onStart()

@@ -9,6 +9,5 @@ import com.google.android.gms.common.api.Scope
 class ApiDescriptor<O : Api.ApiOptions>(
         val api: Api<O>,
         val options: O? = null,
-        val accountName: String = "",
         vararg val scopes: Scope
 )

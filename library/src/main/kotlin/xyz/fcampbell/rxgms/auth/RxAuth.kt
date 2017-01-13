@@ -11,6 +11,7 @@ import com.google.android.gms.common.api.Status
 import rx.AsyncEmitter
 import rx.Observable
 import xyz.fcampbell.rxgms.auth.exception.SignInException
+import xyz.fcampbell.rxgms.common.ApiClientDescriptor
 import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.RxGmsApi
 import xyz.fcampbell.rxgms.common.action.GetResultFromEmitter
@@ -22,24 +23,29 @@ import xyz.fcampbell.rxgms.common.util.pendingResultToObservable
 @Suppress("unused")
 class RxAuth private constructor() {
     class GoogleSignInApi(
-            private val context: Context,
-            accountName: String = "",
+            private val apiClientDescriptor: ApiClientDescriptor,
             googleSignInOptions: GoogleSignInOptions,
             vararg scopes: Scope
     ) : RxGmsApi<GoogleSignInOptions>(
-            context,
-            ApiDescriptor(Auth.GOOGLE_SIGN_IN_API, googleSignInOptions, accountName, *scopes)
+            apiClientDescriptor.setAccountName(""), //don't set account name in GoogleApiClient with Auth API. See https://developers.google.com/android/reference/com/google/android/gms/common/api/GoogleApiClient.Builder.html#setAccountName(java.lang.String)
+            ApiDescriptor(Auth.GOOGLE_SIGN_IN_API, googleSignInOptions, *scopes)
     ) {
+        constructor(
+                context: Context,
+                googleSignInOptions: GoogleSignInOptions,
+                vararg scopes: Scope
+        ) : this(ApiClientDescriptor(context), googleSignInOptions, *scopes)
+
         fun getSignInIntent(): Observable<Intent> {
             return apiClient.map { Auth.GoogleSignInApi.getSignInIntent(it) }
         }
 
         fun signIn(): Observable<GoogleSignInAccount> {
             return getSignInIntent().flatMap { intent ->
-                val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+                val pendingIntent = PendingIntent.getActivity(apiClientDescriptor.context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
                 val intentSender = pendingIntent.intentSender
                 Observable.fromEmitter(
-                        GetResultFromEmitter(context, intentSender),
+                        GetResultFromEmitter(apiClientDescriptor.context, intentSender),
                         AsyncEmitter.BackpressureMode.LATEST)
                         .map { data -> data ?: throw SignInException("sign-in intent returned was null") }
                         .map { Auth.GoogleSignInApi.getSignInResultFromIntent(it).signInAccount }
@@ -61,14 +67,17 @@ class RxAuth private constructor() {
     }
 
     class CredentialsApi(
-            context: Context,
-            accountName: String = "",
+            apiClientDescriptor: ApiClientDescriptor,
             credentialsOptions: Auth.AuthCredentialsOptions,
             vararg scopes: Scope
     ) : RxGmsApi<Auth.AuthCredentialsOptions>(
-            context,
-            ApiDescriptor(Auth.CREDENTIALS_API, credentialsOptions, accountName, *scopes)
+            apiClientDescriptor,
+            ApiDescriptor(Auth.CREDENTIALS_API, credentialsOptions, *scopes)
     ) {
-
+        constructor(
+                context: Context,
+                credentialsOptions: Auth.AuthCredentialsOptions,
+                vararg scopes: Scope
+        ) : this(ApiClientDescriptor(context), credentialsOptions, *scopes)
     }
 }
