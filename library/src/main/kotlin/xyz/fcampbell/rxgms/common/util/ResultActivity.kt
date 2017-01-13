@@ -29,31 +29,43 @@ class ResultActivity() : Activity() {
                             .putExtra(KEY_INTENT_SENDER, intentSender)
                             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
             return registerCallbackReceiver(context, randomRequestCode)
-
         }
 
-        private fun registerCallbackReceiver(context: Context, requestCode: Int): Observable<Intent> {
+        private fun registerCallbackReceiver(context: Context, expectedRequestCode: Int): Observable<Intent> {
             val localBroadcastManager = LocalBroadcastManager.getInstance(context)
             return Observable.fromEmitter({ emitter ->
                 localBroadcastManager.registerReceiver(object : BroadcastReceiver() {
                     override fun onReceive(context: Context, intent: Intent) {
                         localBroadcastManager.unregisterReceiver(this)
 
-                        if (!intent.hasExtra(ResultActivity.KEY_REQUEST_CODE)) return
-                        val originalRequestCode = intent.getIntExtra(ResultActivity.KEY_REQUEST_CODE, -1)
-                        if (originalRequestCode == requestCode) {
-                            if (!intent.hasExtra(ResultActivity.KEY_RESULT_CODE)) return
-                            val resultCode = intent.getIntExtra(ResultActivity.KEY_RESULT_CODE, -1)
-                            if (resultCode == Activity.RESULT_OK) {
-                                val returnedData = intent.getParcelableExtra<Intent?>(KEY_RESULT_INTENT)
-                                if (returnedData != null) emitter.onNext(returnedData)
-                                emitter.onCompleted()
-                            }
+                        if (!intent.hasExtra(ResultActivity.KEY_REQUEST_CODE)) {
+                            emitter.onError(ResultException(intent, "returned intent does not have KEY_REQUEST_CODE"))
+                            return
                         }
-                    }
-                }, IntentFilter(ACTION_SHADOW_RESULT + requestCode))
-            }, AsyncEmitter.BackpressureMode.LATEST)
 
+                        val originalRequestCode = intent.getIntExtra(ResultActivity.KEY_REQUEST_CODE, -1)
+                        if (originalRequestCode != expectedRequestCode) {
+                            emitter.onError(ResultException(intent, "originalRequestCode != expectedRequestCode, receiver received wrong broadcast"))
+                            return
+                        }
+
+                        if (!intent.hasExtra(ResultActivity.KEY_RESULT_CODE)) {
+                            emitter.onError(ResultException(intent, "returned intent does not have KEY_RESULT_CODE"))
+                            return
+                        }
+
+                        val resultCode = intent.getIntExtra(ResultActivity.KEY_RESULT_CODE, -1)
+                        if (resultCode != RESULT_OK) {
+                            emitter.onError(ResultException(intent, "resultCode != RESULT_OK"))
+                            return
+                        }
+
+                        val returnedData = intent.getParcelableExtra<Intent?>(KEY_RESULT_INTENT)
+                        if (returnedData != null) emitter.onNext(returnedData)
+                        emitter.onCompleted()
+                    }
+                }, IntentFilter(ACTION_SHADOW_RESULT + expectedRequestCode))
+            }, AsyncEmitter.BackpressureMode.LATEST)
         }
     }
 
@@ -81,5 +93,25 @@ class ResultActivity() : Activity() {
                         .putExtra(KEY_RESULT_CODE, resultCode)
                         .putExtra(KEY_RESULT_INTENT, data))
         finish()
+    }
+
+    class ResultException : Exception {
+        val data: Intent
+
+        constructor(data: Intent) : super() {
+            this.data = data
+        }
+
+        constructor(data: Intent, message: String) : super(message) {
+            this.data = data
+        }
+
+        constructor(data: Intent, ex: Throwable) : super(ex) {
+            this.data = data
+        }
+
+        constructor(data: Intent, message: String, ex: Throwable) : super(message, ex) {
+            this.data = data
+        }
     }
 }

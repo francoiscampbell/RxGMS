@@ -21,10 +21,7 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile 'io.reactivex:rxjava:1.2.0'
 
-    provided "com.google.android.gms:play-services-auth:$vGooglePlayServices"
-    provided "com.google.android.gms:play-services-location:$vGooglePlayServices"
-    provided "com.google.android.gms:play-services-places:$vGooglePlayServices"
-    provided "com.google.android.gms:play-services-drive:$vGooglePlayServices"
+    provided "com.google.android.gms:play-services:$vGooglePlayServices"
 }
 
 // Comment this to deploy to local maven repository
@@ -42,3 +39,28 @@ apply from: '../maven_push.gradle'
 //    }
 //}
 //task install(dependsOn: uploadArchives)
+
+/**
+ TODO Google+	com.google.android.gms:play-services-plus:10.0.1
+ Google Account Login	com.google.android.gms:play-services-auth:10.0.1
+ TODO Google Actions, Base Client Library	com.google.android.gms:play-services-base:10.0.1
+ TODO Google Address API	com.google.android.gms:play-services-identity:10.0.1
+ TODO Firebase App Indexing	com.google.firebase:firebase-appindexing:10.0.1
+ TODO Google Analytics	com.google.android.gms:play-services-analytics:10.0.1
+ TODO Google Awareness	com.google.android.gms:play-services-awareness:10.0.1
+ TODO Google Cast	com.google.android.gms:play-services-cast:10.0.1
+ TODO Google Cloud Messaging	com.google.android.gms:play-services-gcm:10.0.1
+ Google Drive	com.google.android.gms:play-services-drive:10.0.1
+ TODO Google Fit	com.google.android.gms:play-services-fitness:10.0.1
+ Google Location and Activity Recognition	com.google.android.gms:play-services-location:10.0.1
+ TODO Google Maps	com.google.android.gms:play-services-maps:10.0.1
+ TODO Google Mobile Ads	com.google.android.gms:play-services-ads:10.0.1
+ Google Places	com.google.android.gms:play-services-places:10.0.1
+ TODO Mobile Vision	com.google.android.gms:play-services-vision:10.0.1
+ TODO Google Nearby	com.google.android.gms:play-services-nearby:10.0.1
+ TODO Google Panorama Viewer	com.google.android.gms:play-services-panorama:10.0.1
+ TODO Google Play Game services	com.google.android.gms:play-services-games:10.0.1
+ TODO SafetyNet	com.google.android.gms:play-services-safetynet:10.0.1
+ TODO Android Pay	com.google.android.gms:play-services-wallet:10.0.1
+ TODO Android Wear	com.google.android.gms:play-services-wearable:10.0.1
+ */

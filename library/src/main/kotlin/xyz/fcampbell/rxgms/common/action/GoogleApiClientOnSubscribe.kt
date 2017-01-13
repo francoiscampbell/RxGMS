@@ -106,7 +106,7 @@ internal class GoogleApiClientOnSubscribe<O : Api.ApiOptions>(
         override fun onConnectionFailed(connectionResult: ConnectionResult) {
             if (connectionResult.hasResolution()) {
                 ResultActivity.getResult(apiClientDescriptor.context, connectionResult.resolution!!.intentSender)
-                        .subscribe({}, { apiClient.connect() })
+                        .subscribe({}, {}, { apiClient.connect() })
             } else {
                 subscriber.onError(GoogleApiConnectionException(connectionResult, "Error connecting to GoogleApiClient."))
             }
