@@ -17,8 +17,8 @@ import xyz.fcampbell.rxgms.common.util.ResultActivity
 internal class GoogleApiClientOnSubscribe<O : Api.ApiOptions>(
         private val apiClientDescriptor: ApiClientDescriptor,
         private vararg val apiDescriptors: ApiDescriptor<O>
-) : Observable.OnSubscribe<GoogleApiClient> {
-    override fun call(subscriber: Subscriber<in GoogleApiClient>) {
+) : Observable.OnSubscribe<Pair<GoogleApiClient, Bundle?>> {
+    override fun call(subscriber: Subscriber<in Pair<GoogleApiClient, Bundle?>>) {
         val apiClient = createApiClient(subscriber)
         try {
             apiClient.connect()
@@ -33,7 +33,7 @@ internal class GoogleApiClientOnSubscribe<O : Api.ApiOptions>(
         })
     }
 
-    private fun createApiClient(subscriber: Subscriber<in GoogleApiClient>): GoogleApiClient {
+    private fun createApiClient(subscriber: Subscriber<in Pair<GoogleApiClient, Bundle?>>): GoogleApiClient {
         val apiClientConnectionCallbacks = ApiClientConnectionCallbacks(subscriber)
 
         val apiClient = GoogleApiClient.Builder(
@@ -84,7 +84,7 @@ internal class GoogleApiClientOnSubscribe<O : Api.ApiOptions>(
     }
 
     private inner class ApiClientConnectionCallbacks(
-            private val subscriber: Subscriber<in GoogleApiClient>
+            private val subscriber: Subscriber<in Pair<GoogleApiClient, Bundle?>>
     ) : GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
@@ -92,7 +92,7 @@ internal class GoogleApiClientOnSubscribe<O : Api.ApiOptions>(
 
         override fun onConnected(bundle: Bundle?) {
             try {
-                subscriber.onNext(apiClient)
+                subscriber.onNext(apiClient to bundle)
                 //don't call onCompleted, we don't want the client to disconnect unless we explicitly unsubscribe
             } catch (ex: Throwable) {
                 subscriber.onError(ex)
@@ -108,7 +108,7 @@ internal class GoogleApiClientOnSubscribe<O : Api.ApiOptions>(
                 ResultActivity.getResult(apiClientDescriptor.context, connectionResult.resolution!!.intentSender)
                         .subscribe({}, {}, { apiClient.connect() })
             } else {
-                subscriber.onError(GoogleApiConnectionException(connectionResult, "Error connecting to GoogleApiClient."))
+                subscriber.onError(GoogleApiConnectionException(connectionResult, "Error connecting to GoogleApiClient"))
             }
         }
     }

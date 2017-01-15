@@ -14,8 +14,9 @@ import com.jakewharton.rxbinding.widget.RxTextView
 import kotlinx.android.synthetic.main.activity_places.*
 import rx.Observable
 import rx.subscriptions.CompositeSubscription
-import xyz.fcampbell.rxgms.location.RxLocation
-import xyz.fcampbell.rxgms.location.RxPlaces
+import xyz.fcampbell.rxgms.location.RxFusedLocationApi
+import xyz.fcampbell.rxgms.location.RxGeoDataApi
+import xyz.fcampbell.rxgms.location.RxPlaceDetectionApi
 import xyz.fcampbell.rxgms.sample.PermittedActivity
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -23,9 +24,9 @@ import java.util.concurrent.TimeUnit
 class PlacesActivity : PermittedActivity() {
     override val permissionsToRequest = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
 
-    private val fusedLocationApi = RxLocation.FusedLocationApi(this)
-    private val placeDetectionApi = RxPlaces.PlaceDetectionApi(this)
-    private val geodataApi = RxPlaces.GeoDataApi(this)
+    private val fusedLocationApi = RxFusedLocationApi(this)
+    private val placeDetectionApi = RxPlaceDetectionApi(this)
+    private val geodataApi = RxGeoDataApi(this)
 
     private val compositeSubscription = CompositeSubscription()
 

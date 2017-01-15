@@ -23,7 +23,7 @@ class RxAddress(
 
     fun requestUserAddress(userAddressRequest: UserAddressRequest): Observable<Unit> {
         return apiClient.map {
-            Address.requestUserAddress(it, userAddressRequest, 25)
+            Address.requestUserAddress(it.first, userAddressRequest, 25)
         }
     }
 }

@@ -19,8 +19,10 @@ import rx.functions.Action1
 import rx.functions.Func1
 import rx.schedulers.Schedulers
 import xyz.fcampbell.rxgms.common.exception.StatusException
-import xyz.fcampbell.rxgms.location.RxActivityRecognition
-import xyz.fcampbell.rxgms.location.RxLocation
+import xyz.fcampbell.rxgms.location.RxActivityRecognitionApi
+import xyz.fcampbell.rxgms.location.RxFusedLocationApi
+import xyz.fcampbell.rxgms.location.RxGeocodingApi
+import xyz.fcampbell.rxgms.location.RxSettingsApi
 import xyz.fcampbell.rxgms.sample.drive.DriveActivity
 import xyz.fcampbell.rxgms.sample.location.GeofenceActivity
 import xyz.fcampbell.rxgms.sample.location.MockLocationsActivity
@@ -46,10 +48,10 @@ class MainActivity : PermittedActivity() {
         getLocation()
     }
 
-    private val fusedLocationApi = RxLocation.FusedLocationApi(this)
-    private val settingsApi = RxLocation.SettingsApi(this)
-    private val activityRecognitionApi = RxActivityRecognition.ActivityRecognitionApi(this)
-    private val geocodingApi = RxLocation.GeocodingApi(this)
+    private val fusedLocationApi = RxFusedLocationApi(this)
+    private val settingsApi = RxSettingsApi(this)
+    private val activityRecognitionApi = RxActivityRecognitionApi(this)
+    private val geocodingApi = RxGeocodingApi(this)
 
     private fun getLocation() {
         lastKnownLocationSubscription = fusedLocationApi

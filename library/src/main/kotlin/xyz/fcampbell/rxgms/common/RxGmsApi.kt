@@ -1,5 +1,6 @@
 package xyz.fcampbell.rxgms.common
 
+import android.os.Bundle
 import com.google.android.gms.common.api.Api
 import com.google.android.gms.common.api.GoogleApiClient
 import rx.Observable
@@ -17,9 +18,9 @@ abstract class RxGmsApi<O : Api.ApiOptions>(
     private val googleApiClientOnSubscribe = GoogleApiClientOnSubscribe(apiClientDescriptor, *apis)
 
     private var currentSubscription: Subscription = Subscriptions.unsubscribed()
-    private var currentApiClient: Observable<GoogleApiClient>? = null
+    private var currentApiClient: Observable<Pair<GoogleApiClient, Bundle?>>? = null
 
-    val apiClient: Observable<GoogleApiClient>
+    val apiClient: Observable<Pair<GoogleApiClient, Bundle?>>
         get() {
             var localRxApiClient = currentApiClient
             if (localRxApiClient != null && !currentSubscription.isUnsubscribed) return localRxApiClient

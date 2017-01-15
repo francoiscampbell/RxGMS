@@ -9,7 +9,8 @@ import android.widget.Toast
 import com.google.android.gms.location.GeofencingRequest
 import kotlinx.android.synthetic.main.activity_geofence.*
 import rx.Subscription
-import xyz.fcampbell.rxgms.location.RxLocation
+import xyz.fcampbell.rxgms.location.RxFusedLocationApi
+import xyz.fcampbell.rxgms.location.RxGeofencingApi
 import xyz.fcampbell.rxgms.sample.PermittedActivity
 import xyz.fcampbell.rxgms.sample.R
 import xyz.fcampbell.rxgms.sample.utils.DisplayTextOnViewAction
@@ -20,8 +21,8 @@ import java.lang.Float
 class GeofenceActivity : PermittedActivity() {
     override val permissionsToRequest = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
 
-    private val fusedLocationApi = RxLocation.FusedLocationApi(this)
-    private val geofencingApi = RxLocation.GeofencingApi(this)
+    private val fusedLocationApi = RxFusedLocationApi(this)
+    private val geofencingApi = RxGeofencingApi(this)
 
     private var lastKnownLocationSubscription: Subscription? = null
 

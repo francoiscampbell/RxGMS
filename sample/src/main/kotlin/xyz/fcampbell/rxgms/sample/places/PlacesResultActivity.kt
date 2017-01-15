@@ -6,7 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_places_result.*
 import rx.subscriptions.CompositeSubscription
-import xyz.fcampbell.rxgms.location.RxPlaces
+import xyz.fcampbell.rxgms.location.RxGeoDataApi
 import xyz.fcampbell.rxgms.sample.PermittedActivity
 import xyz.fcampbell.rxgms.sample.R
 
@@ -16,7 +16,7 @@ class PlacesResultActivity : PermittedActivity() {
     private val compositeSubscription = CompositeSubscription()
     private var placeId: String? = null
 
-    private val geodataApi = RxPlaces.GeoDataApi(this)
+    private val geodataApi = RxGeoDataApi(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

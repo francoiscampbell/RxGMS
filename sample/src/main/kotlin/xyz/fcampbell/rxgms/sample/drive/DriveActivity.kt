@@ -9,8 +9,7 @@ import com.google.android.gms.drive.MetadataChangeSet
 import com.google.android.gms.identity.intents.UserAddressRequest
 import com.google.android.gms.identity.intents.model.CountrySpecification
 import rx.Observable
-import xyz.fcampbell.rxgms.auth.RxAuth
-import xyz.fcampbell.rxgms.drive.RxDrive
+import xyz.fcampbell.rxgms.auth.RxGoogleSignInApi
 import xyz.fcampbell.rxgms.identity.RxAddress
 
 /**
@@ -24,7 +23,7 @@ class DriveActivity : AppCompatActivity() {
     private val gso = GoogleSignInOptions.Builder()
             .requestEmail()
             .build()
-    private val googleSignInApi = RxAuth.GoogleSignInApi(this, gso)
+    private val googleSignInApi = RxGoogleSignInApi(this, gso)
 
     private val addressApi = RxAddress(this)
 

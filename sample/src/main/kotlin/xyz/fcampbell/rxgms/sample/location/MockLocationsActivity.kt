@@ -16,7 +16,7 @@ import rx.functions.Action1
 import rx.functions.Func1
 import rx.functions.Func2
 import rx.subjects.PublishSubject
-import xyz.fcampbell.rxgms.location.RxLocation
+import xyz.fcampbell.rxgms.location.RxFusedLocationApi
 import xyz.fcampbell.rxgms.sample.PermittedActivity
 import xyz.fcampbell.rxgms.sample.R
 import xyz.fcampbell.rxgms.sample.utils.DisplayTextOnViewAction
@@ -26,7 +26,7 @@ import java.util.*
 class MockLocationsActivity : PermittedActivity() {
     override val permissionsToRequest = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
 
-    private val fusedLocationApi = RxLocation.FusedLocationApi(this)
+    private val fusedLocationApi = RxFusedLocationApi(this)
 
     private lateinit var mockLocationObservable: Observable<Location>
     private var mockLocationSubscription: Subscription? = null
