@@ -5,6 +5,7 @@ import android.content.Context
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.credentials.Credential
 import com.google.android.gms.auth.api.credentials.CredentialRequest
+import com.google.android.gms.auth.api.credentials.CredentialRequestResult
 import com.google.android.gms.auth.api.credentials.HintRequest
 import com.google.android.gms.common.api.Scope
 import com.google.android.gms.common.api.Status
@@ -29,9 +30,8 @@ class RxCredentialsApi(
             vararg scopes: Scope
     ) : this(ApiClientDescriptor(context), credentialsOptions, *scopes)
 
-    fun request(credentialRequest: CredentialRequest): Observable<Credential> {
+    fun request(credentialRequest: CredentialRequest): Observable<CredentialRequestResult> {
         return apiClient.pendingResultToObservable { Auth.CredentialsApi.request(it.first, credentialRequest) }
-                .map { it.credential }
     }
 
     fun getHintPickerIntent(hintRequest: HintRequest): Observable<PendingIntent> {

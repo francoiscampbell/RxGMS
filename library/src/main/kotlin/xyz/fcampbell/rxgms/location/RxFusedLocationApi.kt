@@ -44,9 +44,7 @@ class RxFusedLocationApi(
      */
     @RequiresPermission(anyOf = arrayOf("android.permission.ACCESS_COARSE_LOCATION", "android.permission.ACCESS_FINE_LOCATION"))
     fun getLastLocation(): Observable<Location> {
-        return apiClient.map {
-            LocationServices.FusedLocationApi.getLastLocation(it.first)
-        }
+        return apiClient.map { LocationServices.FusedLocationApi.getLastLocation(it.first) }
     }
 
     /**

@@ -1,7 +1,6 @@
 package xyz.fcampbell.rxgms.cast
 
 import android.content.Context
-import android.view.Display
 import com.google.android.gms.cast.CastRemoteDisplay
 import com.google.android.gms.common.api.Scope
 import rx.Observable
@@ -25,13 +24,11 @@ class RxCastRemoteDisplayApi(
             vararg scopes: Scope
     ) : this(ApiClientDescriptor(context), castRemoteDisplayOptions, *scopes)
 
-    fun startRemoteDisplay(applicationId: String): Observable<Display> {
+    fun startRemoteDisplay(applicationId: String): Observable<CastRemoteDisplay.CastRemoteDisplaySessionResult> {
         return apiClient.pendingResultToObservable { CastRemoteDisplay.CastRemoteDisplayApi.startRemoteDisplay(it.first, applicationId) }
-                .map { it.presentationDisplay }
     }
 
-    fun stopRemoteDisplay(): Observable<Display> {
+    fun stopRemoteDisplay(): Observable<CastRemoteDisplay.CastRemoteDisplaySessionResult> {
         return apiClient.pendingResultToObservable { CastRemoteDisplay.CastRemoteDisplayApi.stopRemoteDisplay(it.first) }
-                .map { it.presentationDisplay }
     }
 }

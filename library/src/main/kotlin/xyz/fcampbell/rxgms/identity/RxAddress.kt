@@ -3,10 +3,11 @@ package xyz.fcampbell.rxgms.identity
 import android.content.Context
 import com.google.android.gms.identity.intents.Address
 import com.google.android.gms.identity.intents.UserAddressRequest
-import rx.Observable
+import rx.Completable
 import xyz.fcampbell.rxgms.common.ApiClientDescriptor
 import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.RxGmsApi
+import xyz.fcampbell.rxgms.common.util.toCompletable
 
 /**
  * Created by francois on 2017-01-13.
@@ -21,9 +22,7 @@ class RxAddress(
             context: Context
     ) : this(ApiClientDescriptor(context))
 
-    fun requestUserAddress(userAddressRequest: UserAddressRequest): Observable<Unit> {
-        return apiClient.map {
-            Address.requestUserAddress(it.first, userAddressRequest, 25)
-        }
+    fun requestUserAddress(userAddressRequest: UserAddressRequest): Completable {
+        return apiClient.toCompletable { Address.requestUserAddress(it.first, userAddressRequest, 25) }
     }
 }

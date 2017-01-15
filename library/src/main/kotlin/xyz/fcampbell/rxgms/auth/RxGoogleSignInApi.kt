@@ -6,6 +6,7 @@ import android.content.Intent
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.auth.api.signin.GoogleSignInResult
 import com.google.android.gms.common.api.Scope
 import com.google.android.gms.common.api.Status
 import rx.Observable
@@ -45,9 +46,8 @@ class RxGoogleSignInApi(
                 .map { Auth.GoogleSignInApi.getSignInResultFromIntent(it).signInAccount }
     }
 
-    fun silentSignIn(): Observable<GoogleSignInAccount> {
+    fun silentSignIn(): Observable<GoogleSignInResult> {
         return apiClient.pendingResultToObservable { Auth.GoogleSignInApi.silentSignIn(it.first) }
-                .map { it.signInAccount }
     }
 
     fun revokeAccess(): Observable<Status> {

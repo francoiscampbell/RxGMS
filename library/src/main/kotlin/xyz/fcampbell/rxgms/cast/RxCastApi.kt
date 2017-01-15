@@ -12,6 +12,7 @@ import xyz.fcampbell.rxgms.common.ApiClientDescriptor
 import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.RxGmsApi
 import xyz.fcampbell.rxgms.common.util.pendingResultToObservable
+import xyz.fcampbell.rxgms.common.util.toCompletable
 import java.io.IOException
 
 @Suppress("unused")
@@ -34,7 +35,7 @@ class RxCastApi(
 
     @Throws(IOException::class, IllegalStateException::class)
     fun requestStatus(): Completable {
-        return apiClient.map { castApi.requestStatus(it.first) }.toCompletable()
+        return apiClient.toCompletable { castApi.requestStatus(it.first) }
     }
 
     fun sendMessage(namespace: String, message: String): Observable<Status> {
@@ -75,7 +76,7 @@ class RxCastApi(
 
     @Throws(IOException::class, IllegalArgumentException::class, IllegalStateException::class)
     fun setVolume(volume: Double): Completable {
-        return apiClient.map { castApi.setVolume(it.first, volume) }.toCompletable()
+        return apiClient.toCompletable { castApi.setVolume(it.first, volume) }
     }
 
     @Throws(IllegalStateException::class)
@@ -85,7 +86,7 @@ class RxCastApi(
 
     @Throws(IOException::class, IllegalStateException::class)
     fun setMute(mute: Boolean): Completable {
-        return apiClient.map { castApi.setMute(it.first, mute) }.toCompletable()
+        return apiClient.toCompletable { castApi.setMute(it.first, mute) }
     }
 
     @Throws(IllegalStateException::class)
@@ -115,11 +116,11 @@ class RxCastApi(
 
     @Throws(IOException::class, IllegalStateException::class)
     fun setMessageReceivedCallbacks(namespace: String, callbacks: Cast.MessageReceivedCallback): Completable {
-        return apiClient.map { castApi.setMessageReceivedCallbacks(it.first, namespace, callbacks) }.toCompletable()
+        return apiClient.toCompletable { castApi.setMessageReceivedCallbacks(it.first, namespace, callbacks) }
     }
 
     @Throws(IOException::class, IllegalArgumentException::class)
     fun removeMessageReceivedCallbacks(namespace: String): Completable {
-        return apiClient.map { castApi.removeMessageReceivedCallbacks(it.first, namespace) }.toCompletable()
+        return apiClient.toCompletable { castApi.removeMessageReceivedCallbacks(it.first, namespace) }
     }
 }
