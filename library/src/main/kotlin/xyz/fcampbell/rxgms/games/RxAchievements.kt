@@ -11,6 +11,7 @@ import xyz.fcampbell.rxgms.common.ApiClientDescriptor
 import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.RxGmsApi
 import xyz.fcampbell.rxgms.common.util.pendingResultToObservable
+import xyz.fcampbell.rxgms.common.util.toCompletable
 
 /**
  * Created by francois on 2017-01-13.
@@ -39,7 +40,7 @@ class RxAchievements(
     }
 
     fun reveal(id: String): Completable {
-        return apiClient.map { Games.Achievements.reveal(it.first, id) }.toCompletable()
+        return apiClient.toCompletable { Games.Achievements.reveal(it.first, id) }
     }
 
     fun revealImmediate(id: String): Observable<Achievements.UpdateAchievementResult> {
@@ -47,7 +48,7 @@ class RxAchievements(
     }
 
     fun unlock(id: String): Completable {
-        return apiClient.map { Games.Achievements.unlock(it.first, id) }.toCompletable()
+        return apiClient.toCompletable { Games.Achievements.unlock(it.first, id) }
     }
 
     fun unlockImmediate(id: String): Observable<Achievements.UpdateAchievementResult> {
@@ -55,7 +56,7 @@ class RxAchievements(
     }
 
     fun increment(id: String, numSteps: Int): Completable {
-        return apiClient.map { Games.Achievements.increment(it.first, id, numSteps) }.toCompletable()
+        return apiClient.toCompletable { Games.Achievements.increment(it.first, id, numSteps) }
     }
 
     fun incrementImmediate(id: String, numSteps: Int): Observable<Achievements.UpdateAchievementResult> {
@@ -63,7 +64,7 @@ class RxAchievements(
     }
 
     fun setSteps(id: String, numSteps: Int): Completable {
-        return apiClient.map { Games.Achievements.setSteps(it.first, id, numSteps) }.toCompletable()
+        return apiClient.toCompletable { Games.Achievements.setSteps(it.first, id, numSteps) }
     }
 
     fun setStepsImmediate(id: String, numSteps: Int): Observable<Achievements.UpdateAchievementResult> {
