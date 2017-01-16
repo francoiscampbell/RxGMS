@@ -7,7 +7,7 @@ import rx.Observable
 import xyz.fcampbell.rxgms.common.ApiClientDescriptor
 import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.RxGmsApi
-import xyz.fcampbell.rxgms.common.util.pendingResultToObservable
+import xyz.fcampbell.rxgms.common.util.fromPendingResult
 
 @Suppress("unused")
 class RxCastRemoteDisplayApi(
@@ -25,10 +25,10 @@ class RxCastRemoteDisplayApi(
     ) : this(ApiClientDescriptor(context), castRemoteDisplayOptions, *scopes)
 
     fun startRemoteDisplay(applicationId: String): Observable<CastRemoteDisplay.CastRemoteDisplaySessionResult> {
-        return apiClient.pendingResultToObservable { CastRemoteDisplay.CastRemoteDisplayApi.startRemoteDisplay(it.first, applicationId) }
+        return apiClientPair.fromPendingResult { CastRemoteDisplay.CastRemoteDisplayApi.startRemoteDisplay(it.first, applicationId) }
     }
 
     fun stopRemoteDisplay(): Observable<CastRemoteDisplay.CastRemoteDisplaySessionResult> {
-        return apiClient.pendingResultToObservable { CastRemoteDisplay.CastRemoteDisplayApi.stopRemoteDisplay(it.first) }
+        return apiClientPair.fromPendingResult { CastRemoteDisplay.CastRemoteDisplayApi.stopRemoteDisplay(it.first) }
     }
 }

@@ -10,7 +10,7 @@ import rx.Observable
 import xyz.fcampbell.rxgms.common.ApiClientDescriptor
 import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.RxGmsApi
-import xyz.fcampbell.rxgms.common.util.pendingResultToObservable
+import xyz.fcampbell.rxgms.common.util.fromPendingResult
 import xyz.fcampbell.rxgms.common.util.toCompletable
 
 /**
@@ -32,42 +32,42 @@ class RxAchievements(
     ) : this(ApiClientDescriptor(context), gamesOptions, *scopes)
 
     fun getAchievementsIntent(): Observable<Intent> {
-        return apiClient.map { Games.Achievements.getAchievementsIntent(it.first) }
+        return apiClientPair.map { Games.Achievements.getAchievementsIntent(it.first) }
     }
 
     fun load(forceReload: Boolean): Observable<Achievements.LoadAchievementsResult> {
-        return apiClient.pendingResultToObservable { Games.Achievements.load(it.first, forceReload) }
+        return apiClientPair.fromPendingResult { Games.Achievements.load(it.first, forceReload) }
     }
 
     fun reveal(id: String): Completable {
-        return apiClient.toCompletable { Games.Achievements.reveal(it.first, id) }
+        return apiClientPair.toCompletable { Games.Achievements.reveal(it.first, id) }
     }
 
     fun revealImmediate(id: String): Observable<Achievements.UpdateAchievementResult> {
-        return apiClient.pendingResultToObservable { Games.Achievements.revealImmediate(it.first, id) }
+        return apiClientPair.fromPendingResult { Games.Achievements.revealImmediate(it.first, id) }
     }
 
     fun unlock(id: String): Completable {
-        return apiClient.toCompletable { Games.Achievements.unlock(it.first, id) }
+        return apiClientPair.toCompletable { Games.Achievements.unlock(it.first, id) }
     }
 
     fun unlockImmediate(id: String): Observable<Achievements.UpdateAchievementResult> {
-        return apiClient.pendingResultToObservable { Games.Achievements.unlockImmediate(it.first, id) }
+        return apiClientPair.fromPendingResult { Games.Achievements.unlockImmediate(it.first, id) }
     }
 
     fun increment(id: String, numSteps: Int): Completable {
-        return apiClient.toCompletable { Games.Achievements.increment(it.first, id, numSteps) }
+        return apiClientPair.toCompletable { Games.Achievements.increment(it.first, id, numSteps) }
     }
 
     fun incrementImmediate(id: String, numSteps: Int): Observable<Achievements.UpdateAchievementResult> {
-        return apiClient.pendingResultToObservable { Games.Achievements.incrementImmediate(it.first, id, numSteps) }
+        return apiClientPair.fromPendingResult { Games.Achievements.incrementImmediate(it.first, id, numSteps) }
     }
 
     fun setSteps(id: String, numSteps: Int): Completable {
-        return apiClient.toCompletable { Games.Achievements.setSteps(it.first, id, numSteps) }
+        return apiClientPair.toCompletable { Games.Achievements.setSteps(it.first, id, numSteps) }
     }
 
     fun setStepsImmediate(id: String, numSteps: Int): Observable<Achievements.UpdateAchievementResult> {
-        return apiClient.pendingResultToObservable { Games.Achievements.setStepsImmediate(it.first, id, numSteps) }
+        return apiClientPair.fromPendingResult { Games.Achievements.setStepsImmediate(it.first, id, numSteps) }
     }
 }

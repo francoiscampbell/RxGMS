@@ -11,7 +11,7 @@ import rx.Observable
 import xyz.fcampbell.rxgms.common.ApiClientDescriptor
 import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.RxGmsApi
-import xyz.fcampbell.rxgms.common.util.pendingResultToObservable
+import xyz.fcampbell.rxgms.common.util.fromPendingResult
 
 @Suppress("unused")
 class RxGeofencingApi(
@@ -45,7 +45,7 @@ class RxGeofencingApi(
      */
     @RequiresPermission("android.permission.ACCESS_FINE_LOCATION")
     fun addGeofences(geofenceTransitionPendingIntent: PendingIntent, request: GeofencingRequest): Observable<Status> {
-        return apiClient.pendingResultToObservable {
+        return apiClientPair.fromPendingResult {
             LocationServices.GeofencingApi.addGeofences(it.first, request, geofenceTransitionPendingIntent)
         }
     }
@@ -67,7 +67,7 @@ class RxGeofencingApi(
      * @return observable that removed geofences
      */
     fun removeGeofences(pendingIntent: PendingIntent): Observable<Status> {
-        return apiClient.pendingResultToObservable { LocationServices.GeofencingApi.removeGeofences(it.first, pendingIntent) }
+        return apiClientPair.fromPendingResult { LocationServices.GeofencingApi.removeGeofences(it.first, pendingIntent) }
     }
 
     /**
@@ -87,6 +87,6 @@ class RxGeofencingApi(
      * @return observable that removed geofences
      */
     fun removeGeofences(requestIds: List<String>): Observable<Status> {
-        return apiClient.pendingResultToObservable { LocationServices.GeofencingApi.removeGeofences(it.first, requestIds) }
+        return apiClientPair.fromPendingResult { LocationServices.GeofencingApi.removeGeofences(it.first, requestIds) }
     }
 }

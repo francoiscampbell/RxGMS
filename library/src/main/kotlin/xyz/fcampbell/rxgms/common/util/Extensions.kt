@@ -9,7 +9,7 @@ import xyz.fcampbell.rxgms.common.action.PendingResultOnSubscribe
 /**
  * Created by francois on 2017-01-09.
  */
-inline fun <T, R : Result> Observable<T>.pendingResultToObservable(crossinline func: (T) -> PendingResult<R>): Observable<R> {
+inline fun <T, R : Result> Observable<T>.fromPendingResult(crossinline func: (T) -> PendingResult<R>): Observable<R> {
     return flatMap { func(it).toObservable() }
 }
 

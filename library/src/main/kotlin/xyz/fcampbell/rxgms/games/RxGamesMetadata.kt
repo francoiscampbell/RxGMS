@@ -9,7 +9,7 @@ import rx.Observable
 import xyz.fcampbell.rxgms.common.ApiClientDescriptor
 import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.RxGmsApi
-import xyz.fcampbell.rxgms.common.util.pendingResultToObservable
+import xyz.fcampbell.rxgms.common.util.fromPendingResult
 
 /**
  * Created by francois on 2017-01-13.
@@ -30,10 +30,10 @@ class RxGamesMetadata(
     ) : this(ApiClientDescriptor(context), gamesOptions, *scopes)
 
     fun getCurrentGame(): Observable<Game> {
-        return apiClient.map { Games.GamesMetadata.getCurrentGame(it.first) }
+        return apiClientPair.map { Games.GamesMetadata.getCurrentGame(it.first) }
     }
 
     fun loadGame(): Observable<GamesMetadata.LoadGamesResult> {
-        return apiClient.pendingResultToObservable { Games.GamesMetadata.loadGame(it.first) }
+        return apiClientPair.fromPendingResult { Games.GamesMetadata.loadGame(it.first) }
     }
 }

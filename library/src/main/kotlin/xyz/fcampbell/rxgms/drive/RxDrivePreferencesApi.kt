@@ -11,7 +11,7 @@ import rx.Observable
 import xyz.fcampbell.rxgms.common.ApiClientDescriptor
 import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.RxGmsApi
-import xyz.fcampbell.rxgms.common.util.pendingResultToObservable
+import xyz.fcampbell.rxgms.common.util.fromPendingResult
 
 /**
  * Created by francois on 2016-12-22.
@@ -30,10 +30,10 @@ class RxDrivePreferencesApi(
     ) : this(ApiClientDescriptor(context), *scopes)
 
     fun getFileUploadPreferences(): Observable<FileUploadPreferencesResult> {
-        return apiClient.pendingResultToObservable { Drive.DrivePreferencesApi.getFileUploadPreferences(it.first) }
+        return apiClientPair.fromPendingResult { Drive.DrivePreferencesApi.getFileUploadPreferences(it.first) }
     }
 
     fun setFileUploadPreferences(fileUploadPreferences: FileUploadPreferences): Observable<Status> {
-        return apiClient.pendingResultToObservable { Drive.DrivePreferencesApi.setFileUploadPreferences(it.first, fileUploadPreferences) }
+        return apiClientPair.fromPendingResult { Drive.DrivePreferencesApi.setFileUploadPreferences(it.first, fileUploadPreferences) }
     }
 }

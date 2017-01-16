@@ -13,7 +13,7 @@ import rx.Observable
 import xyz.fcampbell.rxgms.common.ApiClientDescriptor
 import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.RxGmsApi
-import xyz.fcampbell.rxgms.common.util.pendingResultToObservable
+import xyz.fcampbell.rxgms.common.util.fromPendingResult
 import xyz.fcampbell.rxgms.location.action.location.LocationUpdates
 import xyz.fcampbell.rxgms.location.action.location.MockLocation
 import xyz.fcampbell.rxgms.location.action.location.RemoveLocationIntentUpdates
@@ -44,7 +44,7 @@ class RxFusedLocationApi(
      */
     @RequiresPermission(anyOf = arrayOf("android.permission.ACCESS_COARSE_LOCATION", "android.permission.ACCESS_FINE_LOCATION"))
     fun getLastLocation(): Observable<Location> {
-        return apiClient.map { LocationServices.FusedLocationApi.getLastLocation(it.first) }
+        return apiClientPair.map { LocationServices.FusedLocationApi.getLastLocation(it.first) }
     }
 
     /**
@@ -70,7 +70,7 @@ class RxFusedLocationApi(
      */
     @RequiresPermission(allOf = arrayOf("android.permission.ACCESS_COARSE_LOCATION", "android.permission.ACCESS_MOCK_LOCATION"))
     fun mockLocation(sourceLocationObservable: Observable<Location>): Observable<Status> {
-        return apiClient.flatMap {
+        return apiClientPair.flatMap {
             Observable.fromEmitter(
                     MockLocation(it.first, sourceLocationObservable),
                     AsyncEmitter.BackpressureMode.LATEST)
@@ -94,7 +94,7 @@ class RxFusedLocationApi(
      */
     @RequiresPermission(anyOf = arrayOf("android.permission.ACCESS_COARSE_LOCATION", "android.permission.ACCESS_FINE_LOCATION"))
     fun requestLocationUpdates(locationRequest: LocationRequest): Observable<Location> {
-        return apiClient.flatMap {
+        return apiClientPair.flatMap {
             Observable.fromEmitter(
                     LocationUpdates(it.first, locationRequest),
                     AsyncEmitter.BackpressureMode.LATEST)
@@ -122,7 +122,7 @@ class RxFusedLocationApi(
      */
     @RequiresPermission(anyOf = arrayOf("android.permission.ACCESS_COARSE_LOCATION", "android.permission.ACCESS_FINE_LOCATION"))
     fun requestLocationUpdates(locationRequest: LocationRequest, pendingIntent: PendingIntent): Observable<Status> {
-        return apiClient.pendingResultToObservable {
+        return apiClientPair.fromPendingResult {
             LocationServices.FusedLocationApi.requestLocationUpdates(it.first, locationRequest, pendingIntent)
         }
     }
@@ -138,7 +138,7 @@ class RxFusedLocationApi(
      * @return observable that removes the PendingIntent
      */
     fun removeLocationUpdates(intent: PendingIntent): Observable<Status> {
-        return apiClient.flatMap {
+        return apiClientPair.flatMap {
             Observable.fromEmitter(
                     RemoveLocationIntentUpdates(it.first, intent),
                     AsyncEmitter.BackpressureMode.LATEST)

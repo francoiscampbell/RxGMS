@@ -13,7 +13,7 @@ import rx.Observable
 import xyz.fcampbell.rxgms.common.ApiClientDescriptor
 import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.RxGmsApi
-import xyz.fcampbell.rxgms.common.util.pendingResultToObservable
+import xyz.fcampbell.rxgms.common.util.fromPendingResult
 
 @Suppress("unused")
 class RxCredentialsApi(
@@ -31,22 +31,22 @@ class RxCredentialsApi(
     ) : this(ApiClientDescriptor(context), credentialsOptions, *scopes)
 
     fun request(credentialRequest: CredentialRequest): Observable<CredentialRequestResult> {
-        return apiClient.pendingResultToObservable { Auth.CredentialsApi.request(it.first, credentialRequest) }
+        return apiClientPair.fromPendingResult { Auth.CredentialsApi.request(it.first, credentialRequest) }
     }
 
     fun getHintPickerIntent(hintRequest: HintRequest): Observable<PendingIntent> {
-        return apiClient.map { Auth.CredentialsApi.getHintPickerIntent(it.first, hintRequest) }
+        return apiClientPair.map { Auth.CredentialsApi.getHintPickerIntent(it.first, hintRequest) }
     }
 
     fun save(credential: Credential): Observable<Status> {
-        return apiClient.pendingResultToObservable { Auth.CredentialsApi.save(it.first, credential) }
+        return apiClientPair.fromPendingResult { Auth.CredentialsApi.save(it.first, credential) }
     }
 
     fun delete(credential: Credential): Observable<Status> {
-        return apiClient.pendingResultToObservable { Auth.CredentialsApi.delete(it.first, credential) }
+        return apiClientPair.fromPendingResult { Auth.CredentialsApi.delete(it.first, credential) }
     }
 
     fun disableAutoSignIn(): Observable<Status> {
-        return apiClient.pendingResultToObservable { Auth.CredentialsApi.disableAutoSignIn(it.first) }
+        return apiClientPair.fromPendingResult { Auth.CredentialsApi.disableAutoSignIn(it.first) }
     }
 }

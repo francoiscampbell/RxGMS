@@ -7,7 +7,7 @@ import rx.Observable
 import xyz.fcampbell.rxgms.common.ApiClientDescriptor
 import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.RxGmsApi
-import xyz.fcampbell.rxgms.common.util.pendingResultToObservable
+import xyz.fcampbell.rxgms.common.util.fromPendingResult
 
 @Suppress("unused")
 class RxGeoDataApi(
@@ -28,7 +28,7 @@ class RxGeoDataApi(
      * @return observable that emits places buffer and completes
      */
     fun getPlaceById(vararg placeIds: String): Observable<PlaceBuffer> {
-        return apiClient.pendingResultToObservable { Places.GeoDataApi.getPlaceById(it.first, *placeIds) }
+        return apiClientPair.fromPendingResult { Places.GeoDataApi.getPlaceById(it.first, *placeIds) }
     }
 
     /**
@@ -45,7 +45,7 @@ class RxGeoDataApi(
      * @return observable with suggestions buffer and completes
      */
     fun getPlaceAutocompletePredictions(query: String, bounds: LatLngBounds, filter: AutocompleteFilter?): Observable<AutocompletePredictionBuffer> {
-        return apiClient.pendingResultToObservable { Places.GeoDataApi.getAutocompletePredictions(it.first, query, bounds, filter) }
+        return apiClientPair.fromPendingResult { Places.GeoDataApi.getAutocompletePredictions(it.first, query, bounds, filter) }
     }
 
     /**
@@ -56,7 +56,7 @@ class RxGeoDataApi(
      * @return observable that emits metadata buffer and completes
      */
     fun getPlacePhotos(placeId: String): Observable<PlacePhotoMetadataResult> {
-        return apiClient.pendingResultToObservable { Places.GeoDataApi.getPlacePhotos(it.first, placeId) }
+        return apiClientPair.fromPendingResult { Places.GeoDataApi.getPlacePhotos(it.first, placeId) }
     }
 
     /**
@@ -68,6 +68,6 @@ class RxGeoDataApi(
      * @return observable that emits the photo result and completes
      */
     fun getPlacePhoto(placePhotoMetadata: PlacePhotoMetadata): Observable<PlacePhotoResult> {
-        return apiClient.pendingResultToObservable { placePhotoMetadata.getPhoto(it.first) }
+        return apiClientPair.fromPendingResult { placePhotoMetadata.getPhoto(it.first) }
     }
 }

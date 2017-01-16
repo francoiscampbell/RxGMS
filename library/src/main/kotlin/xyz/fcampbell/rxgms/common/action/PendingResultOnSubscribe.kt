@@ -8,11 +8,11 @@ import rx.Subscriber
 import rx.subscriptions.Subscriptions
 import xyz.fcampbell.rxgms.common.exception.StatusException
 
-internal class PendingResultOnSubscribe<T : Result>(
-        private val pendingResult: PendingResult<T>
-) : Observable.OnSubscribe<T> {
+internal class PendingResultOnSubscribe<R : Result>(
+        private val pendingResult: PendingResult<R>
+) : Observable.OnSubscribe<R> {
 
-    override fun call(subscriber: Subscriber<in T>) {
+    override fun call(subscriber: Subscriber<in R>) {
         pendingResult.setResultCallback { result ->
             handleResourceCleanupIfNecessary(result, subscriber)
             if (result.status.isSuccess) {
@@ -29,7 +29,7 @@ internal class PendingResultOnSubscribe<T : Result>(
         })
     }
 
-    private fun handleResourceCleanupIfNecessary(result: T, subscriber: Subscriber<in T>) {
+    private fun handleResourceCleanupIfNecessary(result: R, subscriber: Subscriber<in R>) {
         when (result) {
             is Releasable -> subscriber.add(Subscriptions.create { result.release() })
         }

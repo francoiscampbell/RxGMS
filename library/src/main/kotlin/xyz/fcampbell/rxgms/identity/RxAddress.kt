@@ -23,6 +23,6 @@ class RxAddress(
     ) : this(ApiClientDescriptor(context))
 
     fun requestUserAddress(userAddressRequest: UserAddressRequest): Completable {
-        return apiClient.toCompletable { Address.requestUserAddress(it.first, userAddressRequest, 25) }
+        return apiClientPair.toCompletable { Address.requestUserAddress(it.first, userAddressRequest, 25) }
     }
 }

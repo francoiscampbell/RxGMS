@@ -11,7 +11,7 @@ import rx.Observable
 import xyz.fcampbell.rxgms.common.ApiClientDescriptor
 import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.RxGmsApi
-import xyz.fcampbell.rxgms.common.util.pendingResultToObservable
+import xyz.fcampbell.rxgms.common.util.fromPendingResult
 import xyz.fcampbell.rxgms.common.util.toCompletable
 import java.io.IOException
 
@@ -35,92 +35,92 @@ class RxCastApi(
 
     @Throws(IOException::class, IllegalStateException::class)
     fun requestStatus(): Completable {
-        return apiClient.toCompletable { castApi.requestStatus(it.first) }
+        return apiClientPair.toCompletable { castApi.requestStatus(it.first) }
     }
 
     fun sendMessage(namespace: String, message: String): Observable<Status> {
-        return apiClient.pendingResultToObservable { castApi.sendMessage(it.first, namespace, message) }
+        return apiClientPair.fromPendingResult { castApi.sendMessage(it.first, namespace, message) }
     }
 
     fun launchApplication(applicationId: String): Observable<Cast.ApplicationConnectionResult> {
-        return apiClient.pendingResultToObservable { castApi.launchApplication(it.first, applicationId) }
+        return apiClientPair.fromPendingResult { castApi.launchApplication(it.first, applicationId) }
     }
 
     fun launchApplication(applicationId: String, launchOptions: LaunchOptions): Observable<Cast.ApplicationConnectionResult> {
-        return apiClient.pendingResultToObservable { castApi.launchApplication(it.first, applicationId, launchOptions) }
+        return apiClientPair.fromPendingResult { castApi.launchApplication(it.first, applicationId, launchOptions) }
     }
 
     fun joinApplication(applicationId: String, sessionId: String): Observable<Cast.ApplicationConnectionResult> {
-        return apiClient.pendingResultToObservable { castApi.joinApplication(it.first, applicationId, sessionId) }
+        return apiClientPair.fromPendingResult { castApi.joinApplication(it.first, applicationId, sessionId) }
     }
 
     fun joinApplication(applicationId: String): Observable<Cast.ApplicationConnectionResult> {
-        return apiClient.pendingResultToObservable { castApi.joinApplication(it.first, applicationId) }
+        return apiClientPair.fromPendingResult { castApi.joinApplication(it.first, applicationId) }
     }
 
     fun joinApplication(): Observable<Cast.ApplicationConnectionResult> {
-        return apiClient.pendingResultToObservable { castApi.joinApplication(it.first) }
+        return apiClientPair.fromPendingResult { castApi.joinApplication(it.first) }
     }
 
     fun leaveApplication(): Observable<Status> {
-        return apiClient.pendingResultToObservable { castApi.stopApplication(it.first) }
+        return apiClientPair.fromPendingResult { castApi.stopApplication(it.first) }
     }
 
     fun stopApplication(): Observable<Status> {
-        return apiClient.pendingResultToObservable { castApi.stopApplication(it.first) }
+        return apiClientPair.fromPendingResult { castApi.stopApplication(it.first) }
     }
 
     fun stopApplication(sessionId: String): Observable<Status> {
-        return apiClient.pendingResultToObservable { castApi.stopApplication(it.first, sessionId) }
+        return apiClientPair.fromPendingResult { castApi.stopApplication(it.first, sessionId) }
     }
 
     @Throws(IOException::class, IllegalArgumentException::class, IllegalStateException::class)
     fun setVolume(volume: Double): Completable {
-        return apiClient.toCompletable { castApi.setVolume(it.first, volume) }
+        return apiClientPair.toCompletable { castApi.setVolume(it.first, volume) }
     }
 
     @Throws(IllegalStateException::class)
     fun getVolume(): Observable<Double> {
-        return apiClient.map { castApi.getVolume(it.first) }
+        return apiClientPair.map { castApi.getVolume(it.first) }
     }
 
     @Throws(IOException::class, IllegalStateException::class)
     fun setMute(mute: Boolean): Completable {
-        return apiClient.toCompletable { castApi.setMute(it.first, mute) }
+        return apiClientPair.toCompletable { castApi.setMute(it.first, mute) }
     }
 
     @Throws(IllegalStateException::class)
     fun isMute(): Observable<Boolean> {
-        return apiClient.map { castApi.isMute(it.first) }
+        return apiClientPair.map { castApi.isMute(it.first) }
     }
 
     @Throws(IllegalStateException::class)
     fun getActiveInputState(): Observable<Int> {
-        return apiClient.map { castApi.getActiveInputState(it.first) }
+        return apiClientPair.map { castApi.getActiveInputState(it.first) }
     }
 
     @Throws(IllegalStateException::class)
     fun getStandbyState(): Observable<Int> {
-        return apiClient.map { castApi.getStandbyState(it.first) }
+        return apiClientPair.map { castApi.getStandbyState(it.first) }
     }
 
     @Throws(IllegalStateException::class)
     fun getApplicationMetadata(): Observable<ApplicationMetadata> {
-        return apiClient.map { castApi.getApplicationMetadata(it.first) }
+        return apiClientPair.map { castApi.getApplicationMetadata(it.first) }
     }
 
     @Throws(IllegalStateException::class)
     fun getApplicationStatus(): Observable<String> {
-        return apiClient.map { castApi.getApplicationStatus(it.first) }
+        return apiClientPair.map { castApi.getApplicationStatus(it.first) }
     }
 
     @Throws(IOException::class, IllegalStateException::class)
     fun setMessageReceivedCallbacks(namespace: String, callbacks: Cast.MessageReceivedCallback): Completable {
-        return apiClient.toCompletable { castApi.setMessageReceivedCallbacks(it.first, namespace, callbacks) }
+        return apiClientPair.toCompletable { castApi.setMessageReceivedCallbacks(it.first, namespace, callbacks) }
     }
 
     @Throws(IOException::class, IllegalArgumentException::class)
     fun removeMessageReceivedCallbacks(namespace: String): Completable {
-        return apiClient.toCompletable { castApi.removeMessageReceivedCallbacks(it.first, namespace) }
+        return apiClientPair.toCompletable { castApi.removeMessageReceivedCallbacks(it.first, namespace) }
     }
 }

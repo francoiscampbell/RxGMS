@@ -13,7 +13,7 @@ import rx.Observable
 import xyz.fcampbell.rxgms.common.ApiClientDescriptor
 import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.RxGmsApi
-import xyz.fcampbell.rxgms.common.util.pendingResultToObservable
+import xyz.fcampbell.rxgms.common.util.fromPendingResult
 import xyz.fcampbell.rxgms.common.util.toObservable
 
 /**
@@ -33,7 +33,7 @@ class RxDriveApi(
     ) : this(ApiClientDescriptor(context), *scopes)
 
     fun fetchDriveId(resourceId: String): Observable<RxDriveId> {
-        return apiClient.flatMap { pair ->
+        return apiClientPair.flatMap { pair ->
             Drive.DriveApi.fetchDriveId(pair.first, resourceId)
                     .toObservable()
                     .map { RxDriveId(pair.first, it.driveId) }
@@ -41,11 +41,11 @@ class RxDriveApi(
     }
 
     fun getAppFolder(): Observable<RxDriveFolder> {
-        return apiClient.map { RxDriveFolder(it.first, Drive.DriveApi.getAppFolder(it.first)) }
+        return apiClientPair.map { RxDriveFolder(it.first, Drive.DriveApi.getAppFolder(it.first)) }
     }
 
     fun getRootFolder(): Observable<RxDriveFolder> {
-        return apiClient.map { RxDriveFolder(it.first, Drive.DriveApi.getRootFolder(it.first)) }
+        return apiClientPair.map { RxDriveFolder(it.first, Drive.DriveApi.getRootFolder(it.first)) }
     }
 
     fun newCreateFileActivityBuilder(): Observable<CreateFileActivityBuilder> {
@@ -53,7 +53,7 @@ class RxDriveApi(
     }
 
     fun newDriveContents(): Observable<RxDriveContents> {
-        return apiClient.flatMap { pair ->
+        return apiClientPair.flatMap { pair ->
             Drive.DriveApi.newDriveContents(pair.first)
                     .toObservable()
                     .map { RxDriveContents(pair.first, it.driveContents) }
@@ -65,10 +65,10 @@ class RxDriveApi(
     }
 
     fun query(query: Query): Observable<MetadataBufferResult> {
-        return apiClient.pendingResultToObservable { Drive.DriveApi.query(it.first, query) }
+        return apiClientPair.fromPendingResult { Drive.DriveApi.query(it.first, query) }
     }
 
     fun requestSync(): Observable<Status> {
-        return apiClient.pendingResultToObservable { Drive.DriveApi.requestSync(it.first) }
+        return apiClientPair.fromPendingResult { Drive.DriveApi.requestSync(it.first) }
     }
 }
