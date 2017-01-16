@@ -12,8 +12,7 @@ import rx.Subscription
 import rx.subscriptions.Subscriptions
 import xyz.fcampbell.rxgms.common.action.FromEmitter
 import xyz.fcampbell.rxgms.common.action.GoogleApiClientOnSubscribe
-import xyz.fcampbell.rxgms.common.util.fromPendingResult
-import xyz.fcampbell.rxgms.common.util.toCompletable
+import xyz.fcampbell.rxgms.common.util.toObservable
 
 /**
  * Created by francois on 2016-12-29.
@@ -66,7 +65,7 @@ abstract class RxGmsApi<O : Api.ApiOptions>(
     }
 
     fun <R : Result> fromPendingResult(func: (GoogleApiClient) -> PendingResult<R>): Observable<R> {
-        return apiClient.fromPendingResult(func)
+        return apiClient.flatMap { func(it).toObservable() }
     }
 
     fun <R> fromEmitter(backpressureMode: AsyncEmitter.BackpressureMode, emitter: (GoogleApiClient) -> FromEmitter<R>): Observable<R> {
@@ -82,6 +81,6 @@ abstract class RxGmsApi<O : Api.ApiOptions>(
     }
 
     fun toCompletable(func: (GoogleApiClient) -> Unit): Completable {
-        return apiClient.toCompletable(func)
+        return apiClient.map(func).toCompletable()
     }
 }
