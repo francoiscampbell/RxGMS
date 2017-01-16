@@ -9,8 +9,6 @@ import rx.Observable
 import xyz.fcampbell.rxgms.common.ApiClientDescriptor
 import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.RxGmsApi
-import xyz.fcampbell.rxgms.common.util.fromPendingResult
-import xyz.fcampbell.rxgms.common.util.toCompletable
 
 /**
  * Created by francois on 2017-01-13.
@@ -31,14 +29,14 @@ class RxEvents(
     ) : this(ApiClientDescriptor(context), gamesOptions, *scopes)
 
     fun load(forceReload: Boolean): Observable<Events.LoadEventsResult> {
-        return apiClientPair.fromPendingResult { Games.Events.load(it.first, forceReload) }
+        return fromPendingResult { Games.Events.load(it, forceReload) }
     }
 
     fun loadByIds(forceReload: Boolean, vararg eventIds: String): Observable<Events.LoadEventsResult> {
-        return apiClientPair.fromPendingResult { Games.Events.loadByIds(it.first, forceReload, *eventIds) }
+        return fromPendingResult { Games.Events.loadByIds(it, forceReload, *eventIds) }
     }
 
     fun increment(eventId: String, incrementAmount: Int): Completable {
-        return apiClientPair.toCompletable { Games.Events.increment(it.first, eventId, incrementAmount) }
+        return toCompletable { Games.Events.increment(it, eventId, incrementAmount) }
     }
 }

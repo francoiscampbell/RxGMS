@@ -7,7 +7,7 @@ import rx.functions.Action1
 /**
  * Created by francois on 2016-12-29.
  */
-abstract internal class FromEmitter<T> : Action1<AsyncEmitter<T>> {
+abstract class FromEmitter<T> : Action1<AsyncEmitter<T>> {
 
     @CallSuper
     override fun call(emitter: AsyncEmitter<T>) {

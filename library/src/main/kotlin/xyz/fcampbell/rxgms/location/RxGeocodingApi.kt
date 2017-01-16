@@ -5,7 +5,6 @@ import android.location.Address
 import com.google.android.gms.common.api.Api
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.LatLngBounds
-import rx.AsyncEmitter
 import rx.Observable
 import rx.schedulers.Schedulers
 import xyz.fcampbell.rxgms.common.ApiClientDescriptor
@@ -61,9 +60,7 @@ class RxGeocodingApi(
      * @return observable that serves list of address based on location
      */
     fun reverseGeocode(locale: Locale, lat: Double, lng: Double, maxResults: Int): Observable<List<Address>> {
-        return Observable.fromEmitter(
-                ReverseGeocode(apiClientDescriptor.context, locale, lat, lng, maxResults),
-                AsyncEmitter.BackpressureMode.BUFFER)
+        return fromEmitterBuffer { ReverseGeocode(apiClientDescriptor.context, locale, lat, lng, maxResults) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.trampoline())
     }
@@ -85,7 +82,7 @@ class RxGeocodingApi(
      * @return observable that serves list of address based on location name
      */
     @JvmOverloads fun geocode(locationName: String, maxResults: Int, bounds: LatLngBounds? = null): Observable<List<Address>> {
-        return Observable.create(Geocode(apiClientDescriptor.context, locationName, maxResults, bounds))
+        return fromEmitterLatest { Geocode(apiClientDescriptor.context, locationName, maxResults, bounds) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.trampoline())
     }

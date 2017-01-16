@@ -80,11 +80,11 @@ class RxLeaderboards(
     }
 
     fun submitScore(leaderboardId: String, score: Long): Completable {
-        return completable { Games.Leaderboards.submitScore(it, leaderboardId, score) }
+        return toCompletable { Games.Leaderboards.submitScore(it, leaderboardId, score) }
     }
 
     fun submitScore(leaderboardId: String, score: Long, scoreTag: String): Completable {
-        return completable { Games.Leaderboards.submitScore(it, leaderboardId, score, scoreTag) }
+        return toCompletable { Games.Leaderboards.submitScore(it, leaderboardId, score, scoreTag) }
     }
 
     fun submitScoreImmediate(leaderboardId: String, score: Long): Observable<Leaderboards.SubmitScoreResult> {

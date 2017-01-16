@@ -11,8 +11,6 @@ import rx.Observable
 import xyz.fcampbell.rxgms.common.ApiClientDescriptor
 import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.RxGmsApi
-import xyz.fcampbell.rxgms.common.util.fromPendingResult
-import xyz.fcampbell.rxgms.common.util.toCompletable
 import java.io.IOException
 
 @Suppress("unused")
@@ -35,92 +33,92 @@ class RxCastApi(
 
     @Throws(IOException::class, IllegalStateException::class)
     fun requestStatus(): Completable {
-        return apiClientPair.toCompletable { castApi.requestStatus(it.first) }
+        return toCompletable { castApi.requestStatus(it) }
     }
 
     fun sendMessage(namespace: String, message: String): Observable<Status> {
-        return apiClientPair.fromPendingResult { castApi.sendMessage(it.first, namespace, message) }
+        return fromPendingResult { castApi.sendMessage(it, namespace, message) }
     }
 
     fun launchApplication(applicationId: String): Observable<Cast.ApplicationConnectionResult> {
-        return apiClientPair.fromPendingResult { castApi.launchApplication(it.first, applicationId) }
+        return fromPendingResult { castApi.launchApplication(it, applicationId) }
     }
 
     fun launchApplication(applicationId: String, launchOptions: LaunchOptions): Observable<Cast.ApplicationConnectionResult> {
-        return apiClientPair.fromPendingResult { castApi.launchApplication(it.first, applicationId, launchOptions) }
+        return fromPendingResult { castApi.launchApplication(it, applicationId, launchOptions) }
     }
 
     fun joinApplication(applicationId: String, sessionId: String): Observable<Cast.ApplicationConnectionResult> {
-        return apiClientPair.fromPendingResult { castApi.joinApplication(it.first, applicationId, sessionId) }
+        return fromPendingResult { castApi.joinApplication(it, applicationId, sessionId) }
     }
 
     fun joinApplication(applicationId: String): Observable<Cast.ApplicationConnectionResult> {
-        return apiClientPair.fromPendingResult { castApi.joinApplication(it.first, applicationId) }
+        return fromPendingResult { castApi.joinApplication(it, applicationId) }
     }
 
     fun joinApplication(): Observable<Cast.ApplicationConnectionResult> {
-        return apiClientPair.fromPendingResult { castApi.joinApplication(it.first) }
+        return fromPendingResult { castApi.joinApplication(it) }
     }
 
     fun leaveApplication(): Observable<Status> {
-        return apiClientPair.fromPendingResult { castApi.stopApplication(it.first) }
+        return fromPendingResult { castApi.stopApplication(it) }
     }
 
     fun stopApplication(): Observable<Status> {
-        return apiClientPair.fromPendingResult { castApi.stopApplication(it.first) }
+        return fromPendingResult { castApi.stopApplication(it) }
     }
 
     fun stopApplication(sessionId: String): Observable<Status> {
-        return apiClientPair.fromPendingResult { castApi.stopApplication(it.first, sessionId) }
+        return fromPendingResult { castApi.stopApplication(it, sessionId) }
     }
 
     @Throws(IOException::class, IllegalArgumentException::class, IllegalStateException::class)
     fun setVolume(volume: Double): Completable {
-        return apiClientPair.toCompletable { castApi.setVolume(it.first, volume) }
+        return toCompletable { castApi.setVolume(it, volume) }
     }
 
     @Throws(IllegalStateException::class)
     fun getVolume(): Observable<Double> {
-        return apiClientPair.map { castApi.getVolume(it.first) }
+        return map { castApi.getVolume(it) }
     }
 
     @Throws(IOException::class, IllegalStateException::class)
     fun setMute(mute: Boolean): Completable {
-        return apiClientPair.toCompletable { castApi.setMute(it.first, mute) }
+        return toCompletable { castApi.setMute(it, mute) }
     }
 
     @Throws(IllegalStateException::class)
     fun isMute(): Observable<Boolean> {
-        return apiClientPair.map { castApi.isMute(it.first) }
+        return map { castApi.isMute(it) }
     }
 
     @Throws(IllegalStateException::class)
     fun getActiveInputState(): Observable<Int> {
-        return apiClientPair.map { castApi.getActiveInputState(it.first) }
+        return map { castApi.getActiveInputState(it) }
     }
 
     @Throws(IllegalStateException::class)
     fun getStandbyState(): Observable<Int> {
-        return apiClientPair.map { castApi.getStandbyState(it.first) }
+        return map { castApi.getStandbyState(it) }
     }
 
     @Throws(IllegalStateException::class)
     fun getApplicationMetadata(): Observable<ApplicationMetadata> {
-        return apiClientPair.map { castApi.getApplicationMetadata(it.first) }
+        return map { castApi.getApplicationMetadata(it) }
     }
 
     @Throws(IllegalStateException::class)
     fun getApplicationStatus(): Observable<String> {
-        return apiClientPair.map { castApi.getApplicationStatus(it.first) }
+        return map { castApi.getApplicationStatus(it) }
     }
 
     @Throws(IOException::class, IllegalStateException::class)
     fun setMessageReceivedCallbacks(namespace: String, callbacks: Cast.MessageReceivedCallback): Completable {
-        return apiClientPair.toCompletable { castApi.setMessageReceivedCallbacks(it.first, namespace, callbacks) }
+        return toCompletable { castApi.setMessageReceivedCallbacks(it, namespace, callbacks) }
     }
 
     @Throws(IOException::class, IllegalArgumentException::class)
     fun removeMessageReceivedCallbacks(namespace: String): Completable {
-        return apiClientPair.toCompletable { castApi.removeMessageReceivedCallbacks(it.first, namespace) }
+        return toCompletable { castApi.removeMessageReceivedCallbacks(it, namespace) }
     }
 }

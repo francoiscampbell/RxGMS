@@ -8,12 +8,10 @@ import com.google.android.gms.common.api.Api
 import com.google.android.gms.common.api.Status
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
-import rx.AsyncEmitter
 import rx.Observable
 import xyz.fcampbell.rxgms.common.ApiClientDescriptor
 import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.RxGmsApi
-import xyz.fcampbell.rxgms.common.util.fromPendingResult
 import xyz.fcampbell.rxgms.location.action.location.LocationUpdates
 import xyz.fcampbell.rxgms.location.action.location.MockLocation
 import xyz.fcampbell.rxgms.location.action.location.RemoveLocationIntentUpdates
@@ -44,7 +42,7 @@ class RxFusedLocationApi(
      */
     @RequiresPermission(anyOf = arrayOf("android.permission.ACCESS_COARSE_LOCATION", "android.permission.ACCESS_FINE_LOCATION"))
     fun getLastLocation(): Observable<Location> {
-        return apiClientPair.map { LocationServices.FusedLocationApi.getLastLocation(it.first) }
+        return map { LocationServices.FusedLocationApi.getLastLocation(it) }
     }
 
     /**
@@ -70,11 +68,7 @@ class RxFusedLocationApi(
      */
     @RequiresPermission(allOf = arrayOf("android.permission.ACCESS_COARSE_LOCATION", "android.permission.ACCESS_MOCK_LOCATION"))
     fun mockLocation(sourceLocationObservable: Observable<Location>): Observable<Status> {
-        return apiClientPair.flatMap {
-            Observable.fromEmitter(
-                    MockLocation(it.first, sourceLocationObservable),
-                    AsyncEmitter.BackpressureMode.LATEST)
-        }
+        return fromEmitterLatest { MockLocation(it, sourceLocationObservable) }
     }
 
     /**
@@ -94,11 +88,7 @@ class RxFusedLocationApi(
      */
     @RequiresPermission(anyOf = arrayOf("android.permission.ACCESS_COARSE_LOCATION", "android.permission.ACCESS_FINE_LOCATION"))
     fun requestLocationUpdates(locationRequest: LocationRequest): Observable<Location> {
-        return apiClientPair.flatMap {
-            Observable.fromEmitter(
-                    LocationUpdates(it.first, locationRequest),
-                    AsyncEmitter.BackpressureMode.LATEST)
-        }
+        return fromEmitterLatest { LocationUpdates(it, locationRequest) }
     }
 
     /**
@@ -122,9 +112,7 @@ class RxFusedLocationApi(
      */
     @RequiresPermission(anyOf = arrayOf("android.permission.ACCESS_COARSE_LOCATION", "android.permission.ACCESS_FINE_LOCATION"))
     fun requestLocationUpdates(locationRequest: LocationRequest, pendingIntent: PendingIntent): Observable<Status> {
-        return apiClientPair.fromPendingResult {
-            LocationServices.FusedLocationApi.requestLocationUpdates(it.first, locationRequest, pendingIntent)
-        }
+        return fromPendingResult { LocationServices.FusedLocationApi.requestLocationUpdates(it, locationRequest, pendingIntent) }
     }
 
     /**
@@ -138,10 +126,6 @@ class RxFusedLocationApi(
      * @return observable that removes the PendingIntent
      */
     fun removeLocationUpdates(intent: PendingIntent): Observable<Status> {
-        return apiClientPair.flatMap {
-            Observable.fromEmitter(
-                    RemoveLocationIntentUpdates(it.first, intent),
-                    AsyncEmitter.BackpressureMode.LATEST)
-        }
+        return fromEmitterLatest { RemoveLocationIntentUpdates(it, intent) }
     }
 }

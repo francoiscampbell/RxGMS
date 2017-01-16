@@ -13,7 +13,6 @@ import rx.Observable
 import xyz.fcampbell.rxgms.common.ApiClientDescriptor
 import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.RxGmsApi
-import xyz.fcampbell.rxgms.common.util.fromPendingResult
 import xyz.fcampbell.rxgms.common.util.toObservable
 
 /**
@@ -33,42 +32,42 @@ class RxDriveApi(
     ) : this(ApiClientDescriptor(context), *scopes)
 
     fun fetchDriveId(resourceId: String): Observable<RxDriveId> {
-        return apiClientPair.flatMap { pair ->
-            Drive.DriveApi.fetchDriveId(pair.first, resourceId)
+        return flatMap { googleApiClient ->
+            Drive.DriveApi.fetchDriveId(googleApiClient, resourceId)
                     .toObservable()
-                    .map { RxDriveId(pair.first, it.driveId) }
+                    .map { RxDriveId(googleApiClient, it.driveId) }
         }
     }
 
     fun getAppFolder(): Observable<RxDriveFolder> {
-        return apiClientPair.map { RxDriveFolder(it.first, Drive.DriveApi.getAppFolder(it.first)) }
+        return map { RxDriveFolder(it, Drive.DriveApi.getAppFolder(it)) }
     }
 
     fun getRootFolder(): Observable<RxDriveFolder> {
-        return apiClientPair.map { RxDriveFolder(it.first, Drive.DriveApi.getRootFolder(it.first)) }
+        return map { RxDriveFolder(it, Drive.DriveApi.getRootFolder(it)) }
     }
 
     fun newCreateFileActivityBuilder(): Observable<CreateFileActivityBuilder> {
-        return Observable.just(Drive.DriveApi.newCreateFileActivityBuilder())
+        return just(Drive.DriveApi.newCreateFileActivityBuilder())
     }
 
     fun newDriveContents(): Observable<RxDriveContents> {
-        return apiClientPair.flatMap { pair ->
-            Drive.DriveApi.newDriveContents(pair.first)
+        return flatMap { googleApiClient ->
+            Drive.DriveApi.newDriveContents(googleApiClient)
                     .toObservable()
-                    .map { RxDriveContents(pair.first, it.driveContents) }
+                    .map { RxDriveContents(googleApiClient, it.driveContents) }
         }
     }
 
     fun newOpenFileActivityBuilder(): Observable<OpenFileActivityBuilder> {
-        return Observable.just(Drive.DriveApi.newOpenFileActivityBuilder())
+        return just(Drive.DriveApi.newOpenFileActivityBuilder())
     }
 
     fun query(query: Query): Observable<MetadataBufferResult> {
-        return apiClientPair.fromPendingResult { Drive.DriveApi.query(it.first, query) }
+        return fromPendingResult { Drive.DriveApi.query(it, query) }
     }
 
     fun requestSync(): Observable<Status> {
-        return apiClientPair.fromPendingResult { Drive.DriveApi.requestSync(it.first) }
+        return fromPendingResult { Drive.DriveApi.requestSync(it) }
     }
 }

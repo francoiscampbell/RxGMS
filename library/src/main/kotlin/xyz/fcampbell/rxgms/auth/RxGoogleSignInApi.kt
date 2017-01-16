@@ -15,7 +15,6 @@ import xyz.fcampbell.rxgms.common.ApiClientDescriptor
 import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.RxGmsApi
 import xyz.fcampbell.rxgms.common.util.ResultActivity
-import xyz.fcampbell.rxgms.common.util.fromPendingResult
 
 @Suppress("unused")
 class RxGoogleSignInApi(
@@ -33,7 +32,7 @@ class RxGoogleSignInApi(
     ) : this(ApiClientDescriptor(context), googleSignInOptions, *scopes)
 
     fun getSignInIntent(): Observable<Intent> {
-        return apiClientPair.map { Auth.GoogleSignInApi.getSignInIntent(it.first) }
+        return map { Auth.GoogleSignInApi.getSignInIntent(it) }
     }
 
     fun signIn(): Observable<GoogleSignInAccount> {
@@ -47,14 +46,14 @@ class RxGoogleSignInApi(
     }
 
     fun silentSignIn(): Observable<GoogleSignInResult> {
-        return apiClientPair.fromPendingResult { Auth.GoogleSignInApi.silentSignIn(it.first) }
+        return fromPendingResult { Auth.GoogleSignInApi.silentSignIn(it) }
     }
 
     fun revokeAccess(): Observable<Status> {
-        return apiClientPair.fromPendingResult { Auth.GoogleSignInApi.revokeAccess(it.first) }
+        return fromPendingResult { Auth.GoogleSignInApi.revokeAccess(it) }
     }
 
     fun signOut(): Observable<Status> {
-        return apiClientPair.fromPendingResult { Auth.GoogleSignInApi.signOut(it.first) }
+        return fromPendingResult { Auth.GoogleSignInApi.signOut(it) }
     }
 }

@@ -2,10 +2,8 @@ package xyz.fcampbell.rxgms.games
 
 import android.content.Context
 import com.google.android.gms.common.api.Scope
-import com.google.android.gms.games.Game
 import com.google.android.gms.games.Games
-import com.google.android.gms.games.GamesMetadata
-import rx.Observable
+import rx.Completable
 import xyz.fcampbell.rxgms.common.ApiClientDescriptor
 import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.RxGmsApi
@@ -14,7 +12,7 @@ import xyz.fcampbell.rxgms.common.RxGmsApi
  * Created by francois on 2017-01-13.
  */
 @Suppress("unused")
-class RxGamesMetadata(
+class RxNotifications(
         apiClientDescriptor: ApiClientDescriptor,
         gamesOptions: Games.GamesOptions,
         vararg scopes: Scope
@@ -28,11 +26,11 @@ class RxGamesMetadata(
             vararg scopes: Scope
     ) : this(ApiClientDescriptor(context), gamesOptions, *scopes)
 
-    fun getCurrentGame(): Observable<Game> {
-        return map { Games.GamesMetadata.getCurrentGame(it) }
+    fun clear(notificationTypes: Int): Completable {
+        return toCompletable { Games.Notifications.clear(it, notificationTypes) }
     }
 
-    fun loadGame(): Observable<GamesMetadata.LoadGamesResult> {
-        return fromPendingResult { Games.GamesMetadata.loadGame(it) }
+    fun clearAll(): Completable {
+        return toCompletable { Games.Notifications.clearAll(it) }
     }
 }

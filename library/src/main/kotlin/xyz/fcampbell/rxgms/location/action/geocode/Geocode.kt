@@ -4,8 +4,8 @@ import android.content.Context
 import android.location.Address
 import android.location.Geocoder
 import com.google.android.gms.maps.model.LatLngBounds
-import rx.Observable
-import rx.Subscriber
+import rx.AsyncEmitter
+import xyz.fcampbell.rxgms.common.action.FromEmitter
 import java.io.IOException
 
 internal class Geocode(
@@ -13,9 +13,9 @@ internal class Geocode(
         private val locationName: String,
         private val maxResults: Int,
         private val bounds: LatLngBounds?
-) : Observable.OnSubscribe<List<Address>> {
+) : FromEmitter<List<Address>>() {
 
-    override fun call(subscriber: Subscriber<in List<Address>>) {
+    override fun call(emitter: AsyncEmitter<List<Address>>) {
         val geocoder = Geocoder(context)
         val result: List<Address>
 
@@ -26,12 +26,10 @@ internal class Geocode(
                 result = geocoder.getFromLocationName(locationName, maxResults)
             }
 
-            if (!subscriber.isUnsubscribed) {
-                subscriber.onNext(result)
-                subscriber.onCompleted()
-            }
+            emitter.onNext(result)
+            emitter.onCompleted()
         } catch (e: IOException) {
-            subscriber.onError(e)
+            emitter.onError(e)
         }
     }
 }

@@ -7,7 +7,6 @@ import rx.Observable
 import xyz.fcampbell.rxgms.common.ApiClientDescriptor
 import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.RxGmsApi
-import xyz.fcampbell.rxgms.common.util.fromPendingResult
 
 @Suppress("unused")
 class RxGeoDataApi(
@@ -28,7 +27,7 @@ class RxGeoDataApi(
      * @return observable that emits places buffer and completes
      */
     fun getPlaceById(vararg placeIds: String): Observable<PlaceBuffer> {
-        return apiClientPair.fromPendingResult { Places.GeoDataApi.getPlaceById(it.first, *placeIds) }
+        return fromPendingResult { Places.GeoDataApi.getPlaceById(it, *placeIds) }
     }
 
     /**
@@ -45,7 +44,7 @@ class RxGeoDataApi(
      * @return observable with suggestions buffer and completes
      */
     fun getPlaceAutocompletePredictions(query: String, bounds: LatLngBounds, filter: AutocompleteFilter?): Observable<AutocompletePredictionBuffer> {
-        return apiClientPair.fromPendingResult { Places.GeoDataApi.getAutocompletePredictions(it.first, query, bounds, filter) }
+        return fromPendingResult { Places.GeoDataApi.getAutocompletePredictions(it, query, bounds, filter) }
     }
 
     /**
@@ -56,7 +55,7 @@ class RxGeoDataApi(
      * @return observable that emits metadata buffer and completes
      */
     fun getPlacePhotos(placeId: String): Observable<PlacePhotoMetadataResult> {
-        return apiClientPair.fromPendingResult { Places.GeoDataApi.getPlacePhotos(it.first, placeId) }
+        return fromPendingResult { Places.GeoDataApi.getPlacePhotos(it, placeId) }
     }
 
     /**
@@ -68,6 +67,6 @@ class RxGeoDataApi(
      * @return observable that emits the photo result and completes
      */
     fun getPlacePhoto(placePhotoMetadata: PlacePhotoMetadata): Observable<PlacePhotoResult> {
-        return apiClientPair.fromPendingResult { placePhotoMetadata.getPhoto(it.first) }
+        return fromPendingResult { placePhotoMetadata.getPhoto(it) }
     }
 }

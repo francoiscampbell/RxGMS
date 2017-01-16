@@ -14,16 +14,12 @@ class RxDriveFolder(
         googleApiClient: GoogleApiClient,
         val driveFolder: DriveFolder
 ) : RxDriveResource(googleApiClient, driveFolder) {
-    fun listChildren(): Observable<MetadataBuffer> {
-        return driveFolder.listChildren(googleApiClient)
-                .toObservable()
-                .map { it.metadataBuffer }
+    fun listChildren(): Observable<DriveApi.MetadataBufferResult> {
+        return driveFolder.listChildren(googleApiClient).toObservable()
     }
 
-    fun queryChildren(query: Query): Observable<MetadataBuffer> {
-        return driveFolder.queryChildren(googleApiClient, query)
-                .toObservable()
-                .map { it.metadataBuffer }
+    fun queryChildren(query: Query): Observable<DriveApi.MetadataBufferResult> {
+        return driveFolder.queryChildren(googleApiClient, query).toObservable()
     }
 
     fun createFile(changeSet: MetadataChangeSet, driveContents: DriveContents): Observable<RxDriveFile> {

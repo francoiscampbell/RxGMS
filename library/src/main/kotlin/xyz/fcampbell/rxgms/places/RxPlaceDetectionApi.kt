@@ -9,7 +9,6 @@ import rx.Observable
 import xyz.fcampbell.rxgms.common.ApiClientDescriptor
 import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.RxGmsApi
-import xyz.fcampbell.rxgms.common.util.fromPendingResult
 
 @Suppress("unused")
 class RxPlaceDetectionApi(
@@ -32,6 +31,6 @@ class RxPlaceDetectionApi(
      * @return observable that emits current places buffer and completes
      */
     fun getCurrentPlace(placeFilter: PlaceFilter?): Observable<PlaceLikelihoodBuffer> {
-        return apiClientPair.fromPendingResult { Places.PlaceDetectionApi.getCurrentPlace(it.first, placeFilter) }
+        return fromPendingResult { Places.PlaceDetectionApi.getCurrentPlace(it, placeFilter) }
     }
 }

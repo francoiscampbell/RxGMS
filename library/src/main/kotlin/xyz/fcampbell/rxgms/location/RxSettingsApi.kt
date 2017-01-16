@@ -9,7 +9,6 @@ import rx.Observable
 import xyz.fcampbell.rxgms.common.ApiClientDescriptor
 import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.RxGmsApi
-import xyz.fcampbell.rxgms.common.util.fromPendingResult
 
 @Suppress("unused")
 class RxSettingsApi(
@@ -32,6 +31,6 @@ class RxSettingsApi(
      * @see com.google.android.gms.location.SettingsApi
      */
     fun checkLocationSettings(locationRequest: LocationSettingsRequest): Observable<LocationSettingsResult> {
-        return apiClientPair.fromPendingResult { LocationServices.SettingsApi.checkLocationSettings(it.first, locationRequest) }
+        return fromPendingResult { LocationServices.SettingsApi.checkLocationSettings(it, locationRequest) }
     }
 }

@@ -11,8 +11,6 @@ import rx.Observable
 import xyz.fcampbell.rxgms.common.ApiClientDescriptor
 import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.RxGmsApi
-import xyz.fcampbell.rxgms.common.util.fromPendingResult
-import xyz.fcampbell.rxgms.common.util.toCompletable
 
 /**
  * Created by francois on 2017-01-13.
@@ -33,22 +31,22 @@ class RxInvitations(
     ) : this(ApiClientDescriptor(context), gamesOptions, *scopes)
 
     fun getInvitationInboxIntent(): Observable<Intent> {
-        return apiClientPair.map { Games.Invitations.getInvitationInboxIntent(it.first) }
+        return map { Games.Invitations.getInvitationInboxIntent(it) }
     }
 
     fun registerInvitationListener(listener: OnInvitationReceivedListener): Completable {
-        return apiClientPair.toCompletable { Games.Invitations.registerInvitationListener(it.first, listener) }
+        return toCompletable { Games.Invitations.registerInvitationListener(it, listener) }
     }
 
     fun unregisterInvitationListener(): Completable {
-        return apiClientPair.toCompletable { Games.Invitations.unregisterInvitationListener(it.first) }
+        return toCompletable { Games.Invitations.unregisterInvitationListener(it) }
     }
 
     fun loadInvitations(): Observable<Invitations.LoadInvitationsResult> {
-        return apiClientPair.fromPendingResult { Games.Invitations.loadInvitations(it.first) }
+        return fromPendingResult { Games.Invitations.loadInvitations(it) }
     }
 
     fun loadInvitations(sortOrder: Int): Observable<Invitations.LoadInvitationsResult> {
-        return apiClientPair.fromPendingResult { Games.Invitations.loadInvitations(it.first, sortOrder) }
+        return fromPendingResult { Games.Invitations.loadInvitations(it, sortOrder) }
     }
 }
