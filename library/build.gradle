@@ -15,9 +15,16 @@ android {
     }
 }
 
+kapt {
+    generateStubs = true
+}
+
 //TODO: local maven deployment
 
 dependencies {
+    compile project(':annotation')
+    kapt project(':processor')
+
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile 'io.reactivex:rxjava:1.2.0'
 
