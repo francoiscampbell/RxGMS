@@ -13,9 +13,9 @@ import xyz.fcampbell.rxgms.common.RxGmsApi
 @Suppress("unused")
 class RxActivityRecognitionApi(
         apiClientDescriptor: ApiClientDescriptor
-) : RxGmsApi<Api.ApiOptions.NoOptions>(
+) : RxGmsApi<Unit, Api.ApiOptions.NoOptions>(
         apiClientDescriptor,
-        ApiDescriptor(ActivityRecognition.API)
+        ApiDescriptor(ActivityRecognition.API, Unit)
 ) {
     constructor(
             context: Context

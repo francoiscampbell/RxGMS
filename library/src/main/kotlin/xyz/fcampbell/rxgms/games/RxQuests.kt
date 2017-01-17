@@ -20,9 +20,9 @@ class RxQuests(
         apiClientDescriptor: ApiClientDescriptor,
         gamesOptions: Games.GamesOptions,
         vararg scopes: Scope
-) : RxGmsApi<Games.GamesOptions>(
+) : RxGmsApi<Quests, Games.GamesOptions>(
         apiClientDescriptor,
-        ApiDescriptor(Games.API, gamesOptions, *scopes)
+        ApiDescriptor(Games.API, Games.Quests, gamesOptions, *scopes)
 ) {
     constructor(
             context: Context,
@@ -31,38 +31,38 @@ class RxQuests(
     ) : this(ApiClientDescriptor(context), gamesOptions, *scopes)
 
     fun registerQuestUpdateListener(listener: QuestUpdateListener): Completable {
-        return toCompletable { Games.Quests.registerQuestUpdateListener(it, listener) }
+        return toCompletable { registerQuestUpdateListener(it, listener) }
     }
 
     fun unregisterQuestUpdateListener(): Completable {
-        return toCompletable { Games.Quests.unregisterQuestUpdateListener(it) }
+        return toCompletable { unregisterQuestUpdateListener(it) }
     }
 
     fun accept(questId: String): Observable<Quests.AcceptQuestResult> {
-        return fromPendingResult { Games.Quests.accept(it, questId) }
+        return fromPendingResult { accept(it, questId) }
     }
 
     fun claim(questId: String, milestoneId: String): Observable<Quests.ClaimMilestoneResult> {
-        return fromPendingResult { Games.Quests.claim(it, questId, milestoneId) }
+        return fromPendingResult { claim(it, questId, milestoneId) }
     }
 
     fun load(questSelectors: IntArray, sortOrder: Int, forceReload: Boolean): Observable<Quests.LoadQuestsResult> {
-        return fromPendingResult { Games.Quests.load(it, questSelectors, sortOrder, forceReload) }
+        return fromPendingResult { load(it, questSelectors, sortOrder, forceReload) }
     }
 
     fun loadByIds(forceReload: Boolean, vararg questIds: String): Observable<Quests.LoadQuestsResult> {
-        return fromPendingResult { Games.Quests.loadByIds(it, forceReload, *questIds) }
+        return fromPendingResult { loadByIds(it, forceReload, *questIds) }
     }
 
     fun showStateChangedPopup(questId: String): Completable {
-        return toCompletable { Games.Quests.showStateChangedPopup(it, questId) }
+        return toCompletable { showStateChangedPopup(it, questId) }
     }
 
     fun getQuestsIntent(questSelectors: IntArray): Observable<Intent> {
-        return map { Games.Quests.getQuestsIntent(it, questSelectors) }
+        return map { getQuestsIntent(it, questSelectors) }
     }
 
     fun getQuestIntent(questId: String): Observable<Intent> {
-        return map { Games.Quests.getQuestIntent(it, questId) }
+        return map { getQuestIntent(it, questId) }
     }
 }

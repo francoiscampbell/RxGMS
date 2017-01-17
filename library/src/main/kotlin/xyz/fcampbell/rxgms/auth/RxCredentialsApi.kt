@@ -3,10 +3,7 @@ package xyz.fcampbell.rxgms.auth
 import android.app.PendingIntent
 import android.content.Context
 import com.google.android.gms.auth.api.Auth
-import com.google.android.gms.auth.api.credentials.Credential
-import com.google.android.gms.auth.api.credentials.CredentialRequest
-import com.google.android.gms.auth.api.credentials.CredentialRequestResult
-import com.google.android.gms.auth.api.credentials.HintRequest
+import com.google.android.gms.auth.api.credentials.*
 import com.google.android.gms.common.api.Scope
 import com.google.android.gms.common.api.Status
 import rx.Observable
@@ -19,9 +16,9 @@ class RxCredentialsApi(
         apiClientDescriptor: ApiClientDescriptor,
         credentialsOptions: Auth.AuthCredentialsOptions,
         vararg scopes: Scope
-) : RxGmsApi<Auth.AuthCredentialsOptions>(
+) : RxGmsApi<CredentialsApi, Auth.AuthCredentialsOptions>(
         apiClientDescriptor,
-        ApiDescriptor(Auth.CREDENTIALS_API, credentialsOptions, *scopes)
+        ApiDescriptor(Auth.CREDENTIALS_API, Auth.CredentialsApi, credentialsOptions, *scopes)
 ) {
     constructor(
             context: Context,
@@ -30,22 +27,22 @@ class RxCredentialsApi(
     ) : this(ApiClientDescriptor(context), credentialsOptions, *scopes)
 
     fun request(credentialRequest: CredentialRequest): Observable<CredentialRequestResult> {
-        return fromPendingResult { Auth.CredentialsApi.request(it, credentialRequest) }
+        return fromPendingResult { request(it, credentialRequest) }
     }
 
     fun getHintPickerIntent(hintRequest: HintRequest): Observable<PendingIntent> {
-        return map { Auth.CredentialsApi.getHintPickerIntent(it, hintRequest) }
+        return map { getHintPickerIntent(it, hintRequest) }
     }
 
     fun save(credential: Credential): Observable<Status> {
-        return fromPendingResult { Auth.CredentialsApi.save(it, credential) }
+        return fromPendingResult { save(it, credential) }
     }
 
     fun delete(credential: Credential): Observable<Status> {
-        return fromPendingResult { Auth.CredentialsApi.delete(it, credential) }
+        return fromPendingResult { delete(it, credential) }
     }
 
     fun disableAutoSignIn(): Observable<Status> {
-        return fromPendingResult { Auth.CredentialsApi.disableAutoSignIn(it) }
+        return fromPendingResult { disableAutoSignIn(it) }
     }
 }

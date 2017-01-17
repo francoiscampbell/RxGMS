@@ -1,10 +1,7 @@
 package xyz.fcampbell.rxgms.location
 
 import android.content.Context
-import com.google.android.gms.location.places.PlaceFilter
-import com.google.android.gms.location.places.PlaceLikelihoodBuffer
-import com.google.android.gms.location.places.Places
-import com.google.android.gms.location.places.PlacesOptions
+import com.google.android.gms.location.places.*
 import rx.Observable
 import xyz.fcampbell.rxgms.common.ApiClientDescriptor
 import xyz.fcampbell.rxgms.common.ApiDescriptor
@@ -13,9 +10,9 @@ import xyz.fcampbell.rxgms.common.RxGmsApi
 @Suppress("unused")
 class RxPlaceDetectionApi(
         apiClientDescriptor: ApiClientDescriptor
-) : RxGmsApi<PlacesOptions>(
+) : RxGmsApi<PlaceDetectionApi, PlacesOptions>(
         apiClientDescriptor,
-        ApiDescriptor(Places.PLACE_DETECTION_API)
+        ApiDescriptor(Places.PLACE_DETECTION_API, Places.PlaceDetectionApi)
 ) {
     constructor(
             context: Context
@@ -31,6 +28,6 @@ class RxPlaceDetectionApi(
      * @return observable that emits current places buffer and completes
      */
     fun getCurrentPlace(placeFilter: PlaceFilter?): Observable<PlaceLikelihoodBuffer> {
-        return fromPendingResult { Places.PlaceDetectionApi.getCurrentPlace(it, placeFilter) }
+        return fromPendingResult { getCurrentPlace(it, placeFilter) }
     }
 }

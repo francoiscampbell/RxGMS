@@ -5,6 +5,7 @@ import android.content.Context
 import android.support.annotation.RequiresPermission
 import com.google.android.gms.common.api.Api
 import com.google.android.gms.common.api.Status
+import com.google.android.gms.location.GeofencingApi
 import com.google.android.gms.location.GeofencingRequest
 import com.google.android.gms.location.LocationServices
 import rx.Observable
@@ -15,9 +16,9 @@ import xyz.fcampbell.rxgms.common.RxGmsApi
 @Suppress("unused")
 class RxGeofencingApi(
         apiClientDescriptor: ApiClientDescriptor
-) : RxGmsApi<Api.ApiOptions.NoOptions>(
+) : RxGmsApi<GeofencingApi, Api.ApiOptions.NoOptions>(
         apiClientDescriptor,
-        ApiDescriptor(LocationServices.API)
+        ApiDescriptor(LocationServices.API, LocationServices.GeofencingApi)
 ) {
     constructor(
             context: Context
@@ -44,7 +45,7 @@ class RxGeofencingApi(
      */
     @RequiresPermission("android.permission.ACCESS_FINE_LOCATION")
     fun addGeofences(geofenceTransitionPendingIntent: PendingIntent, request: GeofencingRequest): Observable<Status> {
-        return fromPendingResult { LocationServices.GeofencingApi.addGeofences(it, request, geofenceTransitionPendingIntent) }
+        return fromPendingResult { addGeofences(it, request, geofenceTransitionPendingIntent) }
     }
 
     /**
@@ -64,7 +65,7 @@ class RxGeofencingApi(
      * @return observable that removed geofences
      */
     fun removeGeofences(pendingIntent: PendingIntent): Observable<Status> {
-        return fromPendingResult { LocationServices.GeofencingApi.removeGeofences(it, pendingIntent) }
+        return fromPendingResult { removeGeofences(it, pendingIntent) }
     }
 
     /**
@@ -84,6 +85,6 @@ class RxGeofencingApi(
      * @return observable that removed geofences
      */
     fun removeGeofences(requestIds: List<String>): Observable<Status> {
-        return fromPendingResult { LocationServices.GeofencingApi.removeGeofences(it, requestIds) }
+        return fromPendingResult { removeGeofences(it, requestIds) }
     }
 }

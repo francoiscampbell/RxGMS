@@ -19,9 +19,9 @@ class RxPlayers(
         apiClientDescriptor: ApiClientDescriptor,
         gamesOptions: Games.GamesOptions,
         vararg scopes: Scope
-) : RxGmsApi<Games.GamesOptions>(
+) : RxGmsApi<Players, Games.GamesOptions>(
         apiClientDescriptor,
-        ApiDescriptor(Games.API, gamesOptions, *scopes)
+        ApiDescriptor(Games.API, Games.Players, gamesOptions, *scopes)
 ) {
     constructor(
             context: Context,
@@ -30,42 +30,42 @@ class RxPlayers(
     ) : this(ApiClientDescriptor(context), gamesOptions, *scopes)
 
     fun getCurrentPlayer(): Observable<Player> {
-        return map { Games.Players.getCurrentPlayer(it) }
+        return map { getCurrentPlayer(it) }
     }
 
     fun loadPlayer(playerId: String): Observable<Players.LoadPlayersResult> {
-        return fromPendingResult { Games.Players.loadPlayer(it, playerId) }
+        return fromPendingResult { loadPlayer(it, playerId) }
     }
 
     fun loadPlayer(playerId: String, forceReload: Boolean): Observable<Players.LoadPlayersResult> {
-        return fromPendingResult { Games.Players.loadPlayer(it, playerId, forceReload) }
+        return fromPendingResult { loadPlayer(it, playerId, forceReload) }
     }
 
     fun loadInvitablePlayers(pageSize: Int, forceReload: Boolean): Observable<Players.LoadPlayersResult> {
-        return fromPendingResult { Games.Players.loadInvitablePlayers(it, pageSize, forceReload) }
+        return fromPendingResult { loadInvitablePlayers(it, pageSize, forceReload) }
     }
 
     fun loadMoreInvitablePlayers(pageSize: Int): Observable<Players.LoadPlayersResult> {
-        return fromPendingResult { Games.Players.loadMoreInvitablePlayers(it, pageSize) }
+        return fromPendingResult { loadMoreInvitablePlayers(it, pageSize) }
     }
 
     fun loadRecentlyPlayedWithPlayers(pageSize: Int, forceReload: Boolean): Observable<Players.LoadPlayersResult> {
-        return fromPendingResult { Games.Players.loadRecentlyPlayedWithPlayers(it, pageSize, forceReload) }
+        return fromPendingResult { loadRecentlyPlayedWithPlayers(it, pageSize, forceReload) }
     }
 
     fun loadMoreRecentlyPlayedWithPlayers(pageSize: Int): Observable<Players.LoadPlayersResult> {
-        return fromPendingResult { Games.Players.loadMoreRecentlyPlayedWithPlayers(it, pageSize) }
+        return fromPendingResult { loadMoreRecentlyPlayedWithPlayers(it, pageSize) }
     }
 
     fun loadConnectedPlayers(forceReload: Boolean): Observable<Players.LoadPlayersResult> {
-        return fromPendingResult { Games.Players.loadConnectedPlayers(it, forceReload) }
+        return fromPendingResult { loadConnectedPlayers(it, forceReload) }
     }
 
     fun getCompareProfileIntent(player: Player): Observable<Intent> {
-        return map { Games.Players.getCompareProfileIntent(it, player) }
+        return map { getCompareProfileIntent(it, player) }
     }
 
     fun getPlayerSearchIntent(): Observable<Intent> {
-        return map { Games.Players.getPlayerSearchIntent(it) }
+        return map { getPlayerSearchIntent(it) }
     }
 }

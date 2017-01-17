@@ -18,9 +18,9 @@ class RxGamesMetadata(
         apiClientDescriptor: ApiClientDescriptor,
         gamesOptions: Games.GamesOptions,
         vararg scopes: Scope
-) : RxGmsApi<Games.GamesOptions>(
+) : RxGmsApi<GamesMetadata, Games.GamesOptions>(
         apiClientDescriptor,
-        ApiDescriptor(Games.API, gamesOptions, *scopes)
+        ApiDescriptor(Games.API, Games.GamesMetadata, gamesOptions, *scopes)
 ) {
     constructor(
             context: Context,
@@ -29,10 +29,10 @@ class RxGamesMetadata(
     ) : this(ApiClientDescriptor(context), gamesOptions, *scopes)
 
     fun getCurrentGame(): Observable<Game> {
-        return map { Games.GamesMetadata.getCurrentGame(it) }
+        return map { getCurrentGame(it) }
     }
 
     fun loadGame(): Observable<GamesMetadata.LoadGamesResult> {
-        return fromPendingResult { Games.GamesMetadata.loadGame(it) }
+        return fromPendingResult { loadGame(it) }
     }
 }

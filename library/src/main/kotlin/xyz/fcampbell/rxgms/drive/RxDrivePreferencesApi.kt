@@ -5,6 +5,7 @@ import com.google.android.gms.common.api.Api
 import com.google.android.gms.common.api.Scope
 import com.google.android.gms.common.api.Status
 import com.google.android.gms.drive.Drive
+import com.google.android.gms.drive.DrivePreferencesApi
 import com.google.android.gms.drive.DrivePreferencesApi.FileUploadPreferencesResult
 import com.google.android.gms.drive.FileUploadPreferences
 import rx.Observable
@@ -19,9 +20,9 @@ import xyz.fcampbell.rxgms.common.RxGmsApi
 class RxDrivePreferencesApi(
         apiClientDescriptor: ApiClientDescriptor,
         vararg scopes: Scope
-) : RxGmsApi<Api.ApiOptions.NoOptions>(
+) : RxGmsApi<DrivePreferencesApi, Api.ApiOptions.NoOptions>(
         apiClientDescriptor,
-        ApiDescriptor(Drive.API, null, *scopes)
+        ApiDescriptor(Drive.API, Drive.DrivePreferencesApi, null, *scopes)
 ) {
     constructor(
             context: Context,
@@ -29,10 +30,10 @@ class RxDrivePreferencesApi(
     ) : this(ApiClientDescriptor(context), *scopes)
 
     fun getFileUploadPreferences(): Observable<FileUploadPreferencesResult> {
-        return fromPendingResult { Drive.DrivePreferencesApi.getFileUploadPreferences(it) }
+        return fromPendingResult { getFileUploadPreferences(it) }
     }
 
     fun setFileUploadPreferences(fileUploadPreferences: FileUploadPreferences): Observable<Status> {
-        return fromPendingResult { Drive.DrivePreferencesApi.setFileUploadPreferences(it, fileUploadPreferences) }
+        return fromPendingResult { setFileUploadPreferences(it, fileUploadPreferences) }
     }
 }

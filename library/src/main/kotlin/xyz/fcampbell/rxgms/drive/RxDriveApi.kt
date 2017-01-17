@@ -6,6 +6,7 @@ import com.google.android.gms.common.api.Scope
 import com.google.android.gms.common.api.Status
 import com.google.android.gms.drive.CreateFileActivityBuilder
 import com.google.android.gms.drive.Drive
+import com.google.android.gms.drive.DriveApi
 import com.google.android.gms.drive.DriveApi.MetadataBufferResult
 import com.google.android.gms.drive.OpenFileActivityBuilder
 import com.google.android.gms.drive.query.Query
@@ -22,9 +23,9 @@ import xyz.fcampbell.rxgms.common.util.toObservable
 class RxDriveApi(
         apiClientDescriptor: ApiClientDescriptor,
         vararg scopes: Scope
-) : RxGmsApi<Api.ApiOptions.NoOptions>(
+) : RxGmsApi<DriveApi, Api.ApiOptions.NoOptions>(
         apiClientDescriptor,
-        ApiDescriptor(Drive.API, null, *scopes)
+        ApiDescriptor(Drive.API, Drive.DriveApi, null, *scopes)
 ) {
     constructor(
             context: Context,
@@ -33,18 +34,18 @@ class RxDriveApi(
 
     fun fetchDriveId(resourceId: String): Observable<RxDriveId> {
         return flatMap { googleApiClient ->
-            Drive.DriveApi.fetchDriveId(googleApiClient, resourceId)
+            fetchDriveId(googleApiClient, resourceId)
                     .toObservable()
                     .map { RxDriveId(googleApiClient, it.driveId) }
         }
     }
 
     fun getAppFolder(): Observable<RxDriveFolder> {
-        return map { RxDriveFolder(it, Drive.DriveApi.getAppFolder(it)) }
+        return map { RxDriveFolder(it, getAppFolder(it)) }
     }
 
     fun getRootFolder(): Observable<RxDriveFolder> {
-        return map { RxDriveFolder(it, Drive.DriveApi.getRootFolder(it)) }
+        return map { RxDriveFolder(it, getRootFolder(it)) }
     }
 
     fun newCreateFileActivityBuilder(): Observable<CreateFileActivityBuilder> {
@@ -53,7 +54,7 @@ class RxDriveApi(
 
     fun newDriveContents(): Observable<RxDriveContents> {
         return flatMap { googleApiClient ->
-            Drive.DriveApi.newDriveContents(googleApiClient)
+            newDriveContents(googleApiClient)
                     .toObservable()
                     .map { RxDriveContents(googleApiClient, it.driveContents) }
         }
@@ -64,10 +65,10 @@ class RxDriveApi(
     }
 
     fun query(query: Query): Observable<MetadataBufferResult> {
-        return fromPendingResult { Drive.DriveApi.query(it, query) }
+        return fromPendingResult { query(it, query) }
     }
 
     fun requestSync(): Observable<Status> {
-        return fromPendingResult { Drive.DriveApi.requestSync(it) }
+        return fromPendingResult { requestSync(it) }
     }
 }

@@ -17,11 +17,11 @@ import xyz.fcampbell.rxgms.common.util.toObservable
 /**
  * Created by francois on 2016-12-29.
  */
-abstract class RxGmsApi<O : Api.ApiOptions>(
+abstract class RxGmsApi<out A, O : Api.ApiOptions>(
         apiClientDescriptor: ApiClientDescriptor,
-        vararg apis: ApiDescriptor<O>
+        private val api: ApiDescriptor<A, O>
 ) {
-    private val googleApiClientOnSubscribe = GoogleApiClientOnSubscribe(apiClientDescriptor, *apis)
+    private val googleApiClientOnSubscribe = GoogleApiClientOnSubscribe(apiClientDescriptor, api)
 
     private var currentSubscription: Subscription = Subscriptions.unsubscribed()
     private var currentApiClientPair: Observable<Pair<GoogleApiClient, Bundle?>>? = null
@@ -56,16 +56,16 @@ abstract class RxGmsApi<O : Api.ApiOptions>(
         return Observable.just(item)
     }
 
-    fun <R> map(func: (GoogleApiClient) -> R): Observable<R> {
-        return apiClient.map(func)
+    fun <R> map(func: A.(GoogleApiClient) -> R): Observable<R> {
+        return apiClient.map { api.apiInterface.func(it) }
     }
 
-    fun <R> flatMap(func: (GoogleApiClient) -> Observable<R>): Observable<R> {
-        return apiClient.flatMap(func)
+    fun <R> flatMap(func: A.(GoogleApiClient) -> Observable<R>): Observable<R> {
+        return apiClient.flatMap { api.apiInterface.func(it) }
     }
 
-    fun <R : Result> fromPendingResult(func: (GoogleApiClient) -> PendingResult<R>): Observable<R> {
-        return apiClient.flatMap { func(it).toObservable() }
+    fun <R : Result> fromPendingResult(func: A.(GoogleApiClient) -> PendingResult<R>): Observable<R> {
+        return apiClient.flatMap { api.apiInterface.func(it).toObservable() }
     }
 
     fun <R> fromEmitter(backpressureMode: AsyncEmitter.BackpressureMode, emitter: (GoogleApiClient) -> FromEmitter<R>): Observable<R> {
@@ -80,7 +80,7 @@ abstract class RxGmsApi<O : Api.ApiOptions>(
         return fromEmitter(AsyncEmitter.BackpressureMode.BUFFER, emitter)
     }
 
-    fun toCompletable(func: (GoogleApiClient) -> Unit): Completable {
-        return apiClient.map(func).toCompletable()
+    fun toCompletable(func: A.(GoogleApiClient) -> Unit): Completable {
+        return apiClient.map { api.apiInterface.func(it) }.toCompletable()
     }
 }

@@ -18,9 +18,9 @@ class RxEvents(
         apiClientDescriptor: ApiClientDescriptor,
         gamesOptions: Games.GamesOptions,
         vararg scopes: Scope
-) : RxGmsApi<Games.GamesOptions>(
+) : RxGmsApi<Events, Games.GamesOptions>(
         apiClientDescriptor,
-        ApiDescriptor(Games.API, gamesOptions, *scopes)
+        ApiDescriptor(Games.API, Games.Events, gamesOptions, *scopes)
 ) {
     constructor(
             context: Context,
@@ -29,14 +29,14 @@ class RxEvents(
     ) : this(ApiClientDescriptor(context), gamesOptions, *scopes)
 
     fun load(forceReload: Boolean): Observable<Events.LoadEventsResult> {
-        return fromPendingResult { Games.Events.load(it, forceReload) }
+        return fromPendingResult { load(it, forceReload) }
     }
 
     fun loadByIds(forceReload: Boolean, vararg eventIds: String): Observable<Events.LoadEventsResult> {
-        return fromPendingResult { Games.Events.loadByIds(it, forceReload, *eventIds) }
+        return fromPendingResult { loadByIds(it, forceReload, *eventIds) }
     }
 
     fun increment(eventId: String, incrementAmount: Int): Completable {
-        return toCompletable { Games.Events.increment(it, eventId, incrementAmount) }
+        return toCompletable { increment(it, eventId, incrementAmount) }
     }
 }

@@ -13,9 +13,9 @@ import xyz.fcampbell.rxgms.common.RxGmsApi
  */
 class RxAddress(
         apiClientDescriptor: ApiClientDescriptor
-) : RxGmsApi<Address.AddressOptions>(
+) : RxGmsApi<Unit, Address.AddressOptions>(
         apiClientDescriptor,
-        ApiDescriptor(Address.API)
+        ApiDescriptor(Address.API, Unit)
 ) {
     constructor(
             context: Context

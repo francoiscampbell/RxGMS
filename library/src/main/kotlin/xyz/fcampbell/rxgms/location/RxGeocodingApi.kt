@@ -17,9 +17,9 @@ import java.util.*
 @Suppress("unused")
 class RxGeocodingApi(
         private val apiClientDescriptor: ApiClientDescriptor
-) : RxGmsApi<Api.ApiOptions.NoOptions>(
+) : RxGmsApi<Unit, Api.ApiOptions.NoOptions>(
         apiClientDescriptor,
-        ApiDescriptor(LocationServices.API)
+        ApiDescriptor(LocationServices.API, Unit)
 ) {
     constructor(
             context: Context

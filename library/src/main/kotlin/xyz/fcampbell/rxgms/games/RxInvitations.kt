@@ -20,9 +20,9 @@ class RxInvitations(
         apiClientDescriptor: ApiClientDescriptor,
         gamesOptions: Games.GamesOptions,
         vararg scopes: Scope
-) : RxGmsApi<Games.GamesOptions>(
+) : RxGmsApi<Invitations, Games.GamesOptions>(
         apiClientDescriptor,
-        ApiDescriptor(Games.API, gamesOptions, *scopes)
+        ApiDescriptor(Games.API, Games.Invitations, gamesOptions, *scopes)
 ) {
     constructor(
             context: Context,
@@ -31,22 +31,22 @@ class RxInvitations(
     ) : this(ApiClientDescriptor(context), gamesOptions, *scopes)
 
     fun getInvitationInboxIntent(): Observable<Intent> {
-        return map { Games.Invitations.getInvitationInboxIntent(it) }
+        return map { getInvitationInboxIntent(it) }
     }
 
     fun registerInvitationListener(listener: OnInvitationReceivedListener): Completable {
-        return toCompletable { Games.Invitations.registerInvitationListener(it, listener) }
+        return toCompletable { registerInvitationListener(it, listener) }
     }
 
     fun unregisterInvitationListener(): Completable {
-        return toCompletable { Games.Invitations.unregisterInvitationListener(it) }
+        return toCompletable { unregisterInvitationListener(it) }
     }
 
     fun loadInvitations(): Observable<Invitations.LoadInvitationsResult> {
-        return fromPendingResult { Games.Invitations.loadInvitations(it) }
+        return fromPendingResult { loadInvitations(it) }
     }
 
     fun loadInvitations(sortOrder: Int): Observable<Invitations.LoadInvitationsResult> {
-        return fromPendingResult { Games.Invitations.loadInvitations(it, sortOrder) }
+        return fromPendingResult { loadInvitations(it, sortOrder) }
     }
 }

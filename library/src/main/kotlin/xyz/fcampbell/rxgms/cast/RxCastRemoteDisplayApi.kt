@@ -2,6 +2,7 @@ package xyz.fcampbell.rxgms.cast
 
 import android.content.Context
 import com.google.android.gms.cast.CastRemoteDisplay
+import com.google.android.gms.cast.CastRemoteDisplayApi
 import com.google.android.gms.common.api.Scope
 import rx.Observable
 import xyz.fcampbell.rxgms.common.ApiClientDescriptor
@@ -13,9 +14,13 @@ class RxCastRemoteDisplayApi(
         apiClientDescriptor: ApiClientDescriptor,
         castRemoteDisplayOptions: CastRemoteDisplay.CastRemoteDisplayOptions,
         vararg scopes: Scope
-) : RxGmsApi<CastRemoteDisplay.CastRemoteDisplayOptions>(
+) : RxGmsApi<CastRemoteDisplayApi, CastRemoteDisplay.CastRemoteDisplayOptions>(
         apiClientDescriptor,
-        ApiDescriptor(CastRemoteDisplay.API, castRemoteDisplayOptions, *scopes)
+        ApiDescriptor(
+                CastRemoteDisplay.API,
+                CastRemoteDisplay.CastRemoteDisplayApi,
+                castRemoteDisplayOptions,
+                *scopes)
 ) {
     constructor(
             context: Context,
@@ -24,10 +29,10 @@ class RxCastRemoteDisplayApi(
     ) : this(ApiClientDescriptor(context), castRemoteDisplayOptions, *scopes)
 
     fun startRemoteDisplay(applicationId: String): Observable<CastRemoteDisplay.CastRemoteDisplaySessionResult> {
-        return fromPendingResult { CastRemoteDisplay.CastRemoteDisplayApi.startRemoteDisplay(it, applicationId) }
+        return fromPendingResult { startRemoteDisplay(it, applicationId) }
     }
 
     fun stopRemoteDisplay(): Observable<CastRemoteDisplay.CastRemoteDisplaySessionResult> {
-        return fromPendingResult { CastRemoteDisplay.CastRemoteDisplayApi.stopRemoteDisplay(it) }
+        return fromPendingResult { stopRemoteDisplay(it) }
     }
 }

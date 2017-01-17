@@ -6,6 +6,7 @@ import android.location.Location
 import android.support.annotation.RequiresPermission
 import com.google.android.gms.common.api.Api
 import com.google.android.gms.common.api.Status
+import com.google.android.gms.location.FusedLocationProviderApi
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import rx.Observable
@@ -19,9 +20,9 @@ import xyz.fcampbell.rxgms.location.action.location.RemoveLocationIntentUpdates
 @Suppress("unused")
 class RxFusedLocationApi(
         apiClientDescriptor: ApiClientDescriptor
-) : RxGmsApi<Api.ApiOptions.NoOptions>(
+) : RxGmsApi<FusedLocationProviderApi, Api.ApiOptions.NoOptions>(
         apiClientDescriptor,
-        ApiDescriptor(LocationServices.API)
+        ApiDescriptor(LocationServices.API, LocationServices.FusedLocationApi)
 ) {
     constructor(
             context: Context
@@ -42,7 +43,7 @@ class RxFusedLocationApi(
      */
     @RequiresPermission(anyOf = arrayOf("android.permission.ACCESS_COARSE_LOCATION", "android.permission.ACCESS_FINE_LOCATION"))
     fun getLastLocation(): Observable<Location> {
-        return map { LocationServices.FusedLocationApi.getLastLocation(it) }
+        return map { getLastLocation(it) }
     }
 
     /**
@@ -112,7 +113,7 @@ class RxFusedLocationApi(
      */
     @RequiresPermission(anyOf = arrayOf("android.permission.ACCESS_COARSE_LOCATION", "android.permission.ACCESS_FINE_LOCATION"))
     fun requestLocationUpdates(locationRequest: LocationRequest, pendingIntent: PendingIntent): Observable<Status> {
-        return fromPendingResult { LocationServices.FusedLocationApi.requestLocationUpdates(it, locationRequest, pendingIntent) }
+        return fromPendingResult { requestLocationUpdates(it, locationRequest, pendingIntent) }
     }
 
     /**

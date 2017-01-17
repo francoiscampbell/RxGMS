@@ -4,6 +4,7 @@ import android.os.Bundle
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.Api
 import com.google.android.gms.common.api.GoogleApiClient
+import com.google.android.gms.common.api.Scope
 import rx.Observable
 import rx.Subscriber
 import rx.subscriptions.Subscriptions
@@ -14,9 +15,9 @@ import xyz.fcampbell.rxgms.common.exception.GoogleApiConnectionSuspendedExceptio
 import xyz.fcampbell.rxgms.common.util.ResultActivity
 
 
-internal class GoogleApiClientOnSubscribe<O : Api.ApiOptions>(
+internal class GoogleApiClientOnSubscribe<A, O : Api.ApiOptions>(
         private val apiClientDescriptor: ApiClientDescriptor,
-        private vararg val apiDescriptors: ApiDescriptor<O>
+        private val apiDescriptor: ApiDescriptor<A, O>
 ) : Observable.OnSubscribe<Pair<GoogleApiClient, Bundle?>> {
     override fun call(subscriber: Subscriber<in Pair<GoogleApiClient, Bundle?>>) {
         val apiClient = createApiClient(subscriber)
@@ -40,8 +41,8 @@ internal class GoogleApiClientOnSubscribe<O : Api.ApiOptions>(
                 apiClientDescriptor.context,
                 apiClientConnectionCallbacks,
                 apiClientConnectionCallbacks)
-                .addApis(*apiDescriptors)
-                .addScopes(*apiDescriptors)
+                .addApi(apiDescriptor.api, apiDescriptor.options)
+                .addScopes(*apiDescriptor.scopes)
                 .addFromDescriptor(apiClientDescriptor)
                 .build()
 
@@ -51,19 +52,17 @@ internal class GoogleApiClientOnSubscribe<O : Api.ApiOptions>(
     }
 
     @Suppress("UNCHECKED_CAST")
-    private fun GoogleApiClient.Builder.addApis(vararg descriptors: ApiDescriptor<O>): GoogleApiClient.Builder {
-        descriptors.forEach {
-            if (it.options == null) {
-                addApi(it.api as Api<Api.ApiOptions.NotRequiredOptions>)
-            } else {
-                addApi(it.api as Api<Api.ApiOptions.HasOptions>, it.options as Api.ApiOptions.HasOptions)
-            }
+    private fun GoogleApiClient.Builder.addApi(api: Api<O>, options: O?): GoogleApiClient.Builder {
+        if (options == null) {
+            addApi(api as Api<Api.ApiOptions.NotRequiredOptions>)
+        } else {
+            addApi(api as Api<Api.ApiOptions.HasOptions>, options as Api.ApiOptions.HasOptions)
         }
         return this
     }
 
-    private fun GoogleApiClient.Builder.addScopes(vararg descriptors: ApiDescriptor<O>): GoogleApiClient.Builder {
-        descriptors.forEach { it.scopes.forEach { addScope(it) } }
+    private fun GoogleApiClient.Builder.addScopes(vararg scopes: Scope): GoogleApiClient.Builder {
+        scopes.forEach { addScope(it) }
         return this
     }
 
