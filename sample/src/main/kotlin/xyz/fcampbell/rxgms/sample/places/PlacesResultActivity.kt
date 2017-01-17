@@ -6,7 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_places_result.*
 import rx.subscriptions.CompositeSubscription
-import xyz.fcampbell.rxgms.location.RxGeoDataApi
+import xyz.fcampbell.rxgms.places.RxGeoDataApi
 import xyz.fcampbell.rxgms.sample.PermittedActivity
 import xyz.fcampbell.rxgms.sample.R
 

@@ -15,8 +15,8 @@ import kotlinx.android.synthetic.main.activity_places.*
 import rx.Observable
 import rx.subscriptions.CompositeSubscription
 import xyz.fcampbell.rxgms.location.RxFusedLocationApi
-import xyz.fcampbell.rxgms.location.RxGeoDataApi
-import xyz.fcampbell.rxgms.location.RxPlaceDetectionApi
+import xyz.fcampbell.rxgms.places.RxGeoDataApi
+import xyz.fcampbell.rxgms.places.RxPlaceDetectionApi
 import xyz.fcampbell.rxgms.sample.PermittedActivity
 import java.util.*
 import java.util.concurrent.TimeUnit
