@@ -3,35 +3,30 @@ package xyz.fcampbell.rxgms.common.action
 import com.google.android.gms.common.api.PendingResult
 import com.google.android.gms.common.api.Releasable
 import com.google.android.gms.common.api.Result
-import rx.Observable
-import rx.Subscriber
-import rx.subscriptions.Subscriptions
+import io.reactivex.ObservableEmitter
+import io.reactivex.ObservableOnSubscribe
 import xyz.fcampbell.rxgms.common.exception.StatusException
 
 internal class PendingResultOnSubscribe<R : Result>(
         private val pendingResult: PendingResult<R>
-) : Observable.OnSubscribe<R> {
+) : ObservableOnSubscribe<R> {
 
-    override fun call(subscriber: Subscriber<in R>) {
+    override fun subscribe(emitter: ObservableEmitter<R>) {
         pendingResult.setResultCallback { result ->
-            handleResourceCleanupIfNecessary(result, subscriber)
             if (result.status.isSuccess) {
-                if (!subscriber.isUnsubscribed) {
-                    subscriber.onNext(result)
-                    subscriber.onCompleted()
-                }
+                emitter.onNext(result)
+                emitter.onComplete()
             } else {
-                subscriber.onError(StatusException(result.status))
+                emitter.onError(StatusException(result.status))
             }
+            handleResourceCleanupIfNecessary(result)
         }
-        subscriber.add(Subscriptions.create {
-            pendingResult.cancel()
-        })
+        emitter.setCancellable { pendingResult.cancel() }
     }
 
-    private fun handleResourceCleanupIfNecessary(result: R, subscriber: Subscriber<in R>) {
+    private fun handleResourceCleanupIfNecessary(result: R) {
         when (result) {
-            is Releasable -> subscriber.add(Subscriptions.create { result.release() })
+            is Releasable -> result.release()
         }
     }
 }

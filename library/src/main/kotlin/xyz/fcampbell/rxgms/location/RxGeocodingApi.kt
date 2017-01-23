@@ -5,8 +5,8 @@ import android.location.Address
 import com.google.android.gms.common.api.Api
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.LatLngBounds
-import rx.Observable
-import rx.schedulers.Schedulers
+import io.reactivex.Observable
+import io.reactivex.schedulers.Schedulers
 import xyz.fcampbell.rxgms.common.ApiClientDescriptor
 import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.RxGmsApi
@@ -60,7 +60,7 @@ class RxGeocodingApi(
      * @return observable that serves list of address based on location
      */
     fun reverseGeocode(locale: Locale, lat: Double, lng: Double, maxResults: Int): Observable<List<Address>> {
-        return fromEmitterBuffer { ReverseGeocode(apiClientDescriptor.context, locale, lat, lng, maxResults) }
+        return create { ReverseGeocode(apiClientDescriptor.context, locale, lat, lng, maxResults) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.trampoline())
     }
@@ -82,7 +82,7 @@ class RxGeocodingApi(
      * @return observable that serves list of address based on location name
      */
     @JvmOverloads fun geocode(locationName: String, maxResults: Int, bounds: LatLngBounds? = null): Observable<List<Address>> {
-        return fromEmitterLatest { Geocode(apiClientDescriptor.context, locationName, maxResults, bounds) }
+        return create { Geocode(apiClientDescriptor.context, locationName, maxResults, bounds) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.trampoline())
     }

@@ -10,7 +10,7 @@ import com.google.android.gms.drive.DriveApi
 import com.google.android.gms.drive.DriveApi.MetadataBufferResult
 import com.google.android.gms.drive.OpenFileActivityBuilder
 import com.google.android.gms.drive.query.Query
-import rx.Observable
+import io.reactivex.Observable
 import xyz.fcampbell.rxgms.common.ApiClientDescriptor
 import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.RxGmsApi

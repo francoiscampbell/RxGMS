@@ -5,7 +5,7 @@ import com.google.android.gms.common.api.Status
 import com.google.android.gms.drive.DriveContents
 import com.google.android.gms.drive.ExecutionOptions
 import com.google.android.gms.drive.MetadataChangeSet
-import rx.Observable
+import io.reactivex.Observable
 import xyz.fcampbell.rxgms.common.util.toObservable
 
 /**

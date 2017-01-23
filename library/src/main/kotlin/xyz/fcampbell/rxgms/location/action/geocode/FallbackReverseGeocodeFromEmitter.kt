@@ -2,10 +2,10 @@ package xyz.fcampbell.rxgms.location.action.geocode
 
 import android.location.Address
 import android.text.TextUtils
+import io.reactivex.ObservableEmitter
+import io.reactivex.ObservableOnSubscribe
 import org.json.JSONException
 import org.json.JSONObject
-import rx.AsyncEmitter
-import xyz.fcampbell.rxgms.common.action.FromEmitter
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
@@ -18,16 +18,15 @@ internal class FallbackReverseGeocodeFromEmitter(
         private val latitude: Double,
         private val longitude: Double,
         private val maxResults: Int
-) : FromEmitter<List<Address>>() {
+) : ObservableOnSubscribe<List<Address>> {
 
-    override fun call(emitter: AsyncEmitter<List<Address>>) {
+    override fun subscribe(emitter: ObservableEmitter<List<Address>>) {
         try {
             emitter.onNext(alternativeReverseGeocodeQuery())
-            emitter.onCompleted()
+            emitter.onComplete()
         } catch (ex: Exception) {
             emitter.onError(ex)
         }
-
     }
 
     /**

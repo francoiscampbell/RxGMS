@@ -3,7 +3,7 @@ package xyz.fcampbell.rxgms.identity
 import android.content.Context
 import com.google.android.gms.identity.intents.Address
 import com.google.android.gms.identity.intents.UserAddressRequest
-import rx.Completable
+import io.reactivex.Completable
 import xyz.fcampbell.rxgms.common.ApiClientDescriptor
 import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.RxGmsApi

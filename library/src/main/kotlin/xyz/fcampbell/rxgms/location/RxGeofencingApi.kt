@@ -8,7 +8,7 @@ import com.google.android.gms.common.api.Status
 import com.google.android.gms.location.GeofencingApi
 import com.google.android.gms.location.GeofencingRequest
 import com.google.android.gms.location.LocationServices
-import rx.Observable
+import io.reactivex.Observable
 import xyz.fcampbell.rxgms.common.ApiClientDescriptor
 import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.RxGmsApi

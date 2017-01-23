@@ -4,8 +4,7 @@ import android.app.Activity
 import android.content.*
 import android.os.Bundle
 import android.support.v4.content.LocalBroadcastManager
-import rx.AsyncEmitter
-import rx.Observable
+import io.reactivex.Observable
 import xyz.fcampbell.rxgms.BuildConfig
 import java.util.*
 
@@ -33,7 +32,7 @@ class ResultActivity() : Activity() {
 
         private fun registerCallbackReceiver(context: Context, expectedRequestCode: Int): Observable<Intent> {
             val localBroadcastManager = LocalBroadcastManager.getInstance(context)
-            return Observable.fromEmitter({ emitter ->
+            return Observable.create { emitter ->
                 localBroadcastManager.registerReceiver(object : BroadcastReceiver() {
                     override fun onReceive(context: Context, intent: Intent) {
                         localBroadcastManager.unregisterReceiver(this)
@@ -62,10 +61,10 @@ class ResultActivity() : Activity() {
 
                         val returnedData = intent.getParcelableExtra<Intent?>(KEY_RESULT_INTENT)
                         if (returnedData != null) emitter.onNext(returnedData)
-                        emitter.onCompleted()
+                        emitter.onComplete()
                     }
                 }, IntentFilter(ACTION_SHADOW_RESULT + expectedRequestCode))
-            }, AsyncEmitter.BackpressureMode.LATEST)
+            }
         }
     }
 

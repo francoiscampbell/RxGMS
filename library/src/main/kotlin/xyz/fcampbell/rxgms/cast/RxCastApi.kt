@@ -6,8 +6,8 @@ import com.google.android.gms.cast.Cast
 import com.google.android.gms.cast.LaunchOptions
 import com.google.android.gms.common.api.Scope
 import com.google.android.gms.common.api.Status
-import rx.Completable
-import rx.Observable
+import io.reactivex.Completable
+import io.reactivex.Observable
 import xyz.fcampbell.rxgms.common.ApiClientDescriptor
 import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.RxGmsApi

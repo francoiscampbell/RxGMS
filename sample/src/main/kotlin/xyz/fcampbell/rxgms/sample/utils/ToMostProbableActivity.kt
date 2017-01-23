@@ -2,11 +2,10 @@ package xyz.fcampbell.rxgms.sample.utils
 
 import com.google.android.gms.location.ActivityRecognitionResult
 import com.google.android.gms.location.DetectedActivity
+import io.reactivex.functions.Function
 
-import rx.functions.Func1
-
-object ToMostProbableActivity : Func1<ActivityRecognitionResult, DetectedActivity> {
-    override fun call(activityRecognitionResult: ActivityRecognitionResult): DetectedActivity {
+object ToMostProbableActivity : Function<ActivityRecognitionResult, DetectedActivity> {
+    override fun apply(activityRecognitionResult: ActivityRecognitionResult): DetectedActivity {
         return activityRecognitionResult.mostProbableActivity
     }
 }

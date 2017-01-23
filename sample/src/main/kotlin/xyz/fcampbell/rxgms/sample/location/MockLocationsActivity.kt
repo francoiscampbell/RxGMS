@@ -9,13 +9,13 @@ import android.util.Log
 import android.widget.Toast
 import com.google.android.gms.common.api.Status
 import com.google.android.gms.location.LocationRequest
+import io.reactivex.Observable
+import io.reactivex.disposables.Disposable
+import io.reactivex.functions.BiFunction
+import io.reactivex.functions.Consumer
+import io.reactivex.functions.Function
+import io.reactivex.processors.PublishProcessor
 import kotlinx.android.synthetic.main.activity_mocklocations.*
-import rx.Observable
-import rx.Subscription
-import rx.functions.Action1
-import rx.functions.Func1
-import rx.functions.Func2
-import rx.subjects.PublishSubject
 import xyz.fcampbell.rxgms.location.RxFusedLocationApi
 import xyz.fcampbell.rxgms.sample.PermittedActivity
 import xyz.fcampbell.rxgms.sample.R
@@ -29,18 +29,17 @@ class MockLocationsActivity : PermittedActivity() {
     private val fusedLocationApi = RxFusedLocationApi(this)
 
     private lateinit var mockLocationObservable: Observable<Location>
-    private var mockLocationSubscription: Subscription? = null
-    private var updatedLocationSubscription: Subscription? = null
+    private var mockLocationDisposable: Disposable? = null
+    private var updatedLocationDispoable: Disposable? = null
 
-    private lateinit var mockLocationSubject: PublishSubject<Location>
+    private lateinit var mockLocationProcessor: PublishProcessor<Location>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mocklocations)
 
-        mockLocationSubject = PublishSubject.create<Location>()
-
-        mockLocationObservable = mockLocationSubject.asObservable()
+        mockLocationProcessor = PublishProcessor.create<Location>()
+        mockLocationObservable = mockLocationProcessor.toObservable()
 
         initViews()
     }
@@ -62,13 +61,13 @@ class MockLocationsActivity : PermittedActivity() {
         val locationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                 .setInterval(2000)
-        updatedLocationSubscription = fusedLocationApi
+        updatedLocationDispoable = fusedLocationApi
                 .requestLocationUpdates(locationRequest)
                 .map(LocationToStringFunc)
-                .map(object : Func1<String, String> {
+                .map(object : Function<String, String> {
                     internal var count = 0
 
-                    override fun call(s: String): String {
+                    override fun apply(s: String): String {
                         return s + " " + count++
                     }
                 })
@@ -77,7 +76,7 @@ class MockLocationsActivity : PermittedActivity() {
 
     private fun addMockLocation() {
         try {
-            mockLocationSubject.onNext(createMockLocation())
+            mockLocationProcessor.onNext(createMockLocation())
         } catch (e: Throwable) {
             Toast.makeText(this@MockLocationsActivity, "Error parsing input.", Toast.LENGTH_SHORT).show()
         }
@@ -86,17 +85,17 @@ class MockLocationsActivity : PermittedActivity() {
 
     private fun setMockMode(toggle: Boolean) {
         if (toggle) {
-            mockLocationSubscription = Observable.zip(fusedLocationApi.mockLocation(mockLocationObservable),
-                    mockLocationObservable, object : Func2<Status, Location, String> {
+            mockLocationDisposable = Observable.zip(fusedLocationApi.mockLocation(mockLocationObservable),
+                    mockLocationObservable, object : BiFunction<Status, Location, String> {
                 internal var count = 0
 
-                override fun call(result: Status, location: Location): String {
-                    return LocationToStringFunc.call(location) + " " + count++
+                override fun apply(result: Status, location: Location): String {
+                    return LocationToStringFunc.apply(location) + " " + count++
                 }
             })
                     .subscribe(DisplayTextOnViewAction(mock_location_view), ErrorHandler())
         } else {
-            mockLocationSubscription?.unsubscribe()
+            mockLocationDisposable?.dispose()
         }
     }
 
@@ -124,12 +123,12 @@ class MockLocationsActivity : PermittedActivity() {
 
     override fun onStop() {
         super.onStop()
-        mockLocationSubscription?.unsubscribe()
-        updatedLocationSubscription?.unsubscribe()
+        mockLocationDisposable?.dispose()
+        updatedLocationDispoable?.dispose()
     }
 
-    private inner class ErrorHandler : Action1<Throwable> {
-        override fun call(throwable: Throwable) {
+    private inner class ErrorHandler : Consumer<Throwable> {
+        override fun accept(throwable: Throwable) {
             if (throwable is SecurityException) {
                 Toast.makeText(this@MockLocationsActivity, "You need to enable mock locations in Developer Options.", Toast.LENGTH_SHORT).show()
             } else {

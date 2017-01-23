@@ -5,25 +5,23 @@ import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.LocationListener
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
-import rx.AsyncEmitter
-import xyz.fcampbell.rxgms.common.action.FromEmitter
+import io.reactivex.ObservableEmitter
+import io.reactivex.ObservableOnSubscribe
 
 internal class LocationUpdates(
         private val apiClient: GoogleApiClient,
         private val locationRequest: LocationRequest
-) : FromEmitter<Location>() {
-    private var listener: LocationListener? = null
+) : ObservableOnSubscribe<Location> {
 
-    override fun call(emitter: AsyncEmitter<Location>) {
-        super.call(emitter)
+    override fun subscribe(emitter: ObservableEmitter<Location>) {
+        val listener = LocationListener { location -> emitter.onNext(location) }
 
-        listener = LocationListener { location -> emitter.onNext(location) }
-        LocationServices.FusedLocationApi.requestLocationUpdates(apiClient, locationRequest, listener)
-    }
-
-    override fun onUnsubscribe() {
-        if (apiClient.isConnected) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(apiClient, listener)
+        emitter.setCancellable {
+            if (apiClient.isConnected) {
+                LocationServices.FusedLocationApi.removeLocationUpdates(apiClient, listener)
+            }
         }
+
+        LocationServices.FusedLocationApi.requestLocationUpdates(apiClient, locationRequest, listener)
     }
 }

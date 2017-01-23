@@ -9,13 +9,12 @@ import com.google.android.gms.common.api.Status
 import com.google.android.gms.location.FusedLocationProviderApi
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
-import rx.Observable
+import io.reactivex.Observable
 import xyz.fcampbell.rxgms.common.ApiClientDescriptor
 import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.RxGmsApi
 import xyz.fcampbell.rxgms.location.action.location.LocationUpdates
 import xyz.fcampbell.rxgms.location.action.location.MockLocation
-import xyz.fcampbell.rxgms.location.action.location.RemoveLocationIntentUpdates
 
 @Suppress("unused")
 class RxFusedLocationApi(
@@ -69,7 +68,7 @@ class RxFusedLocationApi(
      */
     @RequiresPermission(allOf = arrayOf("android.permission.ACCESS_COARSE_LOCATION", "android.permission.ACCESS_MOCK_LOCATION"))
     fun mockLocation(sourceLocationObservable: Observable<Location>): Observable<Status> {
-        return fromEmitterLatest { MockLocation(it, sourceLocationObservable) }
+        return create { MockLocation(it, sourceLocationObservable) }
     }
 
     /**
@@ -89,7 +88,7 @@ class RxFusedLocationApi(
      */
     @RequiresPermission(anyOf = arrayOf("android.permission.ACCESS_COARSE_LOCATION", "android.permission.ACCESS_FINE_LOCATION"))
     fun requestLocationUpdates(locationRequest: LocationRequest): Observable<Location> {
-        return fromEmitterLatest { LocationUpdates(it, locationRequest) }
+        return create { LocationUpdates(it, locationRequest) }
     }
 
     /**
@@ -127,6 +126,6 @@ class RxFusedLocationApi(
      * @return observable that removes the PendingIntent
      */
     fun removeLocationUpdates(intent: PendingIntent): Observable<Status> {
-        return fromEmitterLatest { RemoveLocationIntentUpdates(it, intent) }
+        return fromPendingResult { LocationServices.FusedLocationApi.removeLocationUpdates(it, intent) }
     }
 }

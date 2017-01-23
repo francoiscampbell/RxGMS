@@ -4,7 +4,7 @@ import android.content.Context
 import com.google.android.gms.common.api.Scope
 import com.google.android.gms.games.Games
 import com.google.android.gms.games.Notifications
-import rx.Completable
+import io.reactivex.Completable
 import xyz.fcampbell.rxgms.common.ApiClientDescriptor
 import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.RxGmsApi

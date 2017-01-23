@@ -1,13 +1,10 @@
 package xyz.fcampbell.rxgms.sample.utils
 
 import android.location.Address
+import io.reactivex.functions.Function
 
-import rx.functions.Func1
-
-object AddressToStringFunc : Func1<Address?, String> {
-    override fun call(address: Address?): String {
-        if (address == null) return ""
-
+object AddressToStringFunc : Function<Address, String> {
+    override fun apply(address: Address): String {
         var addressLines = ""
         for (i in 0..address.maxAddressLineIndex) {
             addressLines += address.getAddressLine(i) + '\n'

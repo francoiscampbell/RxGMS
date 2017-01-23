@@ -2,7 +2,7 @@ package xyz.fcampbell.rxgms.common.util
 
 import com.google.android.gms.common.api.PendingResult
 import com.google.android.gms.common.api.Result
-import rx.Observable
+import io.reactivex.Observable
 import xyz.fcampbell.rxgms.common.action.PendingResultOnSubscribe
 
 /**

@@ -8,8 +8,8 @@ import com.google.android.gms.games.multiplayer.realtime.RealTimeMultiplayer
 import com.google.android.gms.games.multiplayer.realtime.Room
 import com.google.android.gms.games.multiplayer.realtime.RoomConfig
 import com.google.android.gms.games.multiplayer.realtime.RoomUpdateListener
-import rx.Completable
-import rx.Observable
+import io.reactivex.Completable
+import io.reactivex.Observable
 import xyz.fcampbell.rxgms.common.ApiClientDescriptor
 import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.RxGmsApi

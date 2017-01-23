@@ -8,7 +8,7 @@ import com.google.android.gms.drive.Drive
 import com.google.android.gms.drive.DrivePreferencesApi
 import com.google.android.gms.drive.DrivePreferencesApi.FileUploadPreferencesResult
 import com.google.android.gms.drive.FileUploadPreferences
-import rx.Observable
+import io.reactivex.Observable
 import xyz.fcampbell.rxgms.common.ApiClientDescriptor
 import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.RxGmsApi

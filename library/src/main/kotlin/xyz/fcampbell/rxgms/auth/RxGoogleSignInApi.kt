@@ -10,7 +10,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.auth.api.signin.GoogleSignInResult
 import com.google.android.gms.common.api.Scope
 import com.google.android.gms.common.api.Status
-import rx.Observable
+import io.reactivex.Observable
 import xyz.fcampbell.rxgms.auth.exception.SignInException
 import xyz.fcampbell.rxgms.common.ApiClientDescriptor
 import xyz.fcampbell.rxgms.common.ApiDescriptor

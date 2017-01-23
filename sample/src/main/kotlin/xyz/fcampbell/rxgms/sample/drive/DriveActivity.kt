@@ -8,8 +8,10 @@ import com.google.android.gms.drive.MetadataBuffer
 import com.google.android.gms.drive.MetadataChangeSet
 import com.google.android.gms.identity.intents.UserAddressRequest
 import com.google.android.gms.identity.intents.model.CountrySpecification
-import rx.Observable
+import io.reactivex.Observable
 import xyz.fcampbell.rxgms.auth.RxGoogleSignInApi
+import xyz.fcampbell.rxgms.drive.RxDriveApi
+import xyz.fcampbell.rxgms.drive.RxDrivePreferencesApi
 import xyz.fcampbell.rxgms.identity.RxAddress
 
 /**
@@ -17,8 +19,8 @@ import xyz.fcampbell.rxgms.identity.RxAddress
  */
 class DriveActivity : AppCompatActivity() {
 
-    private val driveApi = RxDrive.DriveApi(this, Drive.SCOPE_FILE, Drive.SCOPE_APPFOLDER)
-    private val drivePrefsApi = RxDrive.DrivePreferencesApi(this, Drive.SCOPE_FILE, Drive.SCOPE_APPFOLDER)
+    private val driveApi = RxDriveApi(this, Drive.SCOPE_FILE, Drive.SCOPE_APPFOLDER)
+    private val drivePrefsApi = RxDrivePreferencesApi(this, Drive.SCOPE_FILE, Drive.SCOPE_APPFOLDER)
 
     private val gso = GoogleSignInOptions.Builder()
             .requestEmail()
@@ -30,31 +32,39 @@ class DriveActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
 
-//        getRootFolder()
+        getRootFolder()
 //        getGoogleAccount() //todo move to other activity
-        getAddress() //todo move to other activity
+//        getAddress() //todo move to other activity
     }
 
     private fun getRootFolder() {
-        drivePrefsApi.getFileUploadPreferences()
-                .subscribe({
-                    Log.d(TAG, "Got file upload prefs: $it")
-                    Log.d(TAG, "batteryUsagePreference: ${it.batteryUsagePreference}")
-                    Log.d(TAG, "isRoamingAllowed: ${it.isRoamingAllowed}")
-                    Log.d(TAG, "networkTypePreference: ${it.networkTypePreference}")
-                }, { throwable ->
-                    Log.d(TAG, "Error", throwable)
-                })
+//        drivePrefsApi.getFileUploadPreferences()
+//                .map { it.fileUploadPreferences }
+//                .subscribe({
+//                    Log.d(TAG, "Got file upload prefs: $it")
+//                    Log.d(TAG, "batteryUsagePreference: ${it.batteryUsagePreference}")
+//                    Log.d(TAG, "isRoamingAllowed: ${it.isRoamingAllowed}")
+//                    Log.d(TAG, "networkTypePreference: ${it.networkTypePreference}")
+//                }, { throwable ->
+//                    Log.d(TAG, "Error", throwable)
+//                })
 
         driveApi.getAppFolder()
                 .flatMap { appFolder ->
                     appFolder.listChildren()
+                            .map { it.metadataBuffer }
                             .flatMap {
                                 if (it.none()) {
                                     Observable.error<MetadataBuffer>(Exception())
                                 } else {
                                     Observable.just(it)
                                 }
+                            }
+                            .doOnSubscribe {
+                                Log.d(TAG, "Sub to listChildren")
+                            }
+                            .doOnDispose {
+                                Log.d(TAG, "Dispose listChildren")
                             }
                             .retryWhen { errors ->
                                 errors.flatMap {
@@ -68,11 +78,19 @@ class DriveActivity : AppCompatActivity() {
                                 }
                             }
                 }
+                .doOnSubscribe {
+                    Log.d(TAG, "Sub to getAppFolder")
+                }
+                .doOnDispose {
+                    Log.d(TAG, "Dispose getAppFolder")
+                }
                 .subscribe({
                     Log.d(TAG, "Got root folder: $it")
                     it.forEach { Log.d(TAG, "Item: ${it.title}") }
                 }, { throwable ->
                     Log.d(TAG, "Error", throwable)
+                }, {
+                    Log.d(TAG, "getAppFolder onComplete")
                 })
     }
 
@@ -91,11 +109,7 @@ class DriveActivity : AppCompatActivity() {
                 .build()
         addressApi.requestUserAddress(userAddressRequest)
                 .subscribe({
-                    Log.d(TAG, "onNext: $it")
-                }, {
-                    Log.d(TAG, "onError: $it")
-                }, {
-                    Log.d(TAG, "onCompleted")
+                    Log.d(TAG, "onComplete")
                 })
     }
 

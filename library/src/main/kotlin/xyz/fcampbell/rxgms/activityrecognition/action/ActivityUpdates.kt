@@ -8,19 +8,26 @@ import android.content.IntentFilter
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.ActivityRecognition
 import com.google.android.gms.location.ActivityRecognitionResult
-import rx.AsyncEmitter
+import io.reactivex.ObservableEmitter
+import io.reactivex.ObservableOnSubscribe
 import xyz.fcampbell.rxgms.BuildConfig
-import xyz.fcampbell.rxgms.common.action.FromEmitter
 
 internal class ActivityUpdates(
         private val apiClient: GoogleApiClient,
         private val detectionIntervalMilliseconds: Int
-) : FromEmitter<ActivityRecognitionResult>() {
+) : ObservableOnSubscribe<ActivityRecognitionResult> {
     private val context = apiClient.context
     private var receiver: ActivityUpdatesBroadcastReceiver? = null
 
-    override fun call(emitter: AsyncEmitter<ActivityRecognitionResult>) {
-        super.call(emitter)
+
+    override fun subscribe(emitter: ObservableEmitter<ActivityRecognitionResult>) {
+        emitter.setCancellable {
+            if (apiClient.isConnected) {
+                ActivityRecognition.ActivityRecognitionApi.removeActivityUpdates(apiClient, receiverPendingIntent)
+            }
+            context.unregisterReceiver(receiver)
+            receiver = null
+        }
 
         receiver = ActivityUpdatesBroadcastReceiver(emitter)
         context.registerReceiver(receiver, IntentFilter(ACTION_ACTIVITY_DETECTED))
@@ -28,18 +35,10 @@ internal class ActivityUpdates(
         ActivityRecognition.ActivityRecognitionApi.requestActivityUpdates(apiClient, detectionIntervalMilliseconds.toLong(), receiverIntent)
     }
 
-    override fun onUnsubscribe() {
-        if (apiClient.isConnected) {
-            ActivityRecognition.ActivityRecognitionApi.removeActivityUpdates(apiClient, receiverPendingIntent)
-        }
-        context.unregisterReceiver(receiver)
-        receiver = null
-    }
-
     private val receiverPendingIntent: PendingIntent
         get() = PendingIntent.getBroadcast(apiClient.context, 0, Intent(ACTION_ACTIVITY_DETECTED), PendingIntent.FLAG_UPDATE_CURRENT)
 
-    private class ActivityUpdatesBroadcastReceiver(private val emitter: AsyncEmitter<in ActivityRecognitionResult>) : BroadcastReceiver() {
+    private class ActivityUpdatesBroadcastReceiver(private val emitter: ObservableEmitter<in ActivityRecognitionResult>) : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             if (ActivityRecognitionResult.hasResult(intent)) {
                 val result = ActivityRecognitionResult.extractResult(intent)

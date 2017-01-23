@@ -3,10 +3,10 @@ package xyz.fcampbell.rxgms.location.action.geocode
 import android.content.Context
 import android.location.Address
 import android.location.Geocoder
-import rx.AsyncEmitter
-import rx.Observable
-import rx.schedulers.Schedulers
-import xyz.fcampbell.rxgms.common.action.FromEmitter
+import io.reactivex.Observable
+import io.reactivex.ObservableEmitter
+import io.reactivex.ObservableOnSubscribe
+import io.reactivex.schedulers.Schedulers
 import java.io.IOException
 import java.util.*
 
@@ -16,24 +16,25 @@ internal class ReverseGeocode(
         private val latitude: Double,
         private val longitude: Double,
         private val maxResults: Int
-) : FromEmitter<List<Address>>() {
+) : ObservableOnSubscribe<List<Address>> {
 
-    override fun call(emitter: AsyncEmitter<List<Address>>) {
-        super.call(emitter)
-
+    override fun subscribe(emitter: ObservableEmitter<List<Address>>) {
         val geocoder = Geocoder(ctx, locale)
         try {
             emitter.onNext(geocoder.getFromLocation(latitude, longitude, maxResults))
-            emitter.onCompleted()
+            emitter.onComplete()
         } catch (e: IOException) {
             // If it's a service not available error try a different approach using google web service
             if (e.message.equals("Service not Available", ignoreCase = true)) {
-                Observable
-                        .fromEmitter(
-                                FallbackReverseGeocodeFromEmitter(locale, latitude, longitude, maxResults),
-                                AsyncEmitter.BackpressureMode.BUFFER)
+                Observable.create(FallbackReverseGeocodeFromEmitter(locale, latitude, longitude, maxResults))
                         .subscribeOn(Schedulers.io())
-                        .subscribe(emitter)
+                        .subscribe({
+                            emitter.onNext(it)
+                        }, {
+                            emitter.onError(it)
+                        }, {
+                            emitter.onComplete()
+                        })
             } else {
                 emitter.onError(e)
             }

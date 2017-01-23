@@ -4,8 +4,8 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_places_result.*
-import rx.subscriptions.CompositeSubscription
 import xyz.fcampbell.rxgms.places.RxGeoDataApi
 import xyz.fcampbell.rxgms.sample.PermittedActivity
 import xyz.fcampbell.rxgms.sample.R
@@ -13,7 +13,7 @@ import xyz.fcampbell.rxgms.sample.R
 class PlacesResultActivity : PermittedActivity() {
     override val permissionsToRequest = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
 
-    private val compositeSubscription = CompositeSubscription()
+    private val compositeDisposable = CompositeDisposable()
     private var placeId: String? = null
 
     private val geodataApi = RxGeoDataApi(this)
@@ -37,7 +37,7 @@ class PlacesResultActivity : PermittedActivity() {
     override fun onPermissionsGranted(vararg permissions: String) {
         if (!permissions.contains(Manifest.permission.ACCESS_FINE_LOCATION)) return
 
-        compositeSubscription.add(geodataApi.getPlaceById(placeId ?: "")
+        compositeDisposable.add(geodataApi.getPlaceById(placeId ?: "")
                 .subscribe { buffer ->
                     val place = buffer.get(0)
                     if (place != null) {
@@ -51,7 +51,7 @@ class PlacesResultActivity : PermittedActivity() {
 
     override fun onStop() {
         super.onStop()
-        compositeSubscription.unsubscribe()
+        compositeDisposable.dispose()
     }
 
     companion object {

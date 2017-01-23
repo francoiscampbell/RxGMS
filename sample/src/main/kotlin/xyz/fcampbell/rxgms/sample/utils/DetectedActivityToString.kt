@@ -1,11 +1,10 @@
 package xyz.fcampbell.rxgms.sample.utils
 
 import com.google.android.gms.location.DetectedActivity
+import io.reactivex.functions.Function
 
-import rx.functions.Func1
-
-object DetectedActivityToString : Func1<DetectedActivity, String> {
-    override fun call(detectedActivity: DetectedActivity): String {
+object DetectedActivityToString : Function<DetectedActivity, String> {
+    override fun apply(detectedActivity: DetectedActivity): String {
         return getNameFromType(detectedActivity.type) + " with confidence " + detectedActivity.confidence
     }
 

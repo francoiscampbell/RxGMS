@@ -4,7 +4,7 @@ import android.content.Context
 import com.google.android.gms.common.api.Api
 import com.google.android.gms.location.ActivityRecognition
 import com.google.android.gms.location.ActivityRecognitionResult
-import rx.Observable
+import io.reactivex.Observable
 import xyz.fcampbell.rxgms.activityrecognition.action.ActivityUpdates
 import xyz.fcampbell.rxgms.common.ApiClientDescriptor
 import xyz.fcampbell.rxgms.common.ApiDescriptor
@@ -29,6 +29,6 @@ class RxActivityRecognitionApi(
      * @return observable that provides activity recognition
      */
     fun requestActivityUpdates(detectionIntervalMilliseconds: Int): Observable<ActivityRecognitionResult> {
-        return fromEmitterLatest { ActivityUpdates(it, detectionIntervalMilliseconds) }
+        return create { ActivityUpdates(it, detectionIntervalMilliseconds) }
     }
 }

@@ -9,8 +9,8 @@ import com.google.android.gms.games.Games
 import com.google.android.gms.games.request.GameRequest
 import com.google.android.gms.games.request.OnRequestReceivedListener
 import com.google.android.gms.games.request.Requests
-import rx.Completable
-import rx.Observable
+import io.reactivex.Completable
+import io.reactivex.Observable
 import xyz.fcampbell.rxgms.common.ApiClientDescriptor
 import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.RxGmsApi

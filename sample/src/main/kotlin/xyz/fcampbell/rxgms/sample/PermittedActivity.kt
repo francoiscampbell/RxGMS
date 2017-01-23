@@ -2,15 +2,14 @@ package xyz.fcampbell.rxgms.sample
 
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
-import com.tbruyelle.rxpermissions.RxPermissions
+import com.tbruyelle.rxpermissions2.RxPermissions
 
 abstract class PermittedActivity : AppCompatActivity() {
     abstract val permissionsToRequest: Array<String>
 
     override fun onStart() {
         super.onStart()
-        RxPermissions
-                .getInstance(this)
+        RxPermissions(this)
                 .request(*permissionsToRequest)
                 .subscribe { granted ->
                     if (granted) {

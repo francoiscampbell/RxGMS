@@ -12,12 +12,12 @@ import android.widget.Toast
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsStatusCodes
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.functions.Consumer
+import io.reactivex.functions.Function
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
-import rx.Subscription
-import rx.android.schedulers.AndroidSchedulers
-import rx.functions.Action1
-import rx.functions.Func1
-import rx.schedulers.Schedulers
 import xyz.fcampbell.rxgms.common.exception.StatusException
 import xyz.fcampbell.rxgms.location.RxActivityRecognitionApi
 import xyz.fcampbell.rxgms.location.RxFusedLocationApi
@@ -32,10 +32,10 @@ import xyz.fcampbell.rxgms.sample.utils.*
 class MainActivity : PermittedActivity() {
     override val permissionsToRequest = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
 
-    private var lastKnownLocationSubscription: Subscription? = null
-    private var updatableLocationSubscription: Subscription? = null
-    private var addressSubscription: Subscription? = null
-    private var activitySubscription: Subscription? = null
+    private var lastKnownLocationDisposable: Disposable? = null
+    private var updatableLocationDisposable: Disposable? = null
+    private var addressDisposable: Disposable? = null
+    private var activityDisposable: Disposable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,7 +54,7 @@ class MainActivity : PermittedActivity() {
     private val geocodingApi = RxGeocodingApi(this)
 
     private fun getLocation() {
-        lastKnownLocationSubscription = fusedLocationApi
+        lastKnownLocationDisposable = fusedLocationApi
                 .getLastLocation()
                 .map(LocationToStringFunc)
                 .subscribe(DisplayTextOnViewAction(last_known_location_view), ErrorHandler())
@@ -64,7 +64,7 @@ class MainActivity : PermittedActivity() {
                 .setNumUpdates(5)
                 .setInterval(100)
 
-        updatableLocationSubscription = settingsApi
+        updatableLocationDisposable = settingsApi
                 .checkLocationSettings(
                         LocationSettingsRequest.Builder()
                                 .addLocationRequest(locationRequest)
@@ -83,26 +83,27 @@ class MainActivity : PermittedActivity() {
                 }
                 .flatMap { fusedLocationApi.requestLocationUpdates(locationRequest) }
                 .map(LocationToStringFunc)
-                .map(object : Func1<String, String> {
+                .map(object : Function<String, String> {
                     private var count = 0
 
-                    override fun call(s: String): String {
+                    override fun apply(s: String): String {
                         return s + " " + count++
                     }
                 })
                 .subscribe(DisplayTextOnViewAction(updated_location_view), ErrorHandler())
 
 
-        addressSubscription = fusedLocationApi
+        addressDisposable = fusedLocationApi
                 .requestLocationUpdates(locationRequest)
                 .flatMap { location -> geocodingApi.reverseGeocode(location.latitude, location.longitude, 1) }
-                .map { addresses -> if (addresses != null && !addresses.isEmpty()) addresses[0] else null }
+                .filter { addresses -> addresses.isNotEmpty() }
+                .map { addresses -> addresses.first() }
                 .map(AddressToStringFunc)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(DisplayTextOnViewAction(address_for_location_view), ErrorHandler())
 
-        activitySubscription = activityRecognitionApi
+        activityDisposable = activityRecognitionApi
                 .requestActivityUpdates(50)
                 .map(ToMostProbableActivity)
                 .map(DetectedActivityToString)
@@ -112,10 +113,10 @@ class MainActivity : PermittedActivity() {
     override fun onStop() {
         super.onStop()
 
-        updatableLocationSubscription?.unsubscribe()
-        addressSubscription?.unsubscribe()
-        lastKnownLocationSubscription?.unsubscribe()
-        activitySubscription?.unsubscribe()
+        updatableLocationDisposable?.dispose()
+        addressDisposable?.dispose()
+        lastKnownLocationDisposable?.dispose()
+        activityDisposable?.dispose()
 
         fusedLocationApi.disconnect()
         activityRecognitionApi.disconnect()
@@ -145,8 +146,8 @@ class MainActivity : PermittedActivity() {
         return true
     }
 
-    private inner class ErrorHandler : Action1<Throwable> {
-        override fun call(throwable: Throwable) {
+    private inner class ErrorHandler : Consumer<Throwable> {
+        override fun accept(throwable: Throwable) {
             if (throwable is StatusException) {
                 if (throwable.status.hasResolution()) {
                     throwable.status.startResolutionForResult(this@MainActivity, REQUEST_RESOLVE_ERROR)

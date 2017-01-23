@@ -7,8 +7,8 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import com.google.android.gms.location.GeofencingRequest
+import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_geofence.*
-import rx.Subscription
 import xyz.fcampbell.rxgms.location.RxFusedLocationApi
 import xyz.fcampbell.rxgms.location.RxGeofencingApi
 import xyz.fcampbell.rxgms.sample.PermittedActivity
@@ -24,7 +24,7 @@ class GeofenceActivity : PermittedActivity() {
     private val fusedLocationApi = RxFusedLocationApi(this)
     private val geofencingApi = RxGeofencingApi(this)
 
-    private var lastKnownLocationSubscription: Subscription? = null
+    private var lastKnownLocationDisposable: Disposable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +41,7 @@ class GeofenceActivity : PermittedActivity() {
     override fun onPermissionsGranted(vararg permissions: String) {
         if (!permissions.contains(Manifest.permission.ACCESS_FINE_LOCATION)) return
 
-        lastKnownLocationSubscription = fusedLocationApi
+        lastKnownLocationDisposable = fusedLocationApi
                 .getLastLocation()
                 .map(LocationToStringFunc)
                 .subscribe(DisplayTextOnViewAction(last_known_location_view))
@@ -49,7 +49,7 @@ class GeofenceActivity : PermittedActivity() {
 
     override fun onStop() {
         super.onStop()
-        lastKnownLocationSubscription?.unsubscribe()
+        lastKnownLocationDisposable?.dispose()
     }
 
     private fun clearGeofence() {

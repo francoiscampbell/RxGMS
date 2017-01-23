@@ -5,9 +5,8 @@ import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.Api
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.common.api.Scope
-import rx.Observable
-import rx.Subscriber
-import rx.subscriptions.Subscriptions
+import io.reactivex.ObservableEmitter
+import io.reactivex.ObservableOnSubscribe
 import xyz.fcampbell.rxgms.common.ApiClientDescriptor
 import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.exception.GoogleApiConnectionException
@@ -18,24 +17,25 @@ import xyz.fcampbell.rxgms.common.util.ResultActivity
 internal class GoogleApiClientOnSubscribe<A, O : Api.ApiOptions>(
         private val apiClientDescriptor: ApiClientDescriptor,
         private val apiDescriptor: ApiDescriptor<A, O>
-) : Observable.OnSubscribe<Pair<GoogleApiClient, Bundle?>> {
-    override fun call(subscriber: Subscriber<in Pair<GoogleApiClient, Bundle?>>) {
-        val apiClient = createApiClient(subscriber)
-        try {
-            apiClient.connect()
-        } catch (ex: Throwable) {
-            subscriber.onError(ex)
-        }
+) : ObservableOnSubscribe<Pair<GoogleApiClient, Bundle?>> {
+    override fun subscribe(emitter: ObservableEmitter<Pair<GoogleApiClient, Bundle?>>) {
+        val apiClient = createApiClient(emitter)
 
-        subscriber.add(Subscriptions.create {
+        emitter.setCancellable {
             if (apiClient.isConnected || apiClient.isConnecting) {
                 apiClient.disconnect()
             }
-        })
+        }
+
+        try {
+            apiClient.connect()
+        } catch (ex: Throwable) {
+            emitter.onError(ex)
+        }
     }
 
-    private fun createApiClient(subscriber: Subscriber<in Pair<GoogleApiClient, Bundle?>>): GoogleApiClient {
-        val apiClientConnectionCallbacks = ApiClientConnectionCallbacks(subscriber)
+    private fun createApiClient(emitter: ObservableEmitter<in Pair<GoogleApiClient, Bundle?>>): GoogleApiClient {
+        val apiClientConnectionCallbacks = ApiClientConnectionCallbacks(emitter)
 
         val apiClient = GoogleApiClient.Builder(
                 apiClientDescriptor.context,
@@ -83,7 +83,7 @@ internal class GoogleApiClientOnSubscribe<A, O : Api.ApiOptions>(
     }
 
     private inner class ApiClientConnectionCallbacks(
-            private val subscriber: Subscriber<in Pair<GoogleApiClient, Bundle?>>
+            private val emitter: ObservableEmitter<in Pair<GoogleApiClient, Bundle?>>
     ) : GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
@@ -91,15 +91,15 @@ internal class GoogleApiClientOnSubscribe<A, O : Api.ApiOptions>(
 
         override fun onConnected(bundle: Bundle?) {
             try {
-                subscriber.onNext(apiClient to bundle)
+                emitter.onNext(apiClient to bundle)
                 //don't call onCompleted, we don't want the client to disconnect unless we explicitly unsubscribe
             } catch (ex: Throwable) {
-                subscriber.onError(ex)
+                emitter.onError(ex)
             }
         }
 
         override fun onConnectionSuspended(cause: Int) {
-            subscriber.onError(GoogleApiConnectionSuspendedException(cause))
+            emitter.onError(GoogleApiConnectionSuspendedException(cause))
         }
 
         override fun onConnectionFailed(connectionResult: ConnectionResult) {
@@ -107,7 +107,7 @@ internal class GoogleApiClientOnSubscribe<A, O : Api.ApiOptions>(
                 ResultActivity.getResult(apiClientDescriptor.context, connectionResult.resolution!!.intentSender)
                         .subscribe({}, {}, { apiClient.connect() })
             } else {
-                subscriber.onError(GoogleApiConnectionException(connectionResult, "Error connecting to GoogleApiClient"))
+                emitter.onError(GoogleApiConnectionException(connectionResult, "Error connecting to GoogleApiClient"))
             }
         }
     }

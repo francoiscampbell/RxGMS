@@ -2,7 +2,7 @@ package xyz.fcampbell.rxgms.drive
 
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.drive.DriveId
-import rx.Observable
+import io.reactivex.Observable
 
 /**
  * Created by francois on 2017-01-10.

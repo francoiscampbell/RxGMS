@@ -1,12 +1,11 @@
 package xyz.fcampbell.rxgms.sample.utils
 
 import android.widget.TextView
+import io.reactivex.functions.Consumer
 
-import rx.functions.Action1
+class DisplayTextOnViewAction(private val target: TextView) : Consumer<String> {
 
-class DisplayTextOnViewAction(private val target: TextView) : Action1<String> {
-
-    override fun call(s: String) {
+    override fun accept(s: String) {
         target.text = s
     }
 }
