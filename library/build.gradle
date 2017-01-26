@@ -43,7 +43,7 @@ apply from: '../maven_push.gradle'
 /**
  TODO Google+	com.google.android.gms:play-services-plus:10.0.1
  Google Account Login	com.google.android.gms:play-services-auth:10.0.1
- TODO Google Actions, Base Client Library	com.google.android.gms:play-services-base:10.0.1
+ Google Actions, Base Client Library	com.google.android.gms:play-services-base:10.0.1
  TODO Google Address API	com.google.android.gms:play-services-identity:10.0.1
  TODO Firebase App Indexing	com.google.firebase:firebase-appindexing:10.0.1
  TODO Google Analytics	com.google.android.gms:play-services-analytics:10.0.1
@@ -57,10 +57,10 @@ apply from: '../maven_push.gradle'
  TODO Google Mobile Ads	com.google.android.gms:play-services-ads:10.0.1
  Google Places	com.google.android.gms:play-services-places:10.0.1
  TODO Mobile Vision	com.google.android.gms:play-services-vision:10.0.1
- TODO Google Nearby	com.google.android.gms:play-services-nearby:10.0.1
+ Google Nearby	com.google.android.gms:play-services-nearby:10.0.1
  TODO Google Panorama Viewer	com.google.android.gms:play-services-panorama:10.0.1
- TODO Google Play Game services	com.google.android.gms:play-services-games:10.0.1
+ Google Play Game services	com.google.android.gms:play-services-games:10.0.1
  TODO SafetyNet	com.google.android.gms:play-services-safetynet:10.0.1
- TODO Android Pay	com.google.android.gms:play-services-wallet:10.0.1
- TODO Android Wear	com.google.android.gms:play-services-wearable:10.0.1
+ Android Pay	com.google.android.gms:play-services-wallet:10.0.1
+ Android Wear	com.google.android.gms:play-services-wearable:10.0.1
  */
