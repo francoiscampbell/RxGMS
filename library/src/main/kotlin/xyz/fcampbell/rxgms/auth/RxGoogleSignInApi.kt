@@ -8,7 +8,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInApi
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.auth.api.signin.GoogleSignInResult
-import com.google.android.gms.common.api.Scope
 import com.google.android.gms.common.api.Status
 import io.reactivex.Observable
 import xyz.fcampbell.rxgms.auth.exception.SignInException
@@ -20,17 +19,15 @@ import xyz.fcampbell.rxgms.common.util.ResultActivity
 @Suppress("unused")
 class RxGoogleSignInApi(
         private val apiClientDescriptor: ApiClientDescriptor,
-        googleSignInOptions: GoogleSignInOptions,
-        vararg scopes: Scope
+        googleSignInOptions: GoogleSignInOptions
 ) : RxGmsApi<GoogleSignInApi, GoogleSignInOptions>(
         apiClientDescriptor.setAccountName(""), //don't set account name in GoogleApiClient with Auth API. See https://developers.google.com/android/reference/com/google/android/gms/common/api/GoogleApiClient.Builder.html#setAccountName(java.lang.String)
-        ApiDescriptor(Auth.GOOGLE_SIGN_IN_API, Auth.GoogleSignInApi, googleSignInOptions, *scopes)
+        ApiDescriptor(Auth.GOOGLE_SIGN_IN_API, Auth.GoogleSignInApi, googleSignInOptions)
 ) {
     constructor(
             context: Context,
-            googleSignInOptions: GoogleSignInOptions,
-            vararg scopes: Scope
-    ) : this(ApiClientDescriptor(context), googleSignInOptions, *scopes)
+            googleSignInOptions: GoogleSignInOptions
+    ) : this(ApiClientDescriptor(context), googleSignInOptions)
 
     fun getSignInIntent(): Observable<Intent> {
         return map { getSignInIntent(it) }
