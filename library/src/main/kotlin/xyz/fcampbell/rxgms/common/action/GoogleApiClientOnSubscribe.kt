@@ -5,6 +5,7 @@ import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.Api
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.common.api.Scope
+import com.google.android.gms.wearable.Wearable
 import io.reactivex.ObservableEmitter
 import io.reactivex.ObservableOnSubscribe
 import xyz.fcampbell.rxgms.common.ApiClientDescriptor
@@ -54,9 +55,17 @@ internal class GoogleApiClientOnSubscribe<A, O : Api.ApiOptions>(
     @Suppress("UNCHECKED_CAST")
     private fun GoogleApiClient.Builder.addApi(api: Api<O>, options: O?): GoogleApiClient.Builder {
         if (options == null) {
-            addApi(api as Api<Api.ApiOptions.NotRequiredOptions>)
+            if (api in APIS_TO_ADD_ONLY_IF_AVAILABLE) {
+                addApiIfAvailable(api as Api<Api.ApiOptions.NotRequiredOptions>)
+            } else {
+                addApi(api as Api<Api.ApiOptions.NotRequiredOptions>)
+            }
         } else {
-            addApi(api as Api<Api.ApiOptions.HasOptions>, options as Api.ApiOptions.HasOptions)
+            if (api in APIS_TO_ADD_ONLY_IF_AVAILABLE) {
+                addApiIfAvailable(api as Api<Api.ApiOptions.HasOptions>, options as Api.ApiOptions.HasOptions)
+            } else {
+                addApi(api as Api<Api.ApiOptions.HasOptions>, options as Api.ApiOptions.HasOptions)
+            }
         }
         return this
     }
@@ -80,6 +89,10 @@ internal class GoogleApiClientOnSubscribe<A, O : Api.ApiOptions>(
         if (gravityForPopups != Int.MIN_VALUE) setGravityForPopups(gravityForPopups)
 
         return this
+    }
+
+    companion object {
+        private val APIS_TO_ADD_ONLY_IF_AVAILABLE = setOf<Api<out Api.ApiOptions>>(Wearable.API)
     }
 
     private inner class ApiClientConnectionCallbacks(
