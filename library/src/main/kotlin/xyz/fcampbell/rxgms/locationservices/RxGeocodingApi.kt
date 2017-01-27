@@ -1,4 +1,4 @@
-package xyz.fcampbell.rxgms.location
+package xyz.fcampbell.rxgms.locationservices
 
 import android.content.Context
 import android.location.Address
@@ -10,8 +10,8 @@ import io.reactivex.schedulers.Schedulers
 import xyz.fcampbell.rxgms.common.ApiClientDescriptor
 import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.RxGmsApi
-import xyz.fcampbell.rxgms.location.action.geocode.Geocode
-import xyz.fcampbell.rxgms.location.action.geocode.ReverseGeocode
+import xyz.fcampbell.rxgms.locationservices.action.geocode.Geocode
+import xyz.fcampbell.rxgms.locationservices.action.geocode.ReverseGeocode
 import java.util.*
 
 @Suppress("unused")

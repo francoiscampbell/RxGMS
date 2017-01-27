@@ -16,7 +16,7 @@ import io.reactivex.functions.Consumer
 import io.reactivex.functions.Function
 import io.reactivex.processors.PublishProcessor
 import kotlinx.android.synthetic.main.activity_mocklocations.*
-import xyz.fcampbell.rxgms.location.RxFusedLocationApi
+import xyz.fcampbell.rxgms.locationservices.RxFusedLocationApi
 import xyz.fcampbell.rxgms.sample.PermittedActivity
 import xyz.fcampbell.rxgms.sample.R
 import xyz.fcampbell.rxgms.sample.utils.DisplayTextOnViewAction

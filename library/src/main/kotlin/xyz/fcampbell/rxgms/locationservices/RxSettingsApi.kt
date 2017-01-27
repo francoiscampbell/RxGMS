@@ -1,4 +1,4 @@
-package xyz.fcampbell.rxgms.location
+package xyz.fcampbell.rxgms.locationservices
 
 import android.content.Context
 import com.google.android.gms.common.api.Api

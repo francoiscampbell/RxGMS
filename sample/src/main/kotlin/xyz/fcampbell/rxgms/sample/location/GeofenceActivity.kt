@@ -9,8 +9,8 @@ import android.widget.Toast
 import com.google.android.gms.location.GeofencingRequest
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_geofence.*
-import xyz.fcampbell.rxgms.location.RxFusedLocationApi
-import xyz.fcampbell.rxgms.location.RxGeofencingApi
+import xyz.fcampbell.rxgms.locationservices.RxFusedLocationApi
+import xyz.fcampbell.rxgms.locationservices.RxGeofencingApi
 import xyz.fcampbell.rxgms.sample.PermittedActivity
 import xyz.fcampbell.rxgms.sample.R
 import xyz.fcampbell.rxgms.sample.utils.DisplayTextOnViewAction

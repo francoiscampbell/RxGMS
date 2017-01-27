@@ -1,4 +1,4 @@
-package xyz.fcampbell.rxgms.location
+package xyz.fcampbell.rxgms.locationservices
 
 import android.app.PendingIntent
 import android.content.Context

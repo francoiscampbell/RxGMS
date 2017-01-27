@@ -1,4 +1,4 @@
-package xyz.fcampbell.rxgms.location
+package xyz.fcampbell.rxgms.locationservices
 
 import android.app.PendingIntent
 import android.content.Context
@@ -13,8 +13,8 @@ import io.reactivex.Observable
 import xyz.fcampbell.rxgms.common.ApiClientDescriptor
 import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.RxGmsApi
-import xyz.fcampbell.rxgms.location.action.location.LocationUpdates
-import xyz.fcampbell.rxgms.location.action.location.MockLocation
+import xyz.fcampbell.rxgms.locationservices.action.location.LocationUpdates
+import xyz.fcampbell.rxgms.locationservices.action.location.MockLocation
 
 @Suppress("unused")
 class RxFusedLocationApi(

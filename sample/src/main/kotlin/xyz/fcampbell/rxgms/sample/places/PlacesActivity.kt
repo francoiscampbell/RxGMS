@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.widget.AdapterView
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_places.*
-import xyz.fcampbell.rxgms.location.RxFusedLocationApi
+import xyz.fcampbell.rxgms.locationservices.RxFusedLocationApi
 import xyz.fcampbell.rxgms.places.RxGeoDataApi
 import xyz.fcampbell.rxgms.places.RxPlaceDetectionApi
 import xyz.fcampbell.rxgms.sample.PermittedActivity

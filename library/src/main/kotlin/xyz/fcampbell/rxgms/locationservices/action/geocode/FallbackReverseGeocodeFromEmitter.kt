@@ -1,4 +1,4 @@
-package xyz.fcampbell.rxgms.location.action.geocode
+package xyz.fcampbell.rxgms.locationservices.action.geocode
 
 import android.location.Address
 import android.text.TextUtils

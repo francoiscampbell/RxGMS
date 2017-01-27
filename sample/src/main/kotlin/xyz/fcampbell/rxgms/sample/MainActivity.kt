@@ -19,10 +19,10 @@ import io.reactivex.functions.Function
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 import xyz.fcampbell.rxgms.common.exception.StatusException
-import xyz.fcampbell.rxgms.location.RxActivityRecognitionApi
-import xyz.fcampbell.rxgms.location.RxFusedLocationApi
-import xyz.fcampbell.rxgms.location.RxGeocodingApi
-import xyz.fcampbell.rxgms.location.RxSettingsApi
+import xyz.fcampbell.rxgms.locationservices.RxActivityRecognitionApi
+import xyz.fcampbell.rxgms.locationservices.RxFusedLocationApi
+import xyz.fcampbell.rxgms.locationservices.RxGeocodingApi
+import xyz.fcampbell.rxgms.locationservices.RxSettingsApi
 import xyz.fcampbell.rxgms.sample.drive.DriveActivity
 import xyz.fcampbell.rxgms.sample.location.GeofenceActivity
 import xyz.fcampbell.rxgms.sample.location.MockLocationsActivity
