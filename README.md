@@ -1,226 +1,152 @@
-ReactiveLocation library for Android
-====================================
+# RxGMS for Android
+Library that wraps Google Play services (GMS) APIs using RxJava and takes care of connecting and disconnecting the GoogleApiClient for you.
+Inspired and extended from [ReactiveLocation](https://github.com/mcharmas/Android-ReactiveLocation).
 
-Small library that wraps Google Play Services API in brilliant [RxJava](https://github.com/ReactiveX/RxJava)
-```Observables``` reducing boilerplate to minimum.
+## Current version - 0.1.0
+This version has been developed against Google Play Services 10.0.1 and RxJava 2.0.4. It may work on earlier versions of GMS but any methods deprecated as of 10.0.1 are not included. It will not work with RxJava 1.x.y.
+The status of implemented Google Play services APIs is:
 
-Current stable version - 0.10
----------------
+| API                                      | Status | Gradle depencency                                     |
+|------------------------------------------|--------|-------------------------------------------------------|
+| Google+                                  | ✘      | com.google.android.gms:play-services-plus:10.0.1      |
+| Google Account Login                     | ✔      | com.google.android.gms:play-services-auth:10.0.1      |
+| Google Actions, Base Client Library      | ✔      | com.google.android.gms:play-services-base:10.0.1      |
+| Google Address API                       | ✘      | com.google.android.gms:play-services-identity:10.0.1  |
+| Firebase App Indexing                    | ✘      | com.google.firebase:firebase-appindexing:10.0.1       |
+| Google Analytics                         | ✘      | com.google.android.gms:play-services-analytics:10.0.1 |
+| Google Awareness                         | ✘      | com.google.android.gms:play-services-awareness:10.0.1 |
+| Google Cast                              | ✔      | com.google.android.gms:play-services-cast:10.0.1      |
+| Google Cloud Messaging                   | ✘      | com.google.android.gms:play-services-gcm:10.0.1       |
+| Google Drive                             | ✔      | com.google.android.gms:play-services-drive:10.0.1     |
+| Google Fit                               | ✘      | com.google.android.gms:play-services-fitness:10.0.1   |
+| Google Location and Activity Recognition | ✔      | com.google.android.gms:play-services-location:10.0.1  |
+| Google Maps                              | ✘      | com.google.android.gms:play-services-maps:10.0.1      |
+| Google Mobile Ads                        | ✘      | com.google.android.gms:play-services-ads:10.0.1       |
+| Google Places                            | ✔      | com.google.android.gms:play-services-places:10.0.1    |
+| Mobile Vision                            | ✘      | com.google.android.gms:play-services-vision:10.0.1    |
+| Google Nearby                            | ✔      | com.google.android.gms:play-services-nearby:10.0.1    |
+| Google Panorama Viewer                   | ✘      | com.google.android.gms:play-services-panorama:10.0.1  |
+| Google Play Game services                | ✔      | com.google.android.gms:play-services-games:10.0.1     |
+| SafetyNet                                | ✘      | com.google.android.gms:play-services-safetynet:10.0.1 |
+| Android Pay                              | ✔      | com.google.android.gms:play-services-wallet:10.0.1    |
+| Android Wear                             | ✔      | com.google.android.gms:play-services-wearable:10.0.1  |
 
-**This version works with Google Play Services 9.4.0 and RxJava 1.2.+**
+## Structure
+The packages and classes follow a similar structure to the original GMS packages. The API's name is the package and the particular interface in that API is wrapped in a class with the same name prefixed with `Rx`
 
-What can you do with that?
---------------------------
+For example, to use the `LocationServices.FusedLocationApi`, instantiate the class `xyz.fcampbell.rxgms.location.RxFusedLocationApi`. After that, the methods have the same names but return RxJava objects.
 
-* easily connect to Play Services API
-* obtain last known location
-* subscribe for location updates
-* use location settings API
-* manage geofences
-* geocode location to list of addresses
-* activity recognition
-* use current place API
-* fetch place autocomplete suggestions
+All methods return `Observable<R>` except for those that normally return `void` (or `Unit` in Kotlin), which return `Completable`.
 
-How does the API look like?
-----------------------------
+## Lifecycle
+The connection and disconnection is automatically handled by this library and the subscription/disposal behaviours of RxJava. For methods that return an Observable of a single item (not a stream), it is not necessary to dispose explicitly, since RxJava handles it for you. For streaming data, such as location updates, it is necessary to dispose.
 
-Simple. All you need is to create ```ReactiveLocationProvider``` using your context.
-All observables are already there. Examples are worth more than 1000 words:
+When you wish to terminate a connection (in `onStop()` for example), call `<the api>.disconnect()`
 
+## Installation
+Add this to `build.gradle`: `compile 'xyz.fcampbell.rxgms:rxgms:0.1.0'`
 
-### Getting last known location
+This library declares all GMS Gradle dependencies as `provided`, meaning that they are will not be automatically downloaded. This is to avoid pulling in libraries that you don't use and adding methods to your APK. You must therefore specify the GMS libraries that you wish to use. For example, to use location services, add the following line to your `build.gradle`: `compile 'com.google.android.gms:play-services-location:10.0.1'`
+
+Chances are if you get a `NoClassDefFoundError`, it means you're trying to use a GMS API that you haven't added to your `build.gradle` file.
+
+## API Keys
+Some GMS APIs require your app to have an API key. If you're already using GMS the old-fashioned way in your app, chances are you've alreay got one. If not, see [https://support.google.com/googleapi/answer/6158862](https://support.google.com/googleapi/answer/6158862)
+
+## API examples
+This library is written in Kotlin but works with Java as well, so I've provided both kinds of examples.
+
+### Location
+
+#### Getting last known location
 
 ```
-RxGms rxGms = new RxGms(context);
-rxGms.getLocationServices()
-    .getLastKnownLocation()
-    .subscribe(new Action1<Location>() {
+val fusedLocationApi = RxFusedLocationApi(context)
+
+fusedLocationApi.getLastLocation()
+    .subscribe { location ->
+        ...
+    }
+
+override fun onStop() {
+    fusedLocationApi.disconnect()
+}
+```
+
+```
+RxFusedLocationApi fusedLocationApi = RxFusedLocationApi(context)
+
+fusedLocationApi.getLastLocation()
+    .subscribe(new Consumer<Location>() {
         @Override
-        public void call(Location location) {
-            doSthImportantWithObtainedLocation(location);
+        public void accept(Location location) {
+            ...
         }
     });
+
+@Override
+public void onStop() {
+    fusedLocationApi.disconnect()
+}
 ```
 
-Yep, Java 8 is not there yet (and on Android it will take a while) but there is
-absolutely no Google Play Services LocationClient callbacks hell and there is no
-clean-up you have to do.
-
 ### Subscribing for location updates
+```
+val fusedLocationApi = RxFusedLocationApi(context)
+val request = LocationRequest.create() //standard GMS LocationRequest
+                              .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                              .setNumUpdates(5)
+                              .setInterval(100);
+
+val disposable = fusedLocationApi.requestLocationUpdates(request)
+    .filter(...)    // you can filter location updates
+    .map(...)       // you can map location to something different
+    .flatMap(...)   // or even flat map
+    ...             // and do everything else that is provided by RxJava
+    .subscribe { location ->
+        ...
+    }
+
+override fun onStop() {
+    disposable.dispose()
+    fusedLocationApi.disconnect()
+}
+```
+
 ```
 LocationRequest request = LocationRequest.create() //standard GMS LocationRequest
                                   .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                                   .setNumUpdates(5)
                                   .setInterval(100);
 
-Subscription subscription = rxGms.getLocationServices()
-    .getUpdatedLocation(request)
+Disposable disposable = new RxFusedLocationApi(context)
+    .requestLocationUpdates(request)
     .filter(...)    // you can filter location updates
-    .map(...)       // you can map location to sth different
+    .map(...)       // you can map location to something different
     .flatMap(...)   // or even flat map
     ...             // and do everything else that is provided by RxJava
-    .subscribe(new Action1<Location>() {
+    .subscribe(new Consumer<Location>() {
         @Override
-        public void call(Location location) {
-            doSthImportantWithObtainedLocation(location);
+        public void accept(Location location) {
+            ...
         }
     });
-```
-
-When you are done (for example in ```onStop()```) remember to unsubscribe.
-
-```
-subscription.unsubscribe();
-```
-
-### Subscribing for Activity Recognition
-
-Getting activity recognition is just as simple
-
-```
-rxGms.getActivityRecognition()
-    .getDetectedActivity(0) // detectionIntervalMillis
-    .filter(...)    // you can filter location updates
-    .map(...)       // you can map location to sth different
-    .flatMap(...)   // or even flat map
-    ...             // and do everything else that is provided by RxJava
-    .subscribe(new Action1<ActivityRecognitionResult>() {
-        @Override
-        public void call(ActivityRecognitionResult detectedActivity) {
-            doSthImportantWithObtainedActivity(detectedActivity);
-        }
-    });
-```
-
-### Reverse geocode location
-
-Do you need address for location?
-
-```
-rxGms.getLocationServices()
-    .reverseGeocode(location.getLatitude(), location.getLongitude(), MAX_ADDRESSES)
-    .subscribeOn(Schedulers.io())               // use I/O thread to query for addresses
-    .observeOn(AndroidSchedulers.mainThread())  // return result in main android thread to manipulate UI
-    .subscribe(...);
-```
-
-### Geocode location
-
-Do you need address for a text search query?
-
-```
-rxGms.getLocationServices()
-    .geocode(String userQuery, MAX_ADDRESSES)
-    .subscribeOn(Schedulers.io())
-    .observeOn(AndroidSchedulers.mainThread())
-    .subscribe(...);
-```
-
-### Managing geofences
-
-For geofence management use `addGeofences` and `removeGeofences` methods.
-
-### Checking location settings though location settings API
-
-To get ```LocationSettingsResponse``` for your ```LocationRequest``` check
-out ```ReactiveLocationProvider.checkLocationSettings()``` method. Sample
-usage can be found in **sample** project in ```MainActivity``` class.
-
-### Connecting to Google Play Services API
-
-If you just need managed connection to Play Services API
-use ```ReactiveLocationProvider.getGoogleApiClientObservable()```.
-On subscription it will connect to the API.
-Unsubscription will close the connection.
-
-### Creating observable from PendingResult
-
-If you are manually using Google Play Services and you are dealing with
-```PendingResult``` you can easily transform them to observables with
-```ReactiveLocationProvider.fromPendingResult()``` method.
-
-### Transforming buffers to observable
-
-To transform any buffer to observable and autorelease it on unsubscription
-use ```DataBufferObservable.from()``` method. It will let you easily flatMap
-such data as ```PlaceLikelihoodBuffer``` or ```AutocompletePredictionBuffer```
-from Places API. For usage example see ```PlacesActivity``` sample.
-
-### Places API
-
-You can fetch current place or place suggestions using:
-
-* ```rxGms.getPlaces().getCurrentPlace()```
-* ```rxGms.getPlaces().getPlaceAutocompletePredictions()```
-* ```rxGms.getPlaces().getPlaceById()```
-
-For more info see sample project and ```PlacesActivity```.
-
-### Cooler examples
-
-Do you need location with certain accuracy but don't want to wait for it more than 4 sec? No problem.
-
-```
-LocationRequest req = LocationRequest.create()
-                         .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                         .setExpirationDuration(TimeUnit.SECONDS.toMillis(LOCATION_TIMEOUT_IN_SECONDS))
-                         .setInterval(LOCATION_UPDATE_INTERVAL);
-
-rxGms.getLocationServices()
-    .getUpdatedLocation(req)
-    .filter(new Func1<Location, Boolean>() {
-        @Override
-        public Boolean call(Location location) {
-            return location.getAccuracy() < SUFFICIENT_ACCURACY;
-        }
-    })
-    .timeout(LOCATION_TIMEOUT_IN_SECONDS, TimeUnit.SECONDS, Observable.just((Location) null), AndroidSchedulers.mainThread())
-    .first()
-    .observeOn(AndroidSchedulers.mainThread())
-    .subscribe(...);
-```
 
 
-How to use it?
---------------
-
-Library is available in maven central.
-
-### Gradle
-
-Just use it as dependency in your *build.gradle* file
-along with Google Play Services and RxJava.
-
-```groovy
-dependencies {
-    ...
-    compile 'pl.charmas.android:android-reactive-location:0.10@aar'
-    compile 'com.google.android.gms:play-services-location:9.4.0' //you can use newer GMS version if you need
-    compile 'com.google.android.gms:play-services-places:9.4.0'
-    compile 'io.reactivex:rxjava:1.2.0' //you can override RxJava version if you need
+@Override
+public void onStop() {
+    disposable.dispose()
+    fusedLocationApi.disconnect()
 }
 ```
 
-### Maven
+## Getting the `GoogleApiClient` manually
+If you want access to the `GoogleApiClient`, use `Rx<something>` `<api>.getApiClient()` in Java or `<api>.apiClient` in Kotlin to get an `Observable<GoogleApiClient>` that will call `onNext(GoogleApiClient)` once the client is connected to the API that the `Rx<something>` class represents. For example, if you call `fusedLocationApi.getApiClient()`, you'll get a `GoogleApiClient` that is connected to `LocationServices.API` only. You can then use `map`, `flatMap` or other RxJava operators yourself. You should not call `googleApiClient.disconnect()`. Instead, use `<api>.disconnect()`.
 
-Ensure you have android-maven-plugin version that support **aar** archives and add
-following dependency:
+## In case of APIs not covered
+If a particular GMS API that you use is not yet coverd by this library, you can extend `RxGmsApi` to create your own wrapper. There are some utility methods in `RxGmsApi` class that make it easy to manually wrap a GMS method that is not covered by this library yet. If you come across such a situation, please submit an issue or a pull request so that particular method can be added.
 
-```xml
-<dependency>
-    <groupId>pl.charmas.android</groupId>
-    <artifactId>android-reactive-location</artifactId>
-    <version>0.10</version>
-    <type>aar</type>
-</dependency>
-```
-
-It may be necessary to add google play services and rxanroid dependency as well.
-
-Sample
-------
-
+## Sample
 Sample usage is available in *sample* directory.
 
 Places API requires API Key. Before running samples you need to create project on API console
@@ -229,24 +155,22 @@ Obtained key should be exported as gradle property named: ```REACTIVE_LOCATION_G
 example in ```~/.gradle/gradle.properties```.
 
 
-References
-------
+##References
+Derived from [ReactiveLocation](https://github.com/mcharmas/Android-ReactiveLocation)
 
-If you need Google Fit library rxified please take a look at [RxFit](https://github.com/patloew/RxFit).
+##License
+```
+Copyright (C) 2017 Francois Campbell
 
-License
-=======
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-    Copyright (C) 2015 Michał Charmas (http://blog.charmas.pl)
+     http://www.apache.org/licenses/LICENSE-2.0
 
-	Licensed under the Apache License, Version 2.0 (the "License");
-	you may not use this file except in compliance with the License.
-	You may obtain a copy of the License at
-
-	     http://www.apache.org/licenses/LICENSE-2.0
-
-	Unless required by applicable law or agreed to in writing, software
-	distributed under the License is distributed on an "AS IS" BASIS,
-	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	See the License for the specific language governing permissions and
-	limitations under the License.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+```
