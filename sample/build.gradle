@@ -37,7 +37,7 @@ android {
 }
 
 dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$vKotlin"
     compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
 //    compile 'com.jakewharton.rxbinding:rxbinding:1.0.0' todo wait for RxJava2 support
