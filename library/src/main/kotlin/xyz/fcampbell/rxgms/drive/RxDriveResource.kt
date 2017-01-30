@@ -2,70 +2,67 @@ package xyz.fcampbell.rxgms.drive
 
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.common.api.Status
-import com.google.android.gms.drive.*
+import com.google.android.gms.drive.DriveApi
+import com.google.android.gms.drive.DriveId
+import com.google.android.gms.drive.DriveResource
+import com.google.android.gms.drive.MetadataChangeSet
 import com.google.android.gms.drive.events.ChangeListener
 import io.reactivex.Observable
-import xyz.fcampbell.rxgms.common.util.toObservable
+import xyz.fcampbell.rxgms.common.RxWrappedAuxiliary
 
 /**
  * Created by francois on 2017-01-10.
  */
 @Suppress("unused")
-open class RxDriveResource(
-        protected val googleApiClient: GoogleApiClient,
-        val driveResource: DriveResource
-) {
-    fun getMetadata(): Observable<Metadata> {
-        return driveResource.getMetadata(googleApiClient)
-                .toObservable()
-                .map { it.metadata }
+open class RxDriveResource<out O : DriveResource>(
+        apiClient: Observable<GoogleApiClient>,
+        driveResource: O
+) : RxWrappedAuxiliary<O>(apiClient, driveResource) {
+    fun getMetadata(): Observable<DriveResource.MetadataResult> {
+        return fromPendingResult { getMetadata(it) }
     }
 
-    fun updateMetadata(metadataChangeSet: MetadataChangeSet): Observable<Metadata> {
-        return driveResource.updateMetadata(googleApiClient, metadataChangeSet)
-                .toObservable()
-                .map { it.metadata }
+    fun updateMetadata(metadataChangeSet: MetadataChangeSet): Observable<DriveResource.MetadataResult> {
+        return fromPendingResult { updateMetadata(it, metadataChangeSet) }
     }
 
     fun getDriveId(): Observable<DriveId> {
-        return Observable.just(driveResource.driveId)
+        return Observable.just(original.driveId)
     }
 
-    fun listParents(): Observable<MetadataBuffer> {
-        return driveResource.listParents(googleApiClient)
-                .toObservable()
-                .map { it.metadataBuffer }
+    fun listParents(): Observable<DriveApi.MetadataBufferResult> {
+        return fromPendingResult { listParents(it) }
     }
 
     fun delete(): Observable<Status> {
-        return driveResource.delete(googleApiClient).toObservable()
+        return fromPendingResult { delete(it) }
     }
 
     fun setParents(parents: Set<DriveId>): Observable<Status> {
-        return driveResource.setParents(googleApiClient, parents).toObservable()
+        return fromPendingResult { setParents(it, parents) }
     }
 
     fun addChangeListener(changeListener: ChangeListener): Observable<Status> {
-        return driveResource.addChangeListener(googleApiClient, changeListener).toObservable()
+        return fromPendingResult { addChangeListener(it, changeListener) }
     }
 
     fun removeChangeListener(changeListener: ChangeListener): Observable<Status> {
-        return driveResource.removeChangeListener(googleApiClient, changeListener).toObservable()
+        return fromPendingResult { removeChangeListener(it, changeListener) }
     }
 
     fun addChangeSubscription(): Observable<Status> {
-        return driveResource.addChangeSubscription(googleApiClient).toObservable()
+        return fromPendingResult { addChangeSubscription(it) }
     }
 
     fun removeChangeSubscription(): Observable<Status> {
-        return driveResource.removeChangeSubscription(googleApiClient).toObservable()
+        return fromPendingResult { removeChangeSubscription(it) }
     }
 
     fun trash(): Observable<Status> {
-        return driveResource.trash(googleApiClient).toObservable()
+        return fromPendingResult { trash(it) }
     }
 
     fun untrash(): Observable<Status> {
-        return driveResource.untrash(googleApiClient).toObservable()
+        return fromPendingResult { untrash(it) }
     }
 }

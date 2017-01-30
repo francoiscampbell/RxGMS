@@ -8,10 +8,11 @@ import io.reactivex.ObservableOnSubscribe
 import xyz.fcampbell.rxgms.common.exception.StatusException
 
 internal class PendingResultOnSubscribe<R : Result>(
-        private val pendingResult: PendingResult<R>
+        private val action: () -> PendingResult<R>
 ) : ObservableOnSubscribe<R> {
 
     override fun subscribe(emitter: ObservableEmitter<R>) {
+        val pendingResult = action()
         pendingResult.setResultCallback { result ->
             if (result.status.isSuccess) {
                 emitter.onNext(result)
@@ -21,7 +22,9 @@ internal class PendingResultOnSubscribe<R : Result>(
             }
             handleResourceCleanupIfNecessary(result)
         }
-        emitter.setCancellable { pendingResult.cancel() }
+        emitter.setCancellable {
+            pendingResult.cancel()
+        }
     }
 
     private fun handleResourceCleanupIfNecessary(result: R) {

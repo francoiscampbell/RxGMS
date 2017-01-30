@@ -52,8 +52,11 @@ class DriveActivity : AppCompatActivity() {
         driveApi.getAppFolder()
                 .flatMap { appFolder ->
                     appFolder.listChildren()
-                            .map { it.metadataBuffer }
+                            .map {
+                                it.metadataBuffer
+                            }
                             .flatMap {
+//                                Observable.error<MetadataBuffer>(Exception()) //test
                                 if (it.none()) {
                                     Observable.error<MetadataBuffer>(Exception())
                                 } else {
@@ -69,12 +72,12 @@ class DriveActivity : AppCompatActivity() {
                             .retryWhen { errors ->
                                 errors.flatMap {
                                     driveApi.newDriveContents()
-                                }.doOnNext {
+                                }.flatMap {
                                     val changeSet = MetadataChangeSet.Builder()
                                             .setTitle("CreatedFile")
                                             .setDescription("Created by RxGMS sample app")
                                             .build()
-                                    appFolder.createFile(changeSet, it.driveContents)
+                                    appFolder.createFile(changeSet, it.original)
                                 }
                             }
                 }

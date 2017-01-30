@@ -92,7 +92,14 @@ internal class GoogleApiClientOnSubscribe<A, O : Api.ApiOptions>(
     }
 
     companion object {
-        private val APIS_TO_ADD_ONLY_IF_AVAILABLE = setOf<Api<out Api.ApiOptions>>(Wearable.API)
+        private val APIS_TO_ADD_ONLY_IF_AVAILABLE = mutableSetOf<Api<out Api.ApiOptions>>()
+
+        init {
+            try { //add one per api that may not be there
+                APIS_TO_ADD_ONLY_IF_AVAILABLE.add(Wearable.API)
+            } catch (e: NoClassDefFoundError) {
+            }
+        }
     }
 
     private inner class ApiClientConnectionCallbacks(

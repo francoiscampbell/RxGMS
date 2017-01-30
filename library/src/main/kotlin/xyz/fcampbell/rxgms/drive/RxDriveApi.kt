@@ -41,15 +41,15 @@ class RxDriveApi(
     }
 
     fun getAppFolder(): Observable<RxDriveFolder> {
-        return map { RxDriveFolder(it, getAppFolder(it)) }
+        return map { RxDriveFolder(apiClient, getAppFolder(it)) }
     }
 
     fun getRootFolder(): Observable<RxDriveFolder> {
-        return map { RxDriveFolder(it, getRootFolder(it)) }
+        return map { RxDriveFolder(apiClient, getRootFolder(it)) }
     }
 
     fun newCreateFileActivityBuilder(): Observable<CreateFileActivityBuilder> {
-        return just(Drive.DriveApi.newCreateFileActivityBuilder())
+        return Observable.just(Drive.DriveApi.newCreateFileActivityBuilder())
     }
 
     fun newDriveContents(): Observable<RxDriveContents> {
@@ -61,7 +61,7 @@ class RxDriveApi(
     }
 
     fun newOpenFileActivityBuilder(): Observable<OpenFileActivityBuilder> {
-        return just(Drive.DriveApi.newOpenFileActivityBuilder())
+        return Observable.just(Drive.DriveApi.newOpenFileActivityBuilder())
     }
 
     fun query(query: Query): Observable<MetadataBufferResult> {

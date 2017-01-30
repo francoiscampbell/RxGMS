@@ -68,10 +68,6 @@ abstract class RxGmsApi<out A, O : Api.ApiOptions>(
         currentApiClientPair = null
     }
 
-    fun <R> just(item: R): Observable<R> {
-        return Observable.just(item)
-    }
-
     fun <R> create(sourceFunc: (GoogleApiClient) -> ObservableOnSubscribe<R>): Observable<R> {
         return apiClient.flatMap { Observable.create(sourceFunc(it)) }
     }

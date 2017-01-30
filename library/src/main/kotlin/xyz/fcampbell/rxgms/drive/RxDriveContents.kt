@@ -6,27 +6,26 @@ import com.google.android.gms.drive.DriveContents
 import com.google.android.gms.drive.ExecutionOptions
 import com.google.android.gms.drive.MetadataChangeSet
 import io.reactivex.Observable
-import xyz.fcampbell.rxgms.common.util.toObservable
+import xyz.fcampbell.rxgms.common.RxWrappedAuxiliary
 
 /**
  * Created by francois on 2017-01-10.
  */
 @Suppress("unused")
 class RxDriveContents(
-        private val googleApiClient: GoogleApiClient,
-        val driveContents: DriveContents
-) {
+        apiClient: Observable<GoogleApiClient>,
+        driveContents: DriveContents
+) : RxWrappedAuxiliary<DriveContents>(apiClient, driveContents) {
     fun reopenForWrite(): Observable<RxDriveContents> {
-        return driveContents.reopenForWrite(googleApiClient)
-                .toObservable()
-                .map { RxDriveContents(googleApiClient, it.driveContents) }
+        return fromPendingResult { reopenForWrite(it) }
+                .map { RxDriveContents(apiClient, it.driveContents) }
     }
 
     fun commit(changeSet: MetadataChangeSet): Observable<Status> {
-        return driveContents.commit(googleApiClient, changeSet).toObservable()
+        return fromPendingResult { commit(it, changeSet) }
     }
 
     fun commit(changeSet: MetadataChangeSet, executionOptions: ExecutionOptions): Observable<Status> {
-        return driveContents.commit(googleApiClient, changeSet, executionOptions).toObservable()
+        return fromPendingResult { commit(it, changeSet, executionOptions) }
     }
 }

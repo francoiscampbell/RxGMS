@@ -57,6 +57,6 @@ class RxGoogleSignInApi(
     }
 
     fun getSignInResultFromIntent(intent: Intent): Observable<GoogleSignInResult> {
-        return just(Auth.GoogleSignInApi.getSignInResultFromIntent(intent)) //quirk because the method has the same signature
+        return Observable.just(Auth.GoogleSignInApi.getSignInResultFromIntent(intent)) //quirk because the method has the same signature
     }
 }

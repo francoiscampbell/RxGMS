@@ -75,7 +75,7 @@ class RxSnapshots(
     }
 
     fun getSnapshotFromBundle(extras: Bundle): Observable<SnapshotMetadata> {
-        return just(Games.Snapshots.getSnapshotFromBundle(extras))
+        return Observable.just(Games.Snapshots.getSnapshotFromBundle(extras))
     }
 
     fun resolveConflict(conflictId: String, snapshot: Snapshot): Observable<Snapshots.OpenSnapshotResult> {

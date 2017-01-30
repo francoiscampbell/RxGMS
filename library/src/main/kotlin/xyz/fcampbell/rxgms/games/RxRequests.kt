@@ -35,11 +35,11 @@ class RxRequests(
     ) : this(ApiClientDescriptor(context), gamesOptions, *scopes)
 
     fun getGameRequestsFromInboxResponse(response: Intent): Observable<ArrayList<GameRequest>> {
-        return just(Games.Requests.getGameRequestsFromInboxResponse(response))
+        return Observable.just(Games.Requests.getGameRequestsFromInboxResponse(response))
     }
 
     fun getGameRequestsFromBundle(extras: Bundle): Observable<ArrayList<GameRequest>> {
-        return just(Games.Requests.getGameRequestsFromBundle(extras))
+        return Observable.just(Games.Requests.getGameRequestsFromBundle(extras))
     }
 
     fun registerRequestListener(listener: OnRequestReceivedListener): Completable {
