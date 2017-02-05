@@ -4,25 +4,22 @@ import android.os.Bundle
 import android.util.Log
 import com.google.android.gms.common.api.Api
 import com.google.android.gms.common.api.GoogleApiClient
-import com.google.android.gms.common.api.PendingResult
-import com.google.android.gms.common.api.Result
-import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.ObservableOnSubscribe
 import io.reactivex.disposables.Disposables
 import xyz.fcampbell.rxgms.common.action.GoogleApiClientOnSubscribe
-import xyz.fcampbell.rxgms.common.util.toObservable
 
 /**
  * Created by francois on 2016-12-29.
  */
 abstract class RxGmsApi<out A, O : Api.ApiOptions>(
         apiClientDescriptor: ApiClientDescriptor,
-        private val api: ApiDescriptor<A, O>
-) {
+        api: ApiDescriptor<A, O>
+) : RxWrappedApi<A> {
     companion object {
         private const val TAG = "RxGmsApi"
     }
+
+    override val original = api.apiInterface
 
     private val googleApiClientOnSubscribe = GoogleApiClientOnSubscribe(apiClientDescriptor, api)
 
@@ -57,7 +54,7 @@ abstract class RxGmsApi<out A, O : Api.ApiOptions>(
             return localRxApiClient
         }
 
-    val apiClient: Observable<GoogleApiClient>
+    override val apiClient: Observable<GoogleApiClient>
         get() = apiClientPair.map { it.first }
 
     val bundle: Observable<Bundle?>
@@ -66,25 +63,5 @@ abstract class RxGmsApi<out A, O : Api.ApiOptions>(
     fun disconnect() {
         currentDisposable.dispose()
         currentApiClientPair = null
-    }
-
-    fun <R> create(sourceFunc: (GoogleApiClient) -> ObservableOnSubscribe<R>): Observable<R> {
-        return apiClient.flatMap { Observable.create(sourceFunc(it)) }
-    }
-
-    fun <R> map(func: A.(GoogleApiClient) -> R): Observable<R> {
-        return apiClient.map { api.apiInterface.func(it) }
-    }
-
-    fun <R> flatMap(func: A.(GoogleApiClient) -> Observable<R>): Observable<R> {
-        return apiClient.flatMap { api.apiInterface.func(it) }
-    }
-
-    fun <R : Result> fromPendingResult(func: A.(GoogleApiClient) -> PendingResult<R>): Observable<R> {
-        return apiClient.flatMap { api.apiInterface.func(it).toObservable() }
-    }
-
-    fun toCompletable(func: A.(GoogleApiClient) -> Unit): Completable {
-        return apiClient.map { api.apiInterface.func(it) }.ignoreElements()
     }
 }

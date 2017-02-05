@@ -36,7 +36,7 @@ class RxDriveApi(
         return flatMap { googleApiClient ->
             fetchDriveId(googleApiClient, resourceId)
                     .toObservable()
-                    .map { RxDriveId(googleApiClient, it.driveId) }
+                    .map { RxDriveId(apiClient, it.driveId) }
         }
     }
 
@@ -56,7 +56,7 @@ class RxDriveApi(
         return flatMap { googleApiClient ->
             newDriveContents(googleApiClient)
                     .toObservable()
-                    .map { RxDriveContents(googleApiClient, it.driveContents) }
+                    .map { RxDriveContents(apiClient, it.driveContents) }
         }
     }
 

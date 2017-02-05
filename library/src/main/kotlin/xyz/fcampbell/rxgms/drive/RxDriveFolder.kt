@@ -4,15 +4,18 @@ import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.drive.*
 import com.google.android.gms.drive.query.Query
 import io.reactivex.Observable
+import xyz.fcampbell.rxgms.common.RxWrappedApi
 
 /**
  * Created by francois on 2017-01-10.
  */
 @Suppress("unused")
 class RxDriveFolder(
-        apiClient: Observable<GoogleApiClient>,
-        driveFolder: DriveFolder
-) : RxDriveResource<DriveFolder>(apiClient, driveFolder) {
+        override val apiClient: Observable<GoogleApiClient>,
+        override val original: DriveFolder
+) : RxWrappedApi<DriveFolder>,
+    RxDriveResource<DriveFolder>(apiClient, original) {
+
     fun listChildren(): Observable<DriveApi.MetadataBufferResult> {
         return fromPendingResult { listChildren(it) }
     }

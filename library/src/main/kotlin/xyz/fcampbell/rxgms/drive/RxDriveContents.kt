@@ -6,16 +6,16 @@ import com.google.android.gms.drive.DriveContents
 import com.google.android.gms.drive.ExecutionOptions
 import com.google.android.gms.drive.MetadataChangeSet
 import io.reactivex.Observable
-import xyz.fcampbell.rxgms.common.RxWrappedAuxiliary
+import xyz.fcampbell.rxgms.common.RxWrappedApi
 
 /**
  * Created by francois on 2017-01-10.
  */
 @Suppress("unused")
 class RxDriveContents(
-        apiClient: Observable<GoogleApiClient>,
-        driveContents: DriveContents
-) : RxWrappedAuxiliary<DriveContents>(apiClient, driveContents) {
+        override val apiClient: Observable<GoogleApiClient>,
+        override val original: DriveContents
+) : RxWrappedApi<DriveContents> {
     fun reopenForWrite(): Observable<RxDriveContents> {
         return fromPendingResult { reopenForWrite(it) }
                 .map { RxDriveContents(apiClient, it.driveContents) }

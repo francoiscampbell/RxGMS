@@ -8,16 +8,16 @@ import com.google.android.gms.drive.DriveResource
 import com.google.android.gms.drive.MetadataChangeSet
 import com.google.android.gms.drive.events.ChangeListener
 import io.reactivex.Observable
-import xyz.fcampbell.rxgms.common.RxWrappedAuxiliary
+import xyz.fcampbell.rxgms.common.RxWrappedApi
 
 /**
  * Created by francois on 2017-01-10.
  */
 @Suppress("unused")
 open class RxDriveResource<out O : DriveResource>(
-        apiClient: Observable<GoogleApiClient>,
-        driveResource: O
-) : RxWrappedAuxiliary<O>(apiClient, driveResource) {
+        override val apiClient: Observable<GoogleApiClient>,
+        override val original: O
+) : RxWrappedApi<O> {
     fun getMetadata(): Observable<DriveResource.MetadataResult> {
         return fromPendingResult { getMetadata(it) }
     }
