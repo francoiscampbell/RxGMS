@@ -3,9 +3,8 @@ package xyz.fcampbell.rxgms.common
 import android.content.Context
 import android.os.Handler
 import android.view.View
-
 /**
- * Created by francois on 2017-01-13.
+ * Proxy for [GoogleApiClient.Builder]
  */
 @Suppress("unused")
 class ApiClientDescriptor(

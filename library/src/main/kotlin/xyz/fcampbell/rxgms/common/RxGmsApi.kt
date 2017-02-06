@@ -11,6 +11,16 @@ import xyz.fcampbell.rxgms.common.action.GoogleApiClientOnSubscribe
 /**
  * Created by francois on 2016-12-29.
  */
+/**
+ * Extend this class to wrap a particular Google Play services API.
+ *
+ * @param A The type of the API to wrap  (If there is no API but you still want to extend this class, use [Unit] or [Void]).
+ * @param O The type of that API's options.
+ *
+ * @constructor
+ * @param apiClientDescriptor Describes the desired parameters of the [GoogleApiClient] that will back this API.
+ * @param api Describes the Google Play services API to which to connect.
+ */
 abstract class RxGmsApi<out A, O : Api.ApiOptions>(
         apiClientDescriptor: ApiClientDescriptor,
         api: ApiDescriptor<A, O>
@@ -57,9 +67,15 @@ abstract class RxGmsApi<out A, O : Api.ApiOptions>(
     override val apiClient: Observable<GoogleApiClient>
         get() = apiClientPair.map { it.first }
 
+    /**
+     * The [Bundle] that was passed to [onConnected(Bundle)] when the [GoogleApiClient] was connected.
+     */
     val bundle: Observable<Bundle?>
         get() = apiClientPair.map { it.second }
 
+    /**
+     * Disconnects the underlying [GoogleApiClient]. Further use of this API will result in re-connection.
+     */
     fun disconnect() {
         currentDisposable.dispose()
         currentApiClientPair = null
