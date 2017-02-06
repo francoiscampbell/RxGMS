@@ -5,6 +5,7 @@ import android.util.Log
 import com.google.android.gms.common.api.Api
 import com.google.android.gms.common.api.GoogleApiClient
 import io.reactivex.Observable
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposables
 import xyz.fcampbell.rxgms.common.action.GoogleApiClientOnSubscribe
 
@@ -28,7 +29,8 @@ abstract class RxGmsApi<out A, O : Api.ApiOptions>(
 
     private val googleApiClientOnSubscribe = GoogleApiClientOnSubscribe(apiClientDescriptor, api)
 
-    private var currentDisposable = Disposables.disposed()
+    private var mainDisposable = Disposables.disposed()
+    private val replayedDisposables = CompositeDisposable()
     private var apiClientPair = newClientObservable()
 
     override val original = api.apiInterface
@@ -49,8 +51,9 @@ abstract class RxGmsApi<out A, O : Api.ApiOptions>(
      * Disconnects the underlying [GoogleApiClient]. Further use of this API will result in re-connection.
      */
     fun disconnect() {
-        currentDisposable.dispose()
-        apiClientPair = newClientObservable()
+        mainDisposable.dispose() //disconnect the GoogleApiClient
+        replayedDisposables.clear() //force disconnect any remaining Observers //TODO is this right?
+        apiClientPair = newClientObservable() //create a new Observable to start fresh
     }
 
     private fun newClientObservable(): Observable<Pair<GoogleApiClient, Bundle?>> {
@@ -63,11 +66,12 @@ abstract class RxGmsApi<out A, O : Api.ApiOptions>(
                 }
                 .replay(1)
                 .autoConnect(1) { disposable ->
-                    currentDisposable = disposable //to unsub from main client and disconnect from GMS
+                    mainDisposable = disposable //to unsub from main client and disconnect from GMS
                 }
                 .firstElement() //to force a terminal event to subscribers after one GoogleApiClient emission
                 .toObservable()
-                .doOnSubscribe {
+                .doOnSubscribe { disposable ->
+                    replayedDisposables.add(disposable)
                     Log.d(TAG, "Sub to replayed apiClient")
                 }
                 .doOnDispose {
