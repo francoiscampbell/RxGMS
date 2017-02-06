@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools"
-          package="xyz.fcampbell.rxgms.sample">
+          package="xyz.fcampbell.rxplayservices.sample">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission
@@ -24,7 +24,7 @@
             android:value="@string/API_KEY"/>
 
         <activity
-            android:name="xyz.fcampbell.rxgms.sample.MainActivity"
+            android:name="xyz.fcampbell.rxplayservices.sample.MainActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -33,15 +33,15 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="xyz.fcampbell.rxgms.sample.location.GeofenceActivity"/>
-        <activity android:name="xyz.fcampbell.rxgms.sample.places.PlacesActivity"/>
-        <activity android:name="xyz.fcampbell.rxgms.sample.places.PlacesResultActivity"/>
-        <activity android:name="xyz.fcampbell.rxgms.sample.location.MockLocationsActivity"/>
+        <activity android:name="xyz.fcampbell.rxplayservices.sample.location.GeofenceActivity"/>
+        <activity android:name="xyz.fcampbell.rxplayservices.sample.places.PlacesActivity"/>
+        <activity android:name="xyz.fcampbell.rxplayservices.sample.places.PlacesResultActivity"/>
+        <activity android:name="xyz.fcampbell.rxplayservices.sample.location.MockLocationsActivity"/>
         <activity
-            android:name="xyz.fcampbell.rxgms.sample.drive.DriveActivity"
+            android:name="xyz.fcampbell.rxplayservices.sample.drive.DriveActivity"
             android:exported="true"/>
 
-        <receiver android:name="xyz.fcampbell.rxgms.sample.location.GeofenceBroadcastReceiver"/>
+        <receiver android:name="xyz.fcampbell.rxplayservices.sample.location.GeofenceBroadcastReceiver"/>
     </application>
 
 </manifest>

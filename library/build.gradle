@@ -5,15 +5,15 @@ apply plugin: 'org.jetbrains.dokka-android'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
-group 'xyz.fcampbell.rxgms'
+group 'xyz.fcampbell.rxplayservices'
 version '0.1.0'
 
-def githubUrl = 'https://github.com/francoiscampbell/RxGMS'
+def githubUrl = 'https://github.com/francoiscampbell/RxPlayServices'
 def gitUrl = "${githubUrl}.git"
 def gitTag = "v$version"
 
-def projectFriendlyName = 'RxGMS'
-def projectDescription = 'Library that wraps Google Play services (GMS) APIs using RxJava'
+def projectFriendlyName = 'RxPlayServices'
+def projectDescription = 'Library that wraps Google Play services APIs using RxJava'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion

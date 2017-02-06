@@ -1,12 +1,12 @@
-# RxGMS for Android
-Library that wraps Google Play services (GMS) APIs using RxJava and takes care of connecting and disconnecting the GoogleApiClient for you.
-Inspired and extended from [ReactiveLocation](https://github.com/mcharmas/Android-ReactiveLocation).\
+# RxPlayServices for Android
+Library that wraps Google Play services APIs using RxJava and takes care of connecting and disconnecting the GoogleApiClient for you.
+Inspired and extended from [ReactiveLocation](https://github.com/mcharmas/Android-ReactiveLocation).
 
-This library is written in Kotlin but will work with Java. If you experience problems using Java, please submit an issue.
+This library is written in Kotlin because of the amount of lambdas used in reactive code and because extension functions reduce the boilerplate a lot. However, it should work with Java, albeit less syntactically pleasing. If you experience problems using Java, please submit an issue.
 
 ## Current version - 0.1.0
-This version has been developed against GMS 10.0.1 and RxJava 2.0.4. It may work on earlier versions of GMS but any methods deprecated as of 10.0.1 are not included. It will not work with RxJava 1.x.y.
-The status of implemented GMS APIs is:
+This version has been developed against Play services 10.0.1 and RxJava 2.0.4. It may work on earlier versions of Play services but any methods deprecated as of 10.0.1 are not included. It will not work with RxJava 1.x.y.
+The status of implemented Play services APIs is:
 
 | API                                      | Status | Gradle dependency                                     |
 |------------------------------------------|--------|-------------------------------------------------------|
@@ -36,20 +36,20 @@ The status of implemented GMS APIs is:
 ## Installation
 Add this to `build.gradle`:
 ```
-compile 'xyz.fcampbell.rxgms:rxgms:0.1.0'
+compile 'xyz.fcampbell.rxplayservices:rxplayservices:0.1.0'
 ```
 
-This library declares all GMS Gradle dependencies as `provided`, meaning that they will not be automatically downloaded. This is to avoid pulling in libraries that you don't use and adding methods to your APK. You must therefore specify the GMS libraries that you wish to use. For example, to use location services, add the following line to your `build.gradle`:
+This library declares all Play services Gradle dependencies as `provided`, meaning that they will not be automatically downloaded. This is to avoid pulling in libraries that you don't use and adding methods to your APK. You must therefore specify the Play services libraries that you wish to use. For example, to use location services, add the following line to your `build.gradle`:
 ```
 compile 'com.google.android.gms:play-services-location:10.0.1'
 ```
 
-Chances are if you get a `NoClassDefFoundError`, it means you're trying to use a GMS API that you haven't added to your `build.gradle` file.
+Chances are if you get a `NoClassDefFoundError`, it means you're trying to use a Play services API that you haven't added to your `build.gradle` file.
 
 ## Structure
-The packages and classes follow a similar structure to the original GMS packages. The API's name is the package and the particular interface in that API is wrapped in a class with the same name prefixed with `Rx`
+The packages and classes follow a similar structure to the original Play services packages. The API's name is the package and the particular interface in that API is wrapped in a class with the same name prefixed with `Rx`
 
-For example, to use `LocationServices.FusedLocationApi`, instantiate the class `xyz.fcampbell.rxgms.location.RxFusedLocationApi`. After that, the methods have the same names but return RxJava objects.
+For example, to use `LocationServices.FusedLocationApi`, instantiate the class `xyz.fcampbell.rxplayservices.location.RxFusedLocationApi`. After that, the methods have the same names but return RxJava objects.
 
 All methods return `Observable<R>` except for those that normally return `void` (or `Unit` in Kotlin), which return `Completable`.
 
@@ -58,10 +58,10 @@ The connection and disconnection is automatically handled by this library and th
 
 When you wish to terminate a connection (in `onStop()` for example), call `<api>.disconnect()`
 
-For each instance of `Rx<something>`, the `GoogleApiClient` is multicast, so it will connect when the first subscription is made and each subsequent method invocation will use the same client. The client will remain connected until `<api>.disconnect()`
+For each instance of `Rx<some API>`, the `GoogleApiClient` is multicast, so it will connect when the first subscription is made and each subsequent method invocation will use the same client. The client will remain connected until `<api>.disconnect()`
 
 ## API Keys
-Some GMS APIs require your app to have an API key. If you're already using GMS the old-fashioned way in your app, chances are you've already got one. If not, see [https://support.google.com/googleapi/answer/6158862](https://support.google.com/googleapi/answer/6158862)
+Some Play services APIs require your app to have an API key. If you're already using Play services the old-fashioned way in your app, chances are you've already got one. If not, see [https://support.google.com/googleapi/answer/6158862](https://support.google.com/googleapi/answer/6158862)
 
 ## API examples
 This library is written in Kotlin but works with Java as well, so I've provided both kinds of examples.
@@ -103,7 +103,7 @@ public void onStop() {
 ### Subscribing for location updates
 ```
 val fusedLocationApi = RxFusedLocationApi(context)
-val request = LocationRequest.create() //standard GMS LocationRequest
+val request = LocationRequest.create() //standard Play services LocationRequest
                           .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                           .setNumUpdates(5)
                           .setInterval(100);
@@ -124,7 +124,7 @@ override fun onStop() {
 ```
 
 ```
-LocationRequest request = LocationRequest.create() //standard GMS LocationRequest
+LocationRequest request = LocationRequest.create() //standard Play services LocationRequest
                                   .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                                   .setNumUpdates(5)
                                   .setInterval(100);
@@ -151,22 +151,22 @@ public void onStop() {
 ```
 
 ## Getting the `GoogleApiClient` manually
-If you want access to the `GoogleApiClient`, use `<api>.getApiClient()` in Java or `<api>.apiClient` in Kotlin to get an `Observable<GoogleApiClient>` that will call `onNext(GoogleApiClient)` once the client is connected to the API that the `Rx<something>` class represents. For example, if you call `fusedLocationApi.getApiClient()`, you'll get a `GoogleApiClient` that is connected to `LocationServices.API` only. You can then use `map`, `flatMap`, `subscribe`, or any other RxJava operators yourself. You should not call `googleApiClient.disconnect()`, use `<api>.disconnect()` instead.
+If you want access to the `GoogleApiClient`, use `<api>.getApiClient()` in Java or `<api>.apiClient` in Kotlin to get an `Observable<GoogleApiClient>` that will call `onNext(GoogleApiClient)` once the client is connected to the API that the `Rx<something>` class represents. If the `GoogleApiClient` is already connected, `onNext(GoogleApiClient)` will be called immediately. For example, if you call `fusedLocationApi.getApiClient()`, you'll get a `GoogleApiClient` that is connected to `LocationServices.API` only. You can then use `map`, `flatMap`, `subscribe`, or any other RxJava operators yourself. You should not call `googleApiClient.disconnect()`, use `<api>.disconnect()` instead.
 
 ## In case of APIs not covered
-If a particular GMS API that you use is not yet covered by this library, you can extend `RxGmsApi` to create your own wrapper. There are some utility methods in `RxGmsApi` class that make it easy to manually wrap a GMS method that is not covered by this library yet. If you come across such a situation, please submit an issue or a pull request so that particular method can be added.
+If a particular Play services API that you use is not yet covered by this library, you can extend `RxGmsApi` to create your own wrapper. There are some utility methods in `RxWrappedApi` (`RxGmsApi` implements this interface) that make it easy to manually wrap a Play services method that is not covered by this library yet. If you come across such a situation, please submit an issue or a pull request so that particular method can be added.
 
 ## Sample
-Sample usage is available in *sample* directory.
+Sample usage is available in the *sample* directory.
 
 Places API requires API Key. Before running samples you need to create project on API console
 and obtain API Key using this [guide](https://developers.google.com/places/android/signup).
-Obtained key should be exported as gradle property named: ```REACTIVE_LOCATION_GMS_API_KEY``` for
+Obtained key should be exported as gradle property named: ```REACTIVE_LOCATION_Play services_API_KEY``` for
 example in ```~/.gradle/gradle.properties```.
 
 
 ##References
-Derived from [ReactiveLocation](https://github.com/mcharmas/Android-ReactiveLocation)
+Forked from [ReactiveLocation](https://github.com/mcharmas/Android-ReactiveLocation)
 
 ##License
 ```
