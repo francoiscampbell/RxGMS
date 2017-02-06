@@ -162,7 +162,7 @@ Sample usage is available in the *sample* directory.
 
 Places API requires API Key. Before running samples you need to create project on API console
 and obtain API Key using this [guide](https://developers.google.com/places/android/signup).
-Obtained key should be exported as gradle property named: ```REACTIVE_LOCATION_Play services_API_KEY``` for
+Obtained key should be exported as gradle property named: ```RXPLAYSERVICES_API_KEY``` for
 example in ```~/.gradle/gradle.properties```.
 
 

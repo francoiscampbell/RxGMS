@@ -3,10 +3,10 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 def getGooglePlayServicesApiKey() {
-    if (project.hasProperty('RXGMS_API_KEY')
-            && RXGMS_API_KEY != null
-            && !RXGMS_API_KEY.isEmpty()) {
-        return RXGMS_API_KEY;
+    if (project.hasProperty('RXPLAYSERVICES_API_KEY')
+            && RXPLAYSERVICES_API_KEY != null
+            && !RXPLAYSERVICES_API_KEY.isEmpty()) {
+        return RXPLAYSERVICES_API_KEY;
     }
     return ""
 }
