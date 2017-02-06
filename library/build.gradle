@@ -22,9 +22,16 @@ android {
     defaultConfig {
         minSdkVersion 9
         targetSdkVersion rootProject.ext.targetSdkVersion
+
+        multiDexEnabled true //for test app
+        testApplicationId = group + ".test"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testHandleProfiling true
+        testFunctionalTest true
     }
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
+        androidTest.java.srcDirs += 'src/androidTest/kotlin'
     }
 }
 
@@ -33,6 +40,10 @@ dependencies {
     compile "io.reactivex.rxjava2:rxjava:$vRxJava"
 
     provided "com.google.android.gms:play-services:$vGooglePlayServices"
+
+    androidTestCompile "com.android.support.test:runner:$vTestSupportLib"
+    androidTestCompile "com.android.support.test:rules:$vTestSupportLib"
+    androidTestCompile "com.google.android.gms:play-services:$vGooglePlayServices"
 }
 
 //for bintray upload

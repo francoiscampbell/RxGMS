@@ -9,6 +9,8 @@ ext {
 
     vGooglePlayServices = '10.0.1'
     vRxJava = '2.0.4'
+
+    vTestSupportLib = '0.5'
 }
 
 buildscript {
