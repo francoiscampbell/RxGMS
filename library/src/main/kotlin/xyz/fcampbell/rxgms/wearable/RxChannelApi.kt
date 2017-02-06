@@ -8,6 +8,7 @@ import io.reactivex.Observable
 import xyz.fcampbell.rxgms.common.ApiClientDescriptor
 import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.RxGmsApi
+import xyz.fcampbell.rxgms.drive.RxChannel
 
 /**
  * Created by francois on 2017-01-13.
@@ -25,8 +26,9 @@ class RxChannelApi(
             wearableOptions: Wearable.WearableOptions
     ) : this(ApiClientDescriptor(context), wearableOptions)
 
-    fun openChannel(nodeId: String, path: String): Observable<ChannelApi.OpenChannelResult> {
+    fun openChannel(nodeId: String, path: String): Observable<RxChannel> {
         return fromPendingResult { openChannel(it, nodeId, path) }
+                .map { RxChannel(apiClient, it.channel) }
     }
 
     fun addListener(listener: ChannelApi.ChannelListener): Observable<Status> {

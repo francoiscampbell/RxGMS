@@ -11,7 +11,3 @@ import xyz.fcampbell.rxgms.common.action.PendingResultOnSubscribe
 fun <T : Result> PendingResult<T>.toObservable(): Observable<T> {
     return Observable.create(PendingResultOnSubscribe { this })
 }
-
-fun <T : Result> (() -> PendingResult<T>).toObservable(): Observable<T> {
-    return Observable.create(PendingResultOnSubscribe(this))
-}

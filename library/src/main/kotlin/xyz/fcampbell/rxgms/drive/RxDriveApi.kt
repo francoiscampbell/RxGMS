@@ -14,7 +14,6 @@ import io.reactivex.Observable
 import xyz.fcampbell.rxgms.common.ApiClientDescriptor
 import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.RxGmsApi
-import xyz.fcampbell.rxgms.common.util.toObservable
 
 /**
  * Created by francois on 2016-12-22.
@@ -33,11 +32,8 @@ class RxDriveApi(
     ) : this(ApiClientDescriptor(context), *scopes)
 
     fun fetchDriveId(resourceId: String): Observable<RxDriveId> {
-        return flatMap { googleApiClient ->
-            fetchDriveId(googleApiClient, resourceId)
-                    .toObservable()
-                    .map { RxDriveId(apiClient, it.driveId) }
-        }
+        return fromPendingResult { fetchDriveId(it, resourceId) }
+                .map { RxDriveId(apiClient, it.driveId) }
     }
 
     fun getAppFolder(): Observable<RxDriveFolder> {
@@ -53,11 +49,8 @@ class RxDriveApi(
     }
 
     fun newDriveContents(): Observable<RxDriveContents> {
-        return flatMap { googleApiClient ->
-            newDriveContents(googleApiClient)
-                    .toObservable()
-                    .map { RxDriveContents(apiClient, it.driveContents) }
-        }
+        return fromPendingResult { newDriveContents(it) }
+                .map { RxDriveContents(apiClient, it.driveContents) }
     }
 
     fun newOpenFileActivityBuilder(): Observable<OpenFileActivityBuilder> {

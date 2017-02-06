@@ -6,49 +6,49 @@ import com.google.android.gms.common.api.Status
 import com.google.android.gms.wearable.Channel
 import com.google.android.gms.wearable.ChannelApi
 import io.reactivex.Observable
-import xyz.fcampbell.rxgms.common.util.toObservable
+import xyz.fcampbell.rxgms.common.RxWrappedApi
 
 /**
  * Created by francois on 2017-01-10.
  */
 @Suppress("unused")
 class RxChannel(
-        private val googleApiClient: GoogleApiClient,
-        val channel: Channel
-) {
+        override val apiClient: Observable<GoogleApiClient>,
+        override val original: Channel
+) : RxWrappedApi<Channel> {
     fun close(): Observable<Status> {
-        return channel.close(googleApiClient).toObservable()
+        return fromPendingResult { close(it) }
     }
 
     fun close(errorCode: Int): Observable<Status> {
-        return channel.close(googleApiClient, errorCode).toObservable()
+        return fromPendingResult { close(it, errorCode) }
     }
 
     fun getInputStream(): Observable<Channel.GetInputStreamResult> {
-        return channel.getInputStream(googleApiClient).toObservable()
+        return fromPendingResult { getInputStream(it) }
     }
 
     fun getOutputStream(): Observable<Channel.GetOutputStreamResult> {
-        return channel.getOutputStream(googleApiClient).toObservable()
+        return fromPendingResult { getOutputStream(it) }
     }
 
     fun receiveFile(uri: Uri, append: Boolean): Observable<Status> {
-        return channel.receiveFile(googleApiClient, uri, append).toObservable()
+        return fromPendingResult { receiveFile(it, uri, append) }
     }
 
     fun sendFile(uri: Uri): Observable<Status> {
-        return channel.sendFile(googleApiClient, uri).toObservable()
+        return fromPendingResult { sendFile(it, uri) }
     }
 
     fun sendFile(uri: Uri, startOffset: Long, length: Long): Observable<Status> {
-        return channel.sendFile(googleApiClient, uri, startOffset, length).toObservable()
+        return fromPendingResult { sendFile(it, uri, startOffset, length) }
     }
 
     fun addListener(listener: ChannelApi.ChannelListener): Observable<Status> {
-        return channel.addListener(googleApiClient, listener).toObservable()
+        return fromPendingResult { addListener(it, listener) }
     }
 
     fun removeListener(listener: ChannelApi.ChannelListener): Observable<Status> {
-        return channel.removeListener(googleApiClient, listener).toObservable()
+        return fromPendingResult { removeListener(it, listener) }
     }
 }
