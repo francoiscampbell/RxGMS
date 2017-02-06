@@ -14,7 +14,16 @@ import xyz.fcampbell.rxgms.common.exception.GoogleApiConnectionException
 import xyz.fcampbell.rxgms.common.exception.GoogleApiConnectionSuspendedException
 import xyz.fcampbell.rxgms.common.util.ResultActivity
 
-
+/**
+ * Handles creating, connecting, and delivering the [GoogleApiClient] for a particulat Google Play services API
+ *
+ * @param A The type of the API to wrap  (If there is no API but you still want to extend this class, use [Unit] or [Void]).
+ * @param O The type of that API's options.
+ *
+ * @constructor
+ * @param apiClientDescriptor Describes the desired parameters of the [GoogleApiClient] that will back this API.
+ * @param apiDescriptor Describes the Google Play services API to which to connect.
+ */
 internal class GoogleApiClientOnSubscribe<A, O : Api.ApiOptions>(
         private val apiClientDescriptor: ApiClientDescriptor,
         private val apiDescriptor: ApiDescriptor<A, O>

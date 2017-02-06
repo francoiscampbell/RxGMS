@@ -9,7 +9,7 @@ import xyz.fcampbell.rxgms.BuildConfig
 import java.util.*
 
 /**
- * Created by francois on 2017-01-11.
+ * Transparent [Activity] used to get a result from Google Play services that require user interaction (e.g. [RxGoogleSignInApi.signIn()])
  */
 class ResultActivity() : Activity() {
     companion object {
