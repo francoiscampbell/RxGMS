@@ -26,41 +26,16 @@ abstract class RxGmsApi<out A, O : Api.ApiOptions>(
         private const val TAG = "RxGmsApi"
     }
 
-    override val original = api.apiInterface
-
     private val googleApiClientOnSubscribe = GoogleApiClientOnSubscribe(apiClientDescriptor, api)
 
     private var currentDisposable = Disposables.disposed()
-    private var currentApiClientPair: Observable<Pair<GoogleApiClient, Bundle?>>? = null
+    private var apiClientPair = newClientObservable()
 
-    private val apiClientPair: Observable<Pair<GoogleApiClient, Bundle?>>
-        get() {
-            var localRxApiClient = currentApiClientPair
-            if (localRxApiClient != null && !currentDisposable.isDisposed) return localRxApiClient
+    override val original = api.apiInterface
 
-            localRxApiClient = Observable.create(googleApiClientOnSubscribe)
-                    .doOnSubscribe {
-                        Log.d(TAG, "Sub to main apiClient")
-                    }
-                    .doOnDispose {
-                        Log.d(TAG, "Dispose main apiClient")
-                    }
-                    .replay(1)
-                    .autoConnect(1) { disposable ->
-                        currentDisposable = disposable //to unsub from main client and disconnect from GMS
-                    }
-                    .firstElement() //to force a terminal event to subscribers after one GoogleApiClient emission
-                    .toObservable()
-                    .doOnSubscribe {
-                        Log.d(TAG, "Sub to replayed apiClient")
-                    }
-                    .doOnDispose {
-                        Log.d(TAG, "Dispose replayed apiClient")
-                    }
-            currentApiClientPair = localRxApiClient
-            return localRxApiClient
-        }
-
+    /**
+     * An [Observable] that emits a single [GoogleApiClient] upon its connection to Google Play services
+     */
     override val apiClient: Observable<GoogleApiClient>
         get() = apiClientPair.map { it.first }
 
@@ -75,6 +50,28 @@ abstract class RxGmsApi<out A, O : Api.ApiOptions>(
      */
     fun disconnect() {
         currentDisposable.dispose()
-        currentApiClientPair = null
+        apiClientPair = newClientObservable()
+    }
+
+    private fun newClientObservable(): Observable<Pair<GoogleApiClient, Bundle?>> {
+        return Observable.create(googleApiClientOnSubscribe)
+                .doOnSubscribe {
+                    Log.d(TAG, "Sub to main apiClient")
+                }
+                .doOnDispose {
+                    Log.d(TAG, "Dispose main apiClient")
+                }
+                .replay(1)
+                .autoConnect(1) { disposable ->
+                    currentDisposable = disposable //to unsub from main client and disconnect from GMS
+                }
+                .firstElement() //to force a terminal event to subscribers after one GoogleApiClient emission
+                .toObservable()
+                .doOnSubscribe {
+                    Log.d(TAG, "Sub to replayed apiClient")
+                }
+                .doOnDispose {
+                    Log.d(TAG, "Dispose replayed apiClient")
+                }
     }
 }
