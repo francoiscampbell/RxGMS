@@ -9,9 +9,6 @@ import io.reactivex.ObservableOnSubscribe
 import xyz.fcampbell.rxgms.common.util.toObservable
 
 /**
- * Created by francois on 2017-01-30.
- */
-/**
  * Interface to add to a class to denote it as wrapping a Google Play service API. This interface provides convenience functions that reduce the boilerplate required to wrap the API's functions into Rx.
  * @param O The type of the class to wrap.
  */
