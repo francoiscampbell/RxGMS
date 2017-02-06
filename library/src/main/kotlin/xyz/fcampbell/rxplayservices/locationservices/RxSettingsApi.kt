@@ -32,7 +32,7 @@ class RxSettingsApi(
      * *
      * @return observable that emits check result of location settings
      * *
-     * @see com.google.android.gms.location.SettingsApi
+     * @see SettingsApi
      */
     fun checkLocationSettings(locationRequest: LocationSettingsRequest): Observable<LocationSettingsResult> {
         return fromPendingResult { checkLocationSettings(it, locationRequest) }

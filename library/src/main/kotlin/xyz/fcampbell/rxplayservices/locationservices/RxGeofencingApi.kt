@@ -38,7 +38,7 @@ class RxGeofencingApi(
      * In case of unsuccessful status [StatusException] is delivered.
      *
      *
-     * Other exceptions will be reported that can be thrown on [com.google.android.gms.location.GeofencingApi.addGeofences]
+     * Other exceptions will be reported that can be thrown on [GeofencingApi.addGeofences]
 
      * @param geofenceTransitionPendingIntent pending intent to register on geofence transition
      * *
@@ -58,10 +58,10 @@ class RxGeofencingApi(
      * In case of unsuccessful status [StatusException] is delivered.
      *
      *
-     * Other exceptions will be reported that can be thrown on [com.google.android.gms.location.GeofencingApi.removeGeofences].
+     * Other exceptions will be reported that can be thrown on [GeofencingApi.removeGeofences].
      *
      *
-     * Every exception is delivered by [rx.Observer.onError].
+     * Every exception is delivered by [Observer.onError].
 
      * @param pendingIntent key of registered geofences
      * *
@@ -78,10 +78,10 @@ class RxGeofencingApi(
      * In case of unsuccessful status [StatusException] is delivered.
      *
      *
-     * Other exceptions will be reported that can be thrown on [com.google.android.gms.location.GeofencingApi.removeGeofences].
+     * Other exceptions will be reported that can be thrown on [GeofencingApi.removeGeofences].
      *
      *
-     * Every exception is delivered by [rx.Observer.onError].
+     * Every exception is delivered by [Observer.onError].
 
      * @param requestIds geofences to remove
      * *

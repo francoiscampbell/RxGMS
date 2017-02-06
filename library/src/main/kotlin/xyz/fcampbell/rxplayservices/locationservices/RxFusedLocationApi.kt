@@ -38,7 +38,7 @@ class RxFusedLocationApi(
      *
      * Observable can report [GoogleApiConnectionException]
      * when there are trouble connecting with Google Play Services and other exceptions that
-     * can be thrown on [com.google.android.gms.location.FusedLocationProviderApi.getLastLocation].
+     * can be thrown on [FusedLocationProviderApi.getLastLocation].
      * Everything is delivered by [rx.Observer.onError].
 
      * @return observable that serves last known location
@@ -56,18 +56,18 @@ class RxFusedLocationApi(
      *
      *
      * To use this method, mock locations must be enabled in developer options and your application
-     * must hold the android.permission.ACCESS_MOCK_LOCATION permission, or a [java.lang.SecurityException]
+     * must hold the android.permission.ACCESS_MOCK_LOCATION permission, or a [SecurityException]
      * will be thrown.
      *
      *
      * All statuses that are not successful will be reported as [StatusException].
      *
      *
-     * Every exception is delivered by [rx.Observer.onError].
+     * Every exception is delivered by [Observer.onError].
 
-     * @param sourceLocationObservable observable that emits [android.location.Location] instances suitable to use as mock locations
+     * @param sourceLocationObservable observable that emits [Location] instances suitable to use as mock locations
      * *
-     * @return observable that emits [com.google.android.gms.common.api.Status]
+     * @return observable that emits [Status]
      */
     @RequiresPermission(allOf = arrayOf("android.permission.ACCESS_COARSE_LOCATION", "android.permission.ACCESS_MOCK_LOCATION"))
     fun mockLocation(sourceLocationObservable: Observable<Location>): Observable<Status> {
@@ -82,7 +82,7 @@ class RxFusedLocationApi(
      *
      * Observable can report [GoogleApiConnectionException]
      * when there are trouble connecting with Google Play Services and other exceptions that
-     * can be thrown on [com.google.android.gms.location.FusedLocationProviderApi.requestLocationUpdates].
+     * can be thrown on [FusedLocationProviderApi.requestLocationUpdates].
      * Everything is delivered by [rx.Observer.onError].
 
      * @param locationRequest request object with info about what kind of location you need
@@ -95,7 +95,7 @@ class RxFusedLocationApi(
     }
 
     /**
-     * Creates an observable that adds a [android.app.PendingIntent] as a location listener.
+     * Creates an observable that adds a [PendingIntent] as a location listener.
      *
      *
      * This invokes [com.google.android.gms.location.FusedLocationProviderApi.requestLocationUpdates].
@@ -119,7 +119,7 @@ class RxFusedLocationApi(
     }
 
     /**
-     * Observable that can be used to remove [android.app.PendingIntent] location updates.
+     * Observable that can be used to remove [PendingIntent] location updates.
      *
      *
      * In case of unsuccessful status [StatusException] is delivered.
