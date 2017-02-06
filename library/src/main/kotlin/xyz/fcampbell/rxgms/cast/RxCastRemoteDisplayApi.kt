@@ -9,6 +9,9 @@ import xyz.fcampbell.rxgms.common.ApiClientDescriptor
 import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.RxGmsApi
 
+/**
+ * Wraps [CastRemoteDisplay.CastRemoteDisplayApi]
+ */
 @Suppress("unused")
 class RxCastRemoteDisplayApi(
         apiClientDescriptor: ApiClientDescriptor,
@@ -16,11 +19,7 @@ class RxCastRemoteDisplayApi(
         vararg scopes: Scope
 ) : RxGmsApi<CastRemoteDisplayApi, CastRemoteDisplay.CastRemoteDisplayOptions>(
         apiClientDescriptor,
-        ApiDescriptor(
-                CastRemoteDisplay.API,
-                CastRemoteDisplay.CastRemoteDisplayApi,
-                castRemoteDisplayOptions,
-                *scopes)
+        ApiDescriptor(CastRemoteDisplay.API, CastRemoteDisplay.CastRemoteDisplayApi, castRemoteDisplayOptions, *scopes)
 ) {
     constructor(
             context: Context,

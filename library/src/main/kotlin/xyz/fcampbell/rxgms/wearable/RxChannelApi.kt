@@ -11,7 +11,7 @@ import xyz.fcampbell.rxgms.common.RxGmsApi
 import xyz.fcampbell.rxgms.drive.RxChannel
 
 /**
- * Created by francois on 2017-01-13.
+ * Wraps [Wearable.ChannelApi]
  */
 @Suppress("unused")
 class RxChannelApi(

@@ -13,6 +13,9 @@ import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.RxGmsApi
 import java.io.IOException
 
+/**
+ * Wraps [Cast.CastApi]
+ */
 @Suppress("unused")
 class RxCastApi(
         apiClientDescriptor: ApiClientDescriptor,

@@ -9,12 +9,9 @@ import io.reactivex.disposables.Disposables
 import xyz.fcampbell.rxgms.common.action.GoogleApiClientOnSubscribe
 
 /**
- * Created by francois on 2016-12-29.
- */
-/**
- * Extend this class to wrap a particular Google Play services API.
+ * Inherit from this class to wrap a particular Google Play services API.
  *
- * @param A The type of the API to wrap  (If there is no API but you still want to extend this class, use [Unit] or [Void]).
+ * @param A The type of the API to wrap  (If there is no API but you still want to inherit from this class, use [Unit] or [Void]).
  * @param O The type of that API's options.
  *
  * @constructor

@@ -17,7 +17,7 @@ import xyz.fcampbell.rxgms.common.RxGmsApi
 import java.util.*
 
 /**
- * Created by francois on 2017-01-13.
+ * Wraps [Games.Requests]
  */
 @Suppress("unused")
 class RxRequests(

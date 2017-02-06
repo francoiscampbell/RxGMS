@@ -1,11 +1,11 @@
 package xyz.fcampbell.rxgms.games
 
-import android.app.PendingIntent
 import android.content.Context
-import android.content.Intent
+import com.google.android.gms.common.api.Api
 import com.google.android.gms.common.api.Status
 import com.google.android.gms.nearby.Nearby
-import com.google.android.gms.nearby.messages.*
+import com.google.android.gms.nearby.connection.AppMetadata
+import com.google.android.gms.nearby.connection.Connections
 import io.reactivex.Completable
 import io.reactivex.Observable
 import xyz.fcampbell.rxgms.common.ApiClientDescriptor
@@ -13,66 +13,68 @@ import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.RxGmsApi
 
 /**
- * Created by francois on 2017-01-13.
+ * Wraps [Nearby.Connections]
  */
 @Suppress("unused")
 class RxConnections(
-        apiClientDescriptor: ApiClientDescriptor,
-        messagesOptions: MessagesOptions
-) : RxGmsApi<Messages, MessagesOptions>(
+        apiClientDescriptor: ApiClientDescriptor
+) : RxGmsApi<Connections, Api.ApiOptions.NoOptions>(
         apiClientDescriptor,
-        ApiDescriptor(Nearby.MESSAGES_API, Nearby.Messages, messagesOptions)
+        ApiDescriptor(Nearby.CONNECTIONS_API, Nearby.Connections)
 ) {
     constructor(
-            context: Context,
-            messagesOptions: MessagesOptions
-    ) : this(ApiClientDescriptor(context), messagesOptions)
+            context: Context
+    ) : this(ApiClientDescriptor(context))
 
-    fun publish(message: Message): Observable<Status> {
-        return fromPendingResult { publish(it, message) }
+    fun startAdvertising(name: String, appMetadata: AppMetadata, durationMillis: Long, connectionRequestListener: Connections.ConnectionRequestListener): Observable<Connections.StartAdvertisingResult> {
+        return fromPendingResult { startAdvertising(it, name, appMetadata, durationMillis, connectionRequestListener) }
     }
 
-    fun publish(message: Message, options: PublishOptions): Observable<Status> {
-        return fromPendingResult { publish(it, message, options) }
+    fun stopAdvertising(): Completable {
+        return toCompletable { stopAdvertising(it) }
     }
 
-    fun unpublish(message: Message): Observable<Status> {
-        return fromPendingResult { unpublish(it, message) }
+    fun startDiscovery(serviceId: String, durationMillis: Long, listener: Connections.EndpointDiscoveryListener): Observable<Status> {
+        return fromPendingResult { startDiscovery(it, serviceId, durationMillis, listener) }
     }
 
-    fun subscribe(listener: MessageListener): Observable<Status> {
-        return fromPendingResult { subscribe(it, listener) }
+    fun stopDiscovery(serviceId: String): Completable {
+        return toCompletable { stopDiscovery(it, serviceId) }
     }
 
-    fun subscribe(listener: MessageListener, options: SubscribeOptions): Observable<Status> {
-        return fromPendingResult { subscribe(it, listener, options) }
+    fun sendConnectionRequest(name: String, remoteEndpointId: String, payload: ByteArray, connectionResponseCallback: Connections.ConnectionResponseCallback, messageListener: Connections.MessageListener): Observable<Status> {
+        return fromPendingResult { sendConnectionRequest(it, name, remoteEndpointId, payload, connectionResponseCallback, messageListener) }
     }
 
-    fun subscribe(pendingIntent: PendingIntent, options: SubscribeOptions): Observable<Status> {
-        return fromPendingResult { subscribe(it, pendingIntent, options) }
+    fun acceptConnectionRequest(remoteEndpointId: String, payload: ByteArray, messageListener: Connections.MessageListener): Observable<Status> {
+        return fromPendingResult { acceptConnectionRequest(it, remoteEndpointId, payload, messageListener) }
     }
 
-    fun subscribe(pendingIntent: PendingIntent): Observable<Status> {
-        return fromPendingResult { subscribe(it, pendingIntent) }
+    fun rejectConnectionRequest(remoteEndpointId: String): Observable<Status> {
+        return fromPendingResult { rejectConnectionRequest(it, remoteEndpointId) }
     }
 
-    fun unsubscribe(listener: MessageListener): Observable<Status> {
-        return fromPendingResult { unsubscribe(it, listener) }
+    fun sendReliableMessage(remoteEndpointId: String, payload: ByteArray): Completable {
+        return toCompletable { sendReliableMessage(it, remoteEndpointId, payload) }
     }
 
-    fun unsubscribe(pendingIntent: PendingIntent): Observable<Status> {
-        return fromPendingResult { unsubscribe(it, pendingIntent) }
+    fun sendReliableMessage(remoteEndpointIds: List<String>, payload: ByteArray): Completable {
+        return toCompletable { sendReliableMessage(it, remoteEndpointIds, payload) }
     }
 
-    fun registerStatusCallback(statusCallback: StatusCallback): Observable<Status> {
-        return fromPendingResult { registerStatusCallback(it, statusCallback) }
+    fun sendUnreliableMessage(remoteEndpointId: String, payload: ByteArray): Completable {
+        return toCompletable { sendUnreliableMessage(it, remoteEndpointId, payload) }
     }
 
-    fun unregisterStatusCallback(statusCallback: StatusCallback): Observable<Status> {
-        return fromPendingResult { unregisterStatusCallback(it, statusCallback) }
+    fun sendUnreliableMessage(remoteEndpointIds: List<String>, payload: ByteArray): Completable {
+        return toCompletable { sendUnreliableMessage(it, remoteEndpointIds, payload) }
     }
 
-    fun handleIntent(intent: Intent, messageListener: MessageListener): Completable {
-        return Completable.fromAction { handleIntent(intent, messageListener) }
+    fun disconnectFromEndpoint(remoteEndpointId: String): Completable {
+        return toCompletable { disconnectFromEndpoint(it, remoteEndpointId) }
+    }
+
+    fun stopAllEndpoints(): Completable {
+        return toCompletable { stopAllEndpoints(it) }
     }
 }

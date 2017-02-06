@@ -6,9 +6,6 @@ import io.reactivex.Observable
 import xyz.fcampbell.rxgms.common.action.PendingResultOnSubscribe
 
 /**
- * Created by francois on 2017-01-09.
- */
-/**
  * Convenience extension function to convert a [PendingResult] to an [Observable].
  *
  * @param T The type parameter of the [PendingResult] and the resulting [Observable].

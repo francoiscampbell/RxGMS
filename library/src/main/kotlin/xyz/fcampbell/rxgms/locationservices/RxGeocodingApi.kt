@@ -14,6 +14,9 @@ import xyz.fcampbell.rxgms.locationservices.action.geocode.Geocode
 import xyz.fcampbell.rxgms.locationservices.action.geocode.ReverseGeocode
 import java.util.*
 
+/**
+ * Wraps [Geocoder]
+ */
 @Suppress("unused")
 class RxGeocodingApi(
         private val apiClientDescriptor: ApiClientDescriptor

@@ -16,6 +16,9 @@ import xyz.fcampbell.rxgms.common.RxGmsApi
 import xyz.fcampbell.rxgms.locationservices.action.location.LocationUpdates
 import xyz.fcampbell.rxgms.locationservices.action.location.MockLocation
 
+/**
+ * Wraps [LocationServices.FusedLocationApi]
+ */
 @Suppress("unused")
 class RxFusedLocationApi(
         apiClientDescriptor: ApiClientDescriptor

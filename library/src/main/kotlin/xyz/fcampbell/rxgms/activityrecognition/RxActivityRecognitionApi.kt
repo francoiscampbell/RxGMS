@@ -10,6 +10,9 @@ import xyz.fcampbell.rxgms.common.ApiClientDescriptor
 import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.RxGmsApi
 
+/**
+ * Wraps [ActivityRecognition.ActivityRecognitionApi]
+ */
 @Suppress("unused")
 class RxActivityRecognitionApi(
         apiClientDescriptor: ApiClientDescriptor

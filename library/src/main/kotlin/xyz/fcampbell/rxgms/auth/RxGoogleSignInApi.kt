@@ -16,6 +16,9 @@ import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.RxGmsApi
 import xyz.fcampbell.rxgms.common.util.ResultActivity
 
+/**
+ * Wraps [Auth.GoogleSignInApi]
+ */
 @Suppress("unused")
 class RxGoogleSignInApi(
         private val apiClientDescriptor: ApiClientDescriptor,

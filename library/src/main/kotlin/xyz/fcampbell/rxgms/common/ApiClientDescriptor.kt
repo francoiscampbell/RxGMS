@@ -3,6 +3,7 @@ package xyz.fcampbell.rxgms.common
 import android.content.Context
 import android.os.Handler
 import android.view.View
+
 /**
  * Proxy for [GoogleApiClient.Builder]
  */

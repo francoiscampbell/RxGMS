@@ -7,7 +7,7 @@ import io.reactivex.Observable
 import xyz.fcampbell.rxgms.common.RxWrappedApi
 
 /**
- * Created by francois on 2017-01-10.
+ * Wraps [DriveFolder]
  */
 @Suppress("unused")
 class RxDriveFolder(

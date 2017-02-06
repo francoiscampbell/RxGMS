@@ -8,6 +8,9 @@ import xyz.fcampbell.rxgms.common.ApiClientDescriptor
 import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.RxGmsApi
 
+/**
+ * Wraps [Places.GeoDataApi]
+ */
 @Suppress("unused")
 class RxGeoDataApi(
         apiClientDescriptor: ApiClientDescriptor

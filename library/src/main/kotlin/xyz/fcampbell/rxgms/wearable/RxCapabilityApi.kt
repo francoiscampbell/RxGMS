@@ -11,7 +11,7 @@ import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.RxGmsApi
 
 /**
- * Created by francois on 2017-01-13.
+ * Wraps [Wearable.CapabilityApi]
  */
 @Suppress("unused")
 class RxCapabilityApi(

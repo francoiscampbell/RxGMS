@@ -11,6 +11,9 @@ import xyz.fcampbell.rxgms.common.ApiClientDescriptor
 import xyz.fcampbell.rxgms.common.ApiDescriptor
 import xyz.fcampbell.rxgms.common.RxGmsApi
 
+/**
+ * Wraps [Auth.CredentialsApi]
+ */
 @Suppress("unused")
 class RxCredentialsApi(
         apiClientDescriptor: ApiClientDescriptor,
