@@ -5,8 +5,9 @@ Inspired and extended from [ReactiveLocation](https://github.com/mcharmas/Androi
 This library is written in Kotlin because of the amount of lambdas used in reactive code and because extension functions reduce the boilerplate a lot. However, it should work with Java, albeit less syntactically pleasing. If you experience problems using Java, please submit an issue.
 
 ## Current version - 0.1.0
-This version has been developed against Play services 10.0.1 and RxJava 2.0.4. It may work on earlier versions of Play services but any methods deprecated as of 10.0.1 are not included. It will not work with RxJava 1.x.y.
-The status of implemented Play services APIs is:
+This version has been developed against Play services 10.0.1 and RxJava 2.0.4. It may work on earlier versions of Play services but any methods deprecated as of 10.0.1 are not included. It will not work with RxJava 1.x.y unless you provide a shim like [RxJavaReactiveStreams](https://github.com/ReactiveX/RxJavaReactiveStreams).
+
+This is a WIP as I implement more APIs. The status of implemented Play services APIs is:
 
 | API                                      | Status | Gradle dependency                                     |
 |------------------------------------------|--------|-------------------------------------------------------|
