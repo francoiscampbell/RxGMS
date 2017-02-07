@@ -20,18 +20,21 @@ internal class PendingResultOnSubscribe<R : Result>(
 ) : ObservableOnSubscribe<R> {
 
     override fun subscribe(emitter: ObservableEmitter<R>) {
-        val pendingResult = action()
+        val pendingResult = action() //we want to repeat the action if we re-subscribe
         pendingResult.setResultCallback { result ->
+            emitter.setCancellable {
+                handleResourceCleanupIfNecessary(result)
+            }
+
             if (result.status.isSuccess) {
                 emitter.onNext(result)
                 emitter.onComplete()
             } else {
                 emitter.onError(StatusException(result.status))
             }
-            handleResourceCleanupIfNecessary(result) //TODO watch out for threading (onNext and onComplete may return before processing is done)
         }
         emitter.setCancellable {
-            pendingResult.cancel()
+            pendingResult.cancel() //does nothing if called after resultCallback is called
         }
     }
 
