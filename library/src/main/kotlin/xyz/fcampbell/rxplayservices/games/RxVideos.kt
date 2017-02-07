@@ -9,7 +9,7 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import xyz.fcampbell.rxplayservices.common.ApiClientDescriptor
 import xyz.fcampbell.rxplayservices.common.ApiDescriptor
-import xyz.fcampbell.rxplayservices.common.RxGmsApi
+import xyz.fcampbell.rxplayservices.common.RxPlayServicesApi
 
 /**
  * Wraps [Games.Videos]
@@ -19,7 +19,7 @@ class RxVideos(
         apiClientDescriptor: ApiClientDescriptor,
         gamesOptions: Games.GamesOptions,
         vararg scopes: Scope
-) : RxGmsApi<Videos, Games.GamesOptions>(
+) : RxPlayServicesApi<Videos, Games.GamesOptions>(
         apiClientDescriptor,
         ApiDescriptor(Games.API, Games.Videos, gamesOptions, *scopes)
 ) {

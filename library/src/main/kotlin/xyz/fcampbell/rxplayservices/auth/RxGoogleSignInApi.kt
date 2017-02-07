@@ -13,7 +13,7 @@ import io.reactivex.Observable
 import xyz.fcampbell.rxplayservices.auth.exception.SignInException
 import xyz.fcampbell.rxplayservices.common.ApiClientDescriptor
 import xyz.fcampbell.rxplayservices.common.ApiDescriptor
-import xyz.fcampbell.rxplayservices.common.RxGmsApi
+import xyz.fcampbell.rxplayservices.common.RxPlayServicesApi
 import xyz.fcampbell.rxplayservices.common.util.ResultActivity
 
 /**
@@ -23,7 +23,7 @@ import xyz.fcampbell.rxplayservices.common.util.ResultActivity
 class RxGoogleSignInApi(
         private val apiClientDescriptor: ApiClientDescriptor,
         googleSignInOptions: GoogleSignInOptions
-) : RxGmsApi<GoogleSignInApi, GoogleSignInOptions>(
+) : RxPlayServicesApi<GoogleSignInApi, GoogleSignInOptions>(
         apiClientDescriptor.setAccountName(""), //don't set account name in GoogleApiClient with Auth API. See https://developers.google.com/android/reference/com/google/android/gms/common/api/GoogleApiClient.Builder.html#setAccountName(java.lang.String)
         ApiDescriptor(Auth.GOOGLE_SIGN_IN_API, Auth.GoogleSignInApi, googleSignInOptions)
 ) {

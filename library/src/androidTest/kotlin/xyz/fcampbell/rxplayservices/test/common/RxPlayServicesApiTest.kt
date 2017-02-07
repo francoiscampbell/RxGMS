@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit
 /**
  * Created by francois on 2017-02-06.
  */
-class RxGmsApiTest {
+class RxPlayServicesApiTest {
     private val testApi = RxFusedLocationApi(InstrumentationRegistry.getContext()) //RxFusedLocationApi chosen at random
 
     @Test

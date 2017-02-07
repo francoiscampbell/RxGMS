@@ -7,7 +7,7 @@ import com.google.android.gms.games.stats.Stats
 import io.reactivex.Observable
 import xyz.fcampbell.rxplayservices.common.ApiClientDescriptor
 import xyz.fcampbell.rxplayservices.common.ApiDescriptor
-import xyz.fcampbell.rxplayservices.common.RxGmsApi
+import xyz.fcampbell.rxplayservices.common.RxPlayServicesApi
 
 /**
  * Wraps [Games.Stats]
@@ -17,7 +17,7 @@ class RxStats(
         apiClientDescriptor: ApiClientDescriptor,
         gamesOptions: Games.GamesOptions,
         vararg scopes: Scope
-) : RxGmsApi<Stats, Games.GamesOptions>(
+) : RxPlayServicesApi<Stats, Games.GamesOptions>(
         apiClientDescriptor,
         ApiDescriptor(Games.API, Games.Stats, gamesOptions, *scopes)
 ) {

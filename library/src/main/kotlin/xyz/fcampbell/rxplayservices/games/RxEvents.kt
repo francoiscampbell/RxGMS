@@ -8,7 +8,7 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import xyz.fcampbell.rxplayservices.common.ApiClientDescriptor
 import xyz.fcampbell.rxplayservices.common.ApiDescriptor
-import xyz.fcampbell.rxplayservices.common.RxGmsApi
+import xyz.fcampbell.rxplayservices.common.RxPlayServicesApi
 
 /**
  * Wraps [Games.Events]
@@ -18,7 +18,7 @@ class RxEvents(
         apiClientDescriptor: ApiClientDescriptor,
         gamesOptions: Games.GamesOptions,
         vararg scopes: Scope
-) : RxGmsApi<Events, Games.GamesOptions>(
+) : RxPlayServicesApi<Events, Games.GamesOptions>(
         apiClientDescriptor,
         ApiDescriptor(Games.API, Games.Events, gamesOptions, *scopes)
 ) {

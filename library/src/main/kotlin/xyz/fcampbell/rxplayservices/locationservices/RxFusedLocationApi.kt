@@ -12,7 +12,7 @@ import com.google.android.gms.location.LocationServices
 import io.reactivex.Observable
 import xyz.fcampbell.rxplayservices.common.ApiClientDescriptor
 import xyz.fcampbell.rxplayservices.common.ApiDescriptor
-import xyz.fcampbell.rxplayservices.common.RxGmsApi
+import xyz.fcampbell.rxplayservices.common.RxPlayServicesApi
 import xyz.fcampbell.rxplayservices.locationservices.action.location.LocationUpdates
 import xyz.fcampbell.rxplayservices.locationservices.action.location.MockLocation
 
@@ -22,7 +22,7 @@ import xyz.fcampbell.rxplayservices.locationservices.action.location.MockLocatio
 @Suppress("unused")
 class RxFusedLocationApi(
         apiClientDescriptor: ApiClientDescriptor
-) : RxGmsApi<FusedLocationProviderApi, Api.ApiOptions.NoOptions>(
+) : RxPlayServicesApi<FusedLocationProviderApi, Api.ApiOptions.NoOptions>(
         apiClientDescriptor,
         ApiDescriptor(LocationServices.API, LocationServices.FusedLocationApi)
 ) {

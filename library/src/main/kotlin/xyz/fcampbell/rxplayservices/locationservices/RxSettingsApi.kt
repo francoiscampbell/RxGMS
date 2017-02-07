@@ -9,7 +9,7 @@ import com.google.android.gms.location.SettingsApi
 import io.reactivex.Observable
 import xyz.fcampbell.rxplayservices.common.ApiClientDescriptor
 import xyz.fcampbell.rxplayservices.common.ApiDescriptor
-import xyz.fcampbell.rxplayservices.common.RxGmsApi
+import xyz.fcampbell.rxplayservices.common.RxPlayServicesApi
 
 /**
  * Wraps [LocationServices.SettingsApi]
@@ -17,7 +17,7 @@ import xyz.fcampbell.rxplayservices.common.RxGmsApi
 @Suppress("unused")
 class RxSettingsApi(
         apiClientDescriptor: ApiClientDescriptor
-) : RxGmsApi<SettingsApi, Api.ApiOptions.NoOptions>(
+) : RxPlayServicesApi<SettingsApi, Api.ApiOptions.NoOptions>(
         apiClientDescriptor,
         ApiDescriptor(LocationServices.API, LocationServices.SettingsApi)
 ) {

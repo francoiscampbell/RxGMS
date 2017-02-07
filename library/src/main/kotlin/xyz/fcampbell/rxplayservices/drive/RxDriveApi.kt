@@ -13,7 +13,7 @@ import com.google.android.gms.drive.query.Query
 import io.reactivex.Observable
 import xyz.fcampbell.rxplayservices.common.ApiClientDescriptor
 import xyz.fcampbell.rxplayservices.common.ApiDescriptor
-import xyz.fcampbell.rxplayservices.common.RxGmsApi
+import xyz.fcampbell.rxplayservices.common.RxPlayServicesApi
 
 /**
  * Wraps [Drive.DriveApi]
@@ -22,7 +22,7 @@ import xyz.fcampbell.rxplayservices.common.RxGmsApi
 class RxDriveApi(
         apiClientDescriptor: ApiClientDescriptor,
         vararg scopes: Scope
-) : RxGmsApi<DriveApi, Api.ApiOptions.NoOptions>(
+) : RxPlayServicesApi<DriveApi, Api.ApiOptions.NoOptions>(
         apiClientDescriptor,
         ApiDescriptor(Drive.API, Drive.DriveApi, null, *scopes)
 ) {

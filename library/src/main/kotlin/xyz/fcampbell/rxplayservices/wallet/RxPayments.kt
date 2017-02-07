@@ -7,7 +7,7 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import xyz.fcampbell.rxplayservices.common.ApiClientDescriptor
 import xyz.fcampbell.rxplayservices.common.ApiDescriptor
-import xyz.fcampbell.rxplayservices.common.RxGmsApi
+import xyz.fcampbell.rxplayservices.common.RxPlayServicesApi
 
 /**
  * Wraps [Wallet.Payments]
@@ -16,7 +16,7 @@ import xyz.fcampbell.rxplayservices.common.RxGmsApi
 class RxPayments(
         apiClientDescriptor: ApiClientDescriptor,
         walletOptions: Wallet.WalletOptions
-) : RxGmsApi<Payments, Wallet.WalletOptions>(
+) : RxPlayServicesApi<Payments, Wallet.WalletOptions>(
         apiClientDescriptor,
         ApiDescriptor(Wallet.API, Wallet.Payments, walletOptions)
 ) {

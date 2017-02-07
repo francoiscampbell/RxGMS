@@ -10,7 +10,7 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import xyz.fcampbell.rxplayservices.common.ApiClientDescriptor
 import xyz.fcampbell.rxplayservices.common.ApiDescriptor
-import xyz.fcampbell.rxplayservices.common.RxGmsApi
+import xyz.fcampbell.rxplayservices.common.RxPlayServicesApi
 
 /**
  * Wraps [Nearby.Messages]
@@ -19,7 +19,7 @@ import xyz.fcampbell.rxplayservices.common.RxGmsApi
 class RxMessages(
         apiClientDescriptor: ApiClientDescriptor,
         messagesOptions: MessagesOptions
-) : RxGmsApi<Messages, MessagesOptions>(
+) : RxPlayServicesApi<Messages, MessagesOptions>(
         apiClientDescriptor,
         ApiDescriptor(Nearby.MESSAGES_API, Nearby.Messages, messagesOptions)
 ) {

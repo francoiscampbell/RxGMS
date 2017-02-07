@@ -9,7 +9,7 @@ import com.google.android.gms.common.api.Status
 import io.reactivex.Observable
 import xyz.fcampbell.rxplayservices.common.ApiClientDescriptor
 import xyz.fcampbell.rxplayservices.common.ApiDescriptor
-import xyz.fcampbell.rxplayservices.common.RxGmsApi
+import xyz.fcampbell.rxplayservices.common.RxPlayServicesApi
 
 /**
  * Wraps [Auth.CredentialsApi]
@@ -19,7 +19,7 @@ class RxCredentialsApi(
         apiClientDescriptor: ApiClientDescriptor,
         credentialsOptions: Auth.AuthCredentialsOptions,
         vararg scopes: Scope
-) : RxGmsApi<CredentialsApi, Auth.AuthCredentialsOptions>(
+) : RxPlayServicesApi<CredentialsApi, Auth.AuthCredentialsOptions>(
         apiClientDescriptor,
         ApiDescriptor(Auth.CREDENTIALS_API, Auth.CredentialsApi, credentialsOptions, *scopes)
 ) {

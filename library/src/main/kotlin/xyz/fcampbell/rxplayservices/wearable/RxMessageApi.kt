@@ -8,7 +8,7 @@ import com.google.android.gms.wearable.Wearable
 import io.reactivex.Observable
 import xyz.fcampbell.rxplayservices.common.ApiClientDescriptor
 import xyz.fcampbell.rxplayservices.common.ApiDescriptor
-import xyz.fcampbell.rxplayservices.common.RxGmsApi
+import xyz.fcampbell.rxplayservices.common.RxPlayServicesApi
 
 /**
  * Wraps [Wearable.MessageApi]
@@ -17,7 +17,7 @@ import xyz.fcampbell.rxplayservices.common.RxGmsApi
 class RxMessageApi(
         apiClientDescriptor: ApiClientDescriptor,
         wearableOptions: Wearable.WearableOptions
-) : RxGmsApi<MessageApi, Wearable.WearableOptions>(
+) : RxPlayServicesApi<MessageApi, Wearable.WearableOptions>(
         apiClientDescriptor,
         ApiDescriptor(Wearable.API, Wearable.MessageApi, wearableOptions)
 ) {

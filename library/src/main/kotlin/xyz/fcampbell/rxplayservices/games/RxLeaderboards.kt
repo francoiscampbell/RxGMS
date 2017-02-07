@@ -10,7 +10,7 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import xyz.fcampbell.rxplayservices.common.ApiClientDescriptor
 import xyz.fcampbell.rxplayservices.common.ApiDescriptor
-import xyz.fcampbell.rxplayservices.common.RxGmsApi
+import xyz.fcampbell.rxplayservices.common.RxPlayServicesApi
 
 
 /**
@@ -21,7 +21,7 @@ class RxLeaderboards(
         apiClientDescriptor: ApiClientDescriptor,
         gamesOptions: Games.GamesOptions,
         vararg scopes: Scope
-) : RxGmsApi<Leaderboards, Games.GamesOptions>(
+) : RxPlayServicesApi<Leaderboards, Games.GamesOptions>(
         apiClientDescriptor,
         ApiDescriptor(Games.API, Games.Leaderboards, gamesOptions, *scopes)
 ) {

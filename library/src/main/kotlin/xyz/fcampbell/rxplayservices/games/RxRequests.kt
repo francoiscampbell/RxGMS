@@ -13,7 +13,7 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import xyz.fcampbell.rxplayservices.common.ApiClientDescriptor
 import xyz.fcampbell.rxplayservices.common.ApiDescriptor
-import xyz.fcampbell.rxplayservices.common.RxGmsApi
+import xyz.fcampbell.rxplayservices.common.RxPlayServicesApi
 import java.util.*
 
 /**
@@ -24,7 +24,7 @@ class RxRequests(
         apiClientDescriptor: ApiClientDescriptor,
         gamesOptions: Games.GamesOptions,
         vararg scopes: Scope
-) : RxGmsApi<Requests, Games.GamesOptions>(
+) : RxPlayServicesApi<Requests, Games.GamesOptions>(
         apiClientDescriptor,
         ApiDescriptor(Games.API, Games.Requests, gamesOptions, *scopes)
 ) {

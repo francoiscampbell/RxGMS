@@ -7,7 +7,7 @@ import com.google.android.gms.wearable.Wearable
 import io.reactivex.Observable
 import xyz.fcampbell.rxplayservices.common.ApiClientDescriptor
 import xyz.fcampbell.rxplayservices.common.ApiDescriptor
-import xyz.fcampbell.rxplayservices.common.RxGmsApi
+import xyz.fcampbell.rxplayservices.common.RxPlayServicesApi
 import xyz.fcampbell.rxplayservices.drive.RxChannel
 
 /**
@@ -17,7 +17,7 @@ import xyz.fcampbell.rxplayservices.drive.RxChannel
 class RxChannelApi(
         apiClientDescriptor: ApiClientDescriptor,
         wearableOptions: Wearable.WearableOptions
-) : RxGmsApi<ChannelApi, Wearable.WearableOptions>(
+) : RxPlayServicesApi<ChannelApi, Wearable.WearableOptions>(
         apiClientDescriptor,
         ApiDescriptor(Wearable.API, Wearable.ChannelApi, wearableOptions)
 ) {

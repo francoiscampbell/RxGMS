@@ -10,7 +10,7 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import xyz.fcampbell.rxplayservices.common.ApiClientDescriptor
 import xyz.fcampbell.rxplayservices.common.ApiDescriptor
-import xyz.fcampbell.rxplayservices.common.RxGmsApi
+import xyz.fcampbell.rxplayservices.common.RxPlayServicesApi
 import java.io.IOException
 
 /**
@@ -21,7 +21,7 @@ class RxCastApi(
         apiClientDescriptor: ApiClientDescriptor,
         castOptions: Cast.CastOptions,
         vararg scopes: Scope
-) : RxGmsApi<Cast.CastApi, Cast.CastOptions>(
+) : RxPlayServicesApi<Cast.CastApi, Cast.CastOptions>(
         apiClientDescriptor,
         ApiDescriptor(Cast.API, Cast.CastApi, castOptions, *scopes)
 ) {

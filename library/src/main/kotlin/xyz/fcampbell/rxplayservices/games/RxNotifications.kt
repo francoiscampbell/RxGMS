@@ -7,7 +7,7 @@ import com.google.android.gms.games.Notifications
 import io.reactivex.Completable
 import xyz.fcampbell.rxplayservices.common.ApiClientDescriptor
 import xyz.fcampbell.rxplayservices.common.ApiDescriptor
-import xyz.fcampbell.rxplayservices.common.RxGmsApi
+import xyz.fcampbell.rxplayservices.common.RxPlayServicesApi
 
 /**
  * Wraps [Games.Notifications]
@@ -17,7 +17,7 @@ class RxNotifications(
         apiClientDescriptor: ApiClientDescriptor,
         gamesOptions: Games.GamesOptions,
         vararg scopes: Scope
-) : RxGmsApi<Notifications, Games.GamesOptions>(
+) : RxPlayServicesApi<Notifications, Games.GamesOptions>(
         apiClientDescriptor,
         ApiDescriptor(Games.API, Games.Notifications, gamesOptions, *scopes)
 ) {

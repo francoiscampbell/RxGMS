@@ -9,7 +9,7 @@ import com.google.android.gms.games.Players
 import io.reactivex.Observable
 import xyz.fcampbell.rxplayservices.common.ApiClientDescriptor
 import xyz.fcampbell.rxplayservices.common.ApiDescriptor
-import xyz.fcampbell.rxplayservices.common.RxGmsApi
+import xyz.fcampbell.rxplayservices.common.RxPlayServicesApi
 
 /**
  * Wraps [Games.Players]
@@ -19,7 +19,7 @@ class RxPlayers(
         apiClientDescriptor: ApiClientDescriptor,
         gamesOptions: Games.GamesOptions,
         vararg scopes: Scope
-) : RxGmsApi<Players, Games.GamesOptions>(
+) : RxPlayServicesApi<Players, Games.GamesOptions>(
         apiClientDescriptor,
         ApiDescriptor(Games.API, Games.Players, gamesOptions, *scopes)
 ) {

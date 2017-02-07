@@ -6,7 +6,7 @@ import com.google.android.gms.maps.model.LatLngBounds
 import io.reactivex.Observable
 import xyz.fcampbell.rxplayservices.common.ApiClientDescriptor
 import xyz.fcampbell.rxplayservices.common.ApiDescriptor
-import xyz.fcampbell.rxplayservices.common.RxGmsApi
+import xyz.fcampbell.rxplayservices.common.RxPlayServicesApi
 
 /**
  * Wraps [Places.GeoDataApi]
@@ -14,7 +14,7 @@ import xyz.fcampbell.rxplayservices.common.RxGmsApi
 @Suppress("unused")
 class RxGeoDataApi(
         apiClientDescriptor: ApiClientDescriptor
-) : RxGmsApi<GeoDataApi, PlacesOptions>(
+) : RxPlayServicesApi<GeoDataApi, PlacesOptions>(
         apiClientDescriptor,
         ApiDescriptor(Places.GEO_DATA_API, Places.GeoDataApi)
 ) {
@@ -63,7 +63,7 @@ class RxGeoDataApi(
 
     /**
      * Returns observable that fetches a placePhotoMetadata from the Places API using the place placePhotoMetadata metadata.
-     * Use after fetching the place placePhotoMetadata metadata with [RxGms.getPhotoMetadataById]
+     * Use after fetching the place placePhotoMetadata metadata with [RxPlayServices.getPhotoMetadataById]
 
      * @param placePhotoMetadata the place photo meta data
      * *

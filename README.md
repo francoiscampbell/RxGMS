@@ -155,7 +155,7 @@ public void onStop() {
 If you want access to the `GoogleApiClient`, use `<api>.getApiClient()` in Java or `<api>.apiClient` in Kotlin to get an `Observable<GoogleApiClient>` that will call `onNext(GoogleApiClient)` once the client is connected to the API that the `Rx<something>` class represents. If the `GoogleApiClient` is already connected, `onNext(GoogleApiClient)` will be called immediately. For example, if you call `fusedLocationApi.getApiClient()`, you'll get a `GoogleApiClient` that is connected to `LocationServices.API` only. You can then use `map`, `flatMap`, `subscribe`, or any other RxJava operators yourself. You should not call `googleApiClient.disconnect()`, use `<api>.disconnect()` instead.
 
 ## In case of APIs not covered
-If a particular Play services API that you use is not yet covered by this library, you can extend `RxGmsApi` to create your own wrapper. There are some utility methods in `RxWrappedApi` (`RxGmsApi` implements this interface) that make it easy to manually wrap a Play services method that is not covered by this library yet. If you come across such a situation, please submit an issue or a pull request so that particular method can be added.
+If a particular Play services API that you use is not yet covered by this library, you can extend `RxPlayServicesApi` to create your own wrapper. There are some utility methods in `RxWrappedApi` (`RxPlayServicesApi` implements this interface) that make it easy to manually wrap a Play services method that is not covered by this library yet. If you come across such a situation, please submit an issue or a pull request so that particular method can be added.
 
 ## Sample
 Sample usage is available in the *sample* directory.

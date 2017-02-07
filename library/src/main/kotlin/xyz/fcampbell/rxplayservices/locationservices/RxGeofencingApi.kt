@@ -11,7 +11,7 @@ import com.google.android.gms.location.LocationServices
 import io.reactivex.Observable
 import xyz.fcampbell.rxplayservices.common.ApiClientDescriptor
 import xyz.fcampbell.rxplayservices.common.ApiDescriptor
-import xyz.fcampbell.rxplayservices.common.RxGmsApi
+import xyz.fcampbell.rxplayservices.common.RxPlayServicesApi
 
 /**
  * Wraps [LocationServices.GeofencingApi]
@@ -19,7 +19,7 @@ import xyz.fcampbell.rxplayservices.common.RxGmsApi
 @Suppress("unused")
 class RxGeofencingApi(
         apiClientDescriptor: ApiClientDescriptor
-) : RxGmsApi<GeofencingApi, Api.ApiOptions.NoOptions>(
+) : RxPlayServicesApi<GeofencingApi, Api.ApiOptions.NoOptions>(
         apiClientDescriptor,
         ApiDescriptor(LocationServices.API, LocationServices.GeofencingApi)
 ) {

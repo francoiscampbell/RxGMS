@@ -11,7 +11,7 @@ import com.google.android.gms.drive.FileUploadPreferences
 import io.reactivex.Observable
 import xyz.fcampbell.rxplayservices.common.ApiClientDescriptor
 import xyz.fcampbell.rxplayservices.common.ApiDescriptor
-import xyz.fcampbell.rxplayservices.common.RxGmsApi
+import xyz.fcampbell.rxplayservices.common.RxPlayServicesApi
 
 /**
  * Wraps [Drive.DrivePreferencesApi]
@@ -20,7 +20,7 @@ import xyz.fcampbell.rxplayservices.common.RxGmsApi
 class RxDrivePreferencesApi(
         apiClientDescriptor: ApiClientDescriptor,
         vararg scopes: Scope
-) : RxGmsApi<DrivePreferencesApi, Api.ApiOptions.NoOptions>(
+) : RxPlayServicesApi<DrivePreferencesApi, Api.ApiOptions.NoOptions>(
         apiClientDescriptor,
         ApiDescriptor(Drive.API, Drive.DrivePreferencesApi, null, *scopes)
 ) {

@@ -9,7 +9,7 @@ import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import xyz.fcampbell.rxplayservices.common.ApiClientDescriptor
 import xyz.fcampbell.rxplayservices.common.ApiDescriptor
-import xyz.fcampbell.rxplayservices.common.RxGmsApi
+import xyz.fcampbell.rxplayservices.common.RxPlayServicesApi
 import xyz.fcampbell.rxplayservices.locationservices.action.geocode.Geocode
 import xyz.fcampbell.rxplayservices.locationservices.action.geocode.ReverseGeocode
 import java.util.*
@@ -20,7 +20,7 @@ import java.util.*
 @Suppress("unused")
 class RxGeocodingApi(
         private val apiClientDescriptor: ApiClientDescriptor
-) : RxGmsApi<Unit, Api.ApiOptions.NoOptions>(
+) : RxPlayServicesApi<Unit, Api.ApiOptions.NoOptions>(
         apiClientDescriptor,
         ApiDescriptor(LocationServices.API, Unit)
 ) {

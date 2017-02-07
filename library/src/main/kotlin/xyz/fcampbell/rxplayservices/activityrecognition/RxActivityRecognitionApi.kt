@@ -8,7 +8,7 @@ import io.reactivex.Observable
 import xyz.fcampbell.rxplayservices.activityrecognition.action.ActivityUpdates
 import xyz.fcampbell.rxplayservices.common.ApiClientDescriptor
 import xyz.fcampbell.rxplayservices.common.ApiDescriptor
-import xyz.fcampbell.rxplayservices.common.RxGmsApi
+import xyz.fcampbell.rxplayservices.common.RxPlayServicesApi
 
 /**
  * Wraps [ActivityRecognition.ActivityRecognitionApi]
@@ -16,7 +16,7 @@ import xyz.fcampbell.rxplayservices.common.RxGmsApi
 @Suppress("unused")
 class RxActivityRecognitionApi(
         apiClientDescriptor: ApiClientDescriptor
-) : RxGmsApi<Unit, Api.ApiOptions.NoOptions>(
+) : RxPlayServicesApi<Unit, Api.ApiOptions.NoOptions>(
         apiClientDescriptor,
         ApiDescriptor(ActivityRecognition.API, Unit)
 ) {

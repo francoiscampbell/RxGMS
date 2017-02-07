@@ -7,7 +7,7 @@ import com.google.android.gms.common.api.Scope
 import io.reactivex.Observable
 import xyz.fcampbell.rxplayservices.common.ApiClientDescriptor
 import xyz.fcampbell.rxplayservices.common.ApiDescriptor
-import xyz.fcampbell.rxplayservices.common.RxGmsApi
+import xyz.fcampbell.rxplayservices.common.RxPlayServicesApi
 
 /**
  * Wraps [CastRemoteDisplay.CastRemoteDisplayApi]
@@ -17,7 +17,7 @@ class RxCastRemoteDisplayApi(
         apiClientDescriptor: ApiClientDescriptor,
         castRemoteDisplayOptions: CastRemoteDisplay.CastRemoteDisplayOptions,
         vararg scopes: Scope
-) : RxGmsApi<CastRemoteDisplayApi, CastRemoteDisplay.CastRemoteDisplayOptions>(
+) : RxPlayServicesApi<CastRemoteDisplayApi, CastRemoteDisplay.CastRemoteDisplayOptions>(
         apiClientDescriptor,
         ApiDescriptor(CastRemoteDisplay.API, CastRemoteDisplay.CastRemoteDisplayApi, castRemoteDisplayOptions, *scopes)
 ) {

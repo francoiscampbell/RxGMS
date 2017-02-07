@@ -10,7 +10,7 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import xyz.fcampbell.rxplayservices.common.ApiClientDescriptor
 import xyz.fcampbell.rxplayservices.common.ApiDescriptor
-import xyz.fcampbell.rxplayservices.common.RxGmsApi
+import xyz.fcampbell.rxplayservices.common.RxPlayServicesApi
 
 /**
  * Wraps [Nearby.Connections]
@@ -18,7 +18,7 @@ import xyz.fcampbell.rxplayservices.common.RxGmsApi
 @Suppress("unused")
 class RxConnections(
         apiClientDescriptor: ApiClientDescriptor
-) : RxGmsApi<Connections, Api.ApiOptions.NoOptions>(
+) : RxPlayServicesApi<Connections, Api.ApiOptions.NoOptions>(
         apiClientDescriptor,
         ApiDescriptor(Nearby.CONNECTIONS_API, Nearby.Connections)
 ) {

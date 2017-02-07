@@ -5,7 +5,7 @@ import com.google.android.gms.location.places.*
 import io.reactivex.Observable
 import xyz.fcampbell.rxplayservices.common.ApiClientDescriptor
 import xyz.fcampbell.rxplayservices.common.ApiDescriptor
-import xyz.fcampbell.rxplayservices.common.RxGmsApi
+import xyz.fcampbell.rxplayservices.common.RxPlayServicesApi
 
 /**
  * Wraps [Places.PlaceDetectionApi]
@@ -13,7 +13,7 @@ import xyz.fcampbell.rxplayservices.common.RxGmsApi
 @Suppress("unused")
 class RxPlaceDetectionApi(
         apiClientDescriptor: ApiClientDescriptor
-) : RxGmsApi<PlaceDetectionApi, PlacesOptions>(
+) : RxPlayServicesApi<PlaceDetectionApi, PlacesOptions>(
         apiClientDescriptor,
         ApiDescriptor(Places.PLACE_DETECTION_API, Places.PlaceDetectionApi)
 ) {

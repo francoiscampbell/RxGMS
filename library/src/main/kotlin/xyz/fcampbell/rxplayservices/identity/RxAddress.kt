@@ -6,14 +6,14 @@ import com.google.android.gms.identity.intents.UserAddressRequest
 import io.reactivex.Completable
 import xyz.fcampbell.rxplayservices.common.ApiClientDescriptor
 import xyz.fcampbell.rxplayservices.common.ApiDescriptor
-import xyz.fcampbell.rxplayservices.common.RxGmsApi
+import xyz.fcampbell.rxplayservices.common.RxPlayServicesApi
 
 /**
  * Wraps [Address]
  */
 class RxAddress(
         apiClientDescriptor: ApiClientDescriptor
-) : RxGmsApi<Unit, Address.AddressOptions>(
+) : RxPlayServicesApi<Unit, Address.AddressOptions>(
         apiClientDescriptor,
         ApiDescriptor(Address.API, Unit)
 ) {

@@ -18,12 +18,12 @@ import xyz.fcampbell.rxplayservices.common.action.GoogleApiClientOnSubscribe
  * @param apiClientDescriptor Describes the desired parameters of the [GoogleApiClient] that will back this API.
  * @param api Describes the Google Play services API to which to connect.
  */
-abstract class RxGmsApi<out A, O : Api.ApiOptions>(
+abstract class RxPlayServicesApi<out A, O : Api.ApiOptions>(
         apiClientDescriptor: ApiClientDescriptor,
         api: ApiDescriptor<A, O>
 ) : RxWrappedApi<A> {
     companion object {
-        private const val TAG = "RxGmsApi"
+        private const val TAG = "RxPlayServicesApi"
     }
 
     private val googleApiClientOnSubscribe = GoogleApiClientOnSubscribe(apiClientDescriptor, api)
