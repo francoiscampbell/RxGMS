@@ -1,7 +1,8 @@
 package xyz.fcampbell.rxplayservices.test.common
 
 import android.support.test.InstrumentationRegistry
-import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.common.api.GoogleApiClient
+import io.reactivex.Observable
 import org.junit.Assert
 import org.junit.Test
 import xyz.fcampbell.rxplayservices.locationservices.RxFusedLocationApi
@@ -65,11 +66,20 @@ class RxGmsApiTest {
     fun observerDisposedOnDisconnect() {
         testApi.disconnect()
 
-        val testObserver = testApi.requestLocationUpdates(LocationRequest()).test() //an infinite stream, should be terminated on disconnect
+        val testObserver = testApi.apiClient
+                .flatMap { Observable.never<GoogleApiClient>() }
+                .test() //an infinite stream, should be terminated on dispose
+        val apiClient = testApi.apiClient.blockingFirst()
+
         testObserver.assertSubscribed()
         testObserver.assertNotTerminated()
 
+        Assert.assertTrue(apiClient.isConnected)
+
+        testObserver.dispose()
+        Assert.assertTrue(testObserver.isDisposed)
+
         testApi.disconnect()
-        testObserver.assertTerminated()
+        Assert.assertFalse(apiClient.isConnected)
     }
 }
