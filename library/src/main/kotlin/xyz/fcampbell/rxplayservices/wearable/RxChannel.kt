@@ -6,7 +6,7 @@ import com.google.android.gms.common.api.Status
 import com.google.android.gms.wearable.Channel
 import com.google.android.gms.wearable.ChannelApi
 import io.reactivex.Observable
-import xyz.fcampbell.rxplayservices.common.RxWrappedApi
+import xyz.fcampbell.rxplayservices.base.RxWrappedApi
 
 /**
  * Wraps [Channel]

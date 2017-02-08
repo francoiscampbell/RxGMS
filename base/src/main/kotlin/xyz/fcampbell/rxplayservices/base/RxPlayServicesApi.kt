@@ -1,4 +1,4 @@
-package xyz.fcampbell.rxplayservices.common
+package xyz.fcampbell.rxplayservices.base
 
 import android.os.Bundle
 import android.util.Log
@@ -6,7 +6,7 @@ import com.google.android.gms.common.api.Api
 import com.google.android.gms.common.api.GoogleApiClient
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposables
-import xyz.fcampbell.rxplayservices.common.action.GoogleApiClientOnSubscribe
+import xyz.fcampbell.rxplayservices.base.action.GoogleApiClientOnSubscribe
 
 /**
  * Inherit from this class to wrap a particular Google Play services API.

@@ -1,8 +1,9 @@
-package xyz.fcampbell.rxplayservices.common
+package xyz.fcampbell.rxplayservices.base
 
 import android.content.Context
 import android.os.Handler
 import android.view.View
+import com.google.android.gms.common.api.GoogleApiClient
 
 /**
  * Proxy for [GoogleApiClient.Builder]
@@ -47,3 +48,5 @@ class ApiClientDescriptor(
         return this
     }
 }
+
+

@@ -3,6 +3,14 @@
 // To avoid manually setting the same values in all Android modules, set the value on the root
 // project and then reference this from the modules
 ext {
+    githubUrl = 'https://github.com/francoiscampbell/RxPlayServices'
+    gitUrl = "${githubUrl}.git"
+    gitTag = "v$version"
+
+    projectFriendlyName = 'RxPlayServices'
+    projectDescription = 'Library that wraps Google Play services APIs using RxJava'
+
+    minSdkVersion = 11
     compileSdkVersion = 24
     targetSdkVersion = 24
     buildToolsVersion = "24.0.2"
@@ -16,7 +24,7 @@ ext {
 buildscript {
     ext {
         vAndroidGradlePlugin = '2.2.3'
-        vKotlin = '1.0.5-3'
+        vKotlin = '1.0.6'
 
         vDokkaPlugin = '0.9.13'
         vAndroidMavenGradlePlugin = '1.5'
@@ -35,13 +43,15 @@ buildscript {
         classpath "org.jetbrains.dokka:dokka-android-gradle-plugin:$vDokkaPlugin"
         classpath "com.github.dcendents:android-maven-gradle-plugin:$vAndroidMavenGradlePlugin"
         classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:$vGradleBintrayPlugin"
-
-        classpath "com.getkeepsafe.dexcount:dexcount-gradle-plugin:$vDexcount"
     }
 }
 
 def isReleaseBuild() {
     return version.contains("SNAPSHOT") == false
+}
+
+def getArtifactId(String projectName) {
+    return "${rootProject.ext.projectFriendlyName.toLowerCase()}-$projectName"
 }
 
 allprojects {
@@ -52,4 +62,147 @@ allprojects {
         mavenCentral()
         jcenter()
     }
+}
+
+subprojects {
+    if (name == 'sample') return //ignore sample project
+
+    apply plugin: 'com.android.library'
+    apply plugin: 'kotlin-android'
+
+    apply plugin: 'org.jetbrains.dokka-android'
+    apply plugin: 'com.github.dcendents.android-maven'
+    apply plugin: 'com.jfrog.bintray'
+
+    android {
+        compileSdkVersion rootProject.ext.compileSdkVersion
+        buildToolsVersion rootProject.ext.buildToolsVersion
+
+        defaultConfig {
+            minSdkVersion rootProject.ext.minSdkVersion
+            targetSdkVersion rootProject.ext.targetSdkVersion
+
+            multiDexEnabled true //for test app
+            testApplicationId = group + ".test"
+            testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+            testHandleProfiling true
+            testFunctionalTest true
+        }
+
+        sourceSets {
+            main.java.srcDirs += 'src/main/kotlin'
+            androidTest.java.srcDirs += 'src/androidTest/kotlin'
+        }
+
+        buildTypes {
+            release {
+                minifyEnabled false
+                proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            }
+        }
+    }
+
+    dependencies {
+        compile "org.jetbrains.kotlin:kotlin-stdlib:$vKotlin"
+        compile "io.reactivex.rxjava2:rxjava:$vRxJava"
+    }
+
+    //for bintray upload
+    repositories {
+        maven {
+            url 'http://dl.bintray.com/francoiscampbell/maven'
+        }
+    }
+
+    archivesBaseName = rootProject.getArtifactId(project.name)
+
+    task sourcesJar(type: Jar) {
+        from android.sourceSets.main.java.srcDirs
+        classifier = 'sources'
+    }
+
+    task dokkaJar(type: Jar, dependsOn: dokka) {
+        from dokka.outputDirectory
+        classifier = 'dokka'
+    }
+
+    task dokkaJavadoc(type: org.jetbrains.dokka.gradle.DokkaAndroidTask) {
+        outputFormat = 'javadoc'
+        outputDirectory = "$buildDir/javadoc"
+    }
+
+    task dokkaJavadocJar(type: Jar, dependsOn: dokkaJavadoc) {
+        from dokkaJavadoc.outputDirectory
+        classifier = 'javadoc'
+    }
+
+    artifacts {
+        archives dokkaJar
+        archives dokkaJavadocJar
+        archives sourcesJar
+    }
+
+    task installAndBintrayUpload(dependsOn: [install, bintrayUpload]) {
+    }
+
+    bintrayUpload.shouldRunAfter install
+
+    install {
+        repositories.mavenInstaller {
+            pom.project {
+                name rootProject.ext.projectFriendlyName
+                description rootProject.ext.projectDescription
+                url rootProject.ext.githubUrl
+                inceptionYear '2017'
+
+                packaging 'aar'
+                groupId project.group
+                artifactId rootProject.getArtifactId(project.name)
+                version project.version
+
+                licenses {
+                    license {
+                        name 'Apache-2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        distribution 'repo'
+                    }
+                }
+                scm {
+                    connection rootProject.ext.gitUrl
+                    url rootProject.ext.githubUrl
+                }
+                developers {
+                    developer {
+                        name 'Francois Campbell'
+                        email 'campbell.francois@gmail.com'
+                    }
+                }
+            }
+        }
+    }
+
+    bintray {
+        user = project.BINTRAY_USER
+        key = project.BINTRAY_KEY
+
+        configurations = ['archives']
+        publish = true
+        pkg {
+            repo = 'maven'
+            name = "$project.group"
+            licenses = ['Apache-2.0']
+            vcsUrl = rootProject.ext.gitUrl
+            //noinspection GroovyAssignabilityCheck
+            version {
+                name = project.version
+                desc = rootProject.ext.projectDescription
+                released = new Date()
+                vcsTag = rootProject.ext.gitTag
+            }
+        }
+    }
+}
+
+task wrapper(type: Wrapper) {
+    distributionUrl = "https://services.gradle.org/distributions/gradle-2.14.1-all.zip"
 }

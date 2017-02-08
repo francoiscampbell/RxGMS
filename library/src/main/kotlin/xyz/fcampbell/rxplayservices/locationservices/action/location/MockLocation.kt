@@ -8,7 +8,7 @@ import io.reactivex.Observable
 import io.reactivex.ObservableEmitter
 import io.reactivex.ObservableOnSubscribe
 import io.reactivex.disposables.Disposable
-import xyz.fcampbell.rxplayservices.common.exception.StatusException
+import xyz.fcampbell.rxplayservices.base.exception.StatusException
 
 internal class MockLocation(
         private val apiClient: GoogleApiClient,

@@ -7,9 +7,9 @@ import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsResult
 import com.google.android.gms.location.SettingsApi
 import io.reactivex.Observable
-import xyz.fcampbell.rxplayservices.common.ApiClientDescriptor
-import xyz.fcampbell.rxplayservices.common.ApiDescriptor
-import xyz.fcampbell.rxplayservices.common.RxPlayServicesApi
+import xyz.fcampbell.rxplayservices.base.ApiClientDescriptor
+import xyz.fcampbell.rxplayservices.base.ApiDescriptor
+import xyz.fcampbell.rxplayservices.base.RxPlayServicesApi
 
 /**
  * Wraps [LocationServices.SettingsApi]

@@ -4,7 +4,7 @@ import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.drive.DriveId
 import com.google.android.gms.drive.DriveResource
 import io.reactivex.Observable
-import xyz.fcampbell.rxplayservices.common.RxWrappedApi
+import xyz.fcampbell.rxplayservices.base.RxWrappedApi
 
 /**
  * Wraps [DriveId]

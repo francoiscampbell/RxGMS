@@ -6,7 +6,7 @@ import com.google.android.gms.drive.DriveContents
 import com.google.android.gms.drive.ExecutionOptions
 import com.google.android.gms.drive.MetadataChangeSet
 import io.reactivex.Observable
-import xyz.fcampbell.rxplayservices.common.RxWrappedApi
+import xyz.fcampbell.rxplayservices.base.RxWrappedApi
 
 /**
  * Wraps [DriveContents]

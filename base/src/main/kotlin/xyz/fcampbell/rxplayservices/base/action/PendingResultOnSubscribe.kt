@@ -1,11 +1,11 @@
-package xyz.fcampbell.rxplayservices.common.action
+package xyz.fcampbell.rxplayservices.base.action
 
 import com.google.android.gms.common.api.PendingResult
 import com.google.android.gms.common.api.Releasable
 import com.google.android.gms.common.api.Result
 import io.reactivex.ObservableEmitter
 import io.reactivex.ObservableOnSubscribe
-import xyz.fcampbell.rxplayservices.common.exception.StatusException
+import xyz.fcampbell.rxplayservices.base.exception.StatusException
 
 /**
  * Wraps a [PendingResult] and emits its result as an [Observable]. If the [Observable] is canceled or disposed, the [PendingResult] is canceled and any [Releasable] payload is released. If the [PendingResult] was successful, [onNext] is called with the [Result] of the [PendingResult], and if the [PendingResult] was not successful, [onError] is called with a [StatusException] that wraps the status of the [PendingResult].

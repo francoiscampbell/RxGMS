@@ -5,24 +5,15 @@ apply plugin: 'org.jetbrains.dokka-android'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
-apply plugin: 'com.getkeepsafe.dexcount'
-
 group 'xyz.fcampbell.rxplayservices'
 version '0.1.0'
-
-def githubUrl = 'https://github.com/francoiscampbell/RxPlayServices'
-def gitUrl = "${githubUrl}.git"
-def gitTag = "v$version"
-
-def projectFriendlyName = 'RxPlayServices'
-def projectDescription = 'Library that wraps Google Play services APIs using RxJava'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        minSdkVersion 9
+        minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
 
         multiDexEnabled true //for test app
@@ -31,6 +22,7 @@ android {
         testHandleProfiling true
         testFunctionalTest true
     }
+
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
         androidTest.java.srcDirs += 'src/androidTest/kotlin'
@@ -38,6 +30,8 @@ android {
 }
 
 dependencies {
+    compile project(':base')
+
     compile "org.jetbrains.kotlin:kotlin-stdlib:$vKotlin"
     compile "io.reactivex.rxjava2:rxjava:$vRxJava"
 
@@ -46,97 +40,4 @@ dependencies {
     androidTestCompile "com.android.support.test:runner:$vTestSupportLib"
     androidTestCompile "com.android.support.test:rules:$vTestSupportLib"
     androidTestCompile "com.google.android.gms:play-services:$vGooglePlayServices"
-}
-
-//for bintray upload
-repositories {
-    maven {
-        url 'http://dl.bintray.com/francoiscampbell/maven'
-    }
-}
-
-task sourcesJar(type: Jar) {
-    from android.sourceSets.main.java.srcDirs
-    classifier = 'sources'
-}
-
-task dokkaJar(type: Jar, dependsOn: dokka) {
-    from dokka.outputDirectory
-    classifier = 'dokka'
-}
-
-task dokkaJavadoc(type: org.jetbrains.dokka.gradle.DokkaAndroidTask) {
-    outputFormat = 'javadoc'
-    outputDirectory = "$buildDir/javadoc"
-}
-
-task dokkaJavadocJar(type: Jar, dependsOn: dokkaJavadoc) {
-    from dokkaJavadoc.outputDirectory
-    classifier = 'javadoc'
-}
-
-artifacts {
-    archives dokkaJar
-    archives dokkaJavadocJar
-    archives sourcesJar
-}
-
-task installAndBintrayUpload(dependsOn: [install, bintrayUpload]) {
-}
-
-bintrayUpload.shouldRunAfter install
-
-install {
-    repositories.mavenInstaller {
-        pom.project {
-            name projectFriendlyName
-            description projectDescription
-            url githubUrl
-            inceptionYear '2017'
-
-            packaging 'aar'
-            groupId project.group
-            artifactId project.name
-            version project.version
-
-            licenses {
-                license {
-                    name 'Apache-2.0'
-                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                    distribution 'repo'
-                }
-            }
-            scm {
-                connection gitUrl
-                url githubUrl
-            }
-            developers {
-                developer {
-                    name 'Francois Campbell'
-                    email 'campbell.francois@gmail.com'
-                }
-            }
-        }
-    }
-}
-
-bintray {
-    user = project.BINTRAY_USER
-    key = project.BINTRAY_KEY
-
-    configurations = ['archives']
-    publish = true
-    pkg {
-        repo = 'maven'
-        name = "$project.group:$project.name"
-        licenses = ['Apache-2.0']
-        vcsUrl = gitUrl
-        //noinspection GroovyAssignabilityCheck
-        version {
-            name = project.version
-            desc = projectDescription
-            released = new Date()
-            vcsTag = gitTag
-        }
-    }
 }

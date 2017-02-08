@@ -1,17 +1,18 @@
-package xyz.fcampbell.rxplayservices.common.util
+package xyz.fcampbell.rxplayservices.base.util
 
 import android.app.Activity
 import android.content.*
 import android.os.Bundle
 import android.support.v4.content.LocalBroadcastManager
 import io.reactivex.Observable
-import xyz.fcampbell.rxplayservices.BuildConfig
+import xyz.fcampbell.rxplayservices.base.BuildConfig
 import java.util.*
 
 /**
  * Transparent [Activity] used to get a result from Google Play services that require user interaction (e.g. [RxGoogleSignInApi.signIn()])
  */
-class ResultActivity() : Activity() {
+@Suppress("unused")
+class ResultActivity : Activity() {
     companion object {
         private const val KEY_INTENT_SENDER = "${BuildConfig.APPLICATION_ID}.intentSender"
         private const val KEY_RESULT_INTENT = "${BuildConfig.APPLICATION_ID}.resultIntent"
@@ -37,23 +38,23 @@ class ResultActivity() : Activity() {
                     override fun onReceive(context: Context, intent: Intent) {
                         localBroadcastManager.unregisterReceiver(this)
 
-                        if (!intent.hasExtra(ResultActivity.KEY_REQUEST_CODE)) {
+                        if (!intent.hasExtra(KEY_REQUEST_CODE)) {
                             emitter.onError(ResultException(intent, "returned intent does not have KEY_REQUEST_CODE"))
                             return
                         }
 
-                        val originalRequestCode = intent.getIntExtra(ResultActivity.KEY_REQUEST_CODE, -1)
+                        val originalRequestCode = intent.getIntExtra(KEY_REQUEST_CODE, -1)
                         if (originalRequestCode != expectedRequestCode) {
                             emitter.onError(ResultException(intent, "originalRequestCode != expectedRequestCode, receiver received wrong broadcast"))
                             return
                         }
 
-                        if (!intent.hasExtra(ResultActivity.KEY_RESULT_CODE)) {
+                        if (!intent.hasExtra(KEY_RESULT_CODE)) {
                             emitter.onError(ResultException(intent, "returned intent does not have KEY_RESULT_CODE"))
                             return
                         }
 
-                        val resultCode = intent.getIntExtra(ResultActivity.KEY_RESULT_CODE, -1)
+                        val resultCode = intent.getIntExtra(KEY_RESULT_CODE, -1)
                         if (resultCode != RESULT_OK) {
                             emitter.onError(ResultException(intent, "resultCode != RESULT_OK"))
                             return
@@ -94,23 +95,5 @@ class ResultActivity() : Activity() {
         finish()
     }
 
-    class ResultException : Exception {
-        val data: Intent
-
-        constructor(data: Intent) : super() {
-            this.data = data
-        }
-
-        constructor(data: Intent, message: String) : super(message) {
-            this.data = data
-        }
-
-        constructor(data: Intent, ex: Throwable) : super(ex) {
-            this.data = data
-        }
-
-        constructor(data: Intent, message: String, ex: Throwable) : super(message, ex) {
-            this.data = data
-        }
-    }
+    class ResultException(val data: Intent, message: String) : Exception(message)
 }

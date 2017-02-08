@@ -8,7 +8,7 @@ import com.google.android.gms.drive.DriveResource
 import com.google.android.gms.drive.MetadataChangeSet
 import com.google.android.gms.drive.events.ChangeListener
 import io.reactivex.Observable
-import xyz.fcampbell.rxplayservices.common.RxWrappedApi
+import xyz.fcampbell.rxplayservices.base.RxWrappedApi
 
 /**
  * Wraps [DriveResource]

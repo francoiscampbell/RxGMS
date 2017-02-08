@@ -18,7 +18,7 @@ import io.reactivex.functions.Consumer
 import io.reactivex.functions.Function
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
-import xyz.fcampbell.rxplayservices.common.exception.StatusException
+import xyz.fcampbell.rxplayservices.base.exception.StatusException
 import xyz.fcampbell.rxplayservices.locationservices.RxActivityRecognitionApi
 import xyz.fcampbell.rxplayservices.locationservices.RxFusedLocationApi
 import xyz.fcampbell.rxplayservices.locationservices.RxGeocodingApi

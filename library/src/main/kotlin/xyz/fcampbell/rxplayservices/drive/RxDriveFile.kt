@@ -3,7 +3,7 @@ package xyz.fcampbell.rxplayservices.drive
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.drive.DriveFile
 import io.reactivex.Observable
-import xyz.fcampbell.rxplayservices.common.RxWrappedApi
+import xyz.fcampbell.rxplayservices.base.RxWrappedApi
 
 /**
  * Wraps [DriveFile]

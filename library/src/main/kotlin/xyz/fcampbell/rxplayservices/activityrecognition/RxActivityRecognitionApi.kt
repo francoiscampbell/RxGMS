@@ -6,9 +6,9 @@ import com.google.android.gms.location.ActivityRecognition
 import com.google.android.gms.location.ActivityRecognitionResult
 import io.reactivex.Observable
 import xyz.fcampbell.rxplayservices.activityrecognition.action.ActivityUpdates
-import xyz.fcampbell.rxplayservices.common.ApiClientDescriptor
-import xyz.fcampbell.rxplayservices.common.ApiDescriptor
-import xyz.fcampbell.rxplayservices.common.RxPlayServicesApi
+import xyz.fcampbell.rxplayservices.base.ApiClientDescriptor
+import xyz.fcampbell.rxplayservices.base.ApiDescriptor
+import xyz.fcampbell.rxplayservices.base.RxPlayServicesApi
 
 /**
  * Wraps [ActivityRecognition.ActivityRecognitionApi]

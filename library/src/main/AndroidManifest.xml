@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="xyz.fcampbell.rxplayservices">
+<manifest
+    package="xyz.fcampbell.rxplayservices">
 
     <application>
-        <activity
-            android:name="xyz.fcampbell.rxplayservices.common.util.ResultActivity"
-            android:launchMode="singleTask"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+
     </application>
 </manifest>

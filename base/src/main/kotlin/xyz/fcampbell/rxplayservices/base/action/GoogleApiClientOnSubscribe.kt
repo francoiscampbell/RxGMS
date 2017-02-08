@@ -1,18 +1,17 @@
-package xyz.fcampbell.rxplayservices.common.action
+package xyz.fcampbell.rxplayservices.base.action
 
 import android.os.Bundle
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.Api
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.common.api.Scope
-import com.google.android.gms.wearable.Wearable
 import io.reactivex.ObservableEmitter
 import io.reactivex.ObservableOnSubscribe
-import xyz.fcampbell.rxplayservices.common.ApiClientDescriptor
-import xyz.fcampbell.rxplayservices.common.ApiDescriptor
-import xyz.fcampbell.rxplayservices.common.exception.GoogleApiConnectionException
-import xyz.fcampbell.rxplayservices.common.exception.GoogleApiConnectionSuspendedException
-import xyz.fcampbell.rxplayservices.common.util.ResultActivity
+import xyz.fcampbell.rxplayservices.base.ApiClientDescriptor
+import xyz.fcampbell.rxplayservices.base.ApiDescriptor
+import xyz.fcampbell.rxplayservices.base.exception.GoogleApiConnectionException
+import xyz.fcampbell.rxplayservices.base.exception.GoogleApiConnectionSuspendedException
+import xyz.fcampbell.rxplayservices.base.util.ResultActivity
 
 /**
  * Handles creating, connecting, and delivering the [GoogleApiClient] for a particulat Google Play services API
@@ -105,7 +104,7 @@ internal class GoogleApiClientOnSubscribe<A, O : Api.ApiOptions>(
 
         init {
             try { //add one per api that may not be there
-                APIS_TO_ADD_ONLY_IF_AVAILABLE.add(Wearable.API)
+                APIS_TO_ADD_ONLY_IF_AVAILABLE.add(com.google.android.gms.wearable.Wearable.API)
             } catch (e: NoClassDefFoundError) {
             }
         }

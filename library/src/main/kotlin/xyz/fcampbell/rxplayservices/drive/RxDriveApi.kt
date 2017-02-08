@@ -11,9 +11,9 @@ import com.google.android.gms.drive.DriveApi.MetadataBufferResult
 import com.google.android.gms.drive.OpenFileActivityBuilder
 import com.google.android.gms.drive.query.Query
 import io.reactivex.Observable
-import xyz.fcampbell.rxplayservices.common.ApiClientDescriptor
-import xyz.fcampbell.rxplayservices.common.ApiDescriptor
-import xyz.fcampbell.rxplayservices.common.RxPlayServicesApi
+import xyz.fcampbell.rxplayservices.base.ApiClientDescriptor
+import xyz.fcampbell.rxplayservices.base.ApiDescriptor
+import xyz.fcampbell.rxplayservices.base.RxPlayServicesApi
 
 /**
  * Wraps [Drive.DriveApi]

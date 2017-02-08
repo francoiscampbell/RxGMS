@@ -10,9 +10,9 @@ import com.google.android.gms.location.FusedLocationProviderApi
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import io.reactivex.Observable
-import xyz.fcampbell.rxplayservices.common.ApiClientDescriptor
-import xyz.fcampbell.rxplayservices.common.ApiDescriptor
-import xyz.fcampbell.rxplayservices.common.RxPlayServicesApi
+import xyz.fcampbell.rxplayservices.base.ApiClientDescriptor
+import xyz.fcampbell.rxplayservices.base.ApiDescriptor
+import xyz.fcampbell.rxplayservices.base.RxPlayServicesApi
 import xyz.fcampbell.rxplayservices.locationservices.action.location.LocationUpdates
 import xyz.fcampbell.rxplayservices.locationservices.action.location.MockLocation
 

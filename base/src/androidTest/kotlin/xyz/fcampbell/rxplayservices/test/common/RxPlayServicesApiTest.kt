@@ -1,11 +1,7 @@
 package xyz.fcampbell.rxplayservices.test.common
 
-import android.support.test.InstrumentationRegistry
 import com.google.android.gms.common.api.GoogleApiClient
 import io.reactivex.Observable
-import org.junit.Assert
-import org.junit.Test
-import xyz.fcampbell.rxplayservices.locationservices.RxFusedLocationApi
 import java.util.concurrent.TimeUnit
 
 /**

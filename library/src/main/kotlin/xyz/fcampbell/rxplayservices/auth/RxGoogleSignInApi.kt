@@ -11,10 +11,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult
 import com.google.android.gms.common.api.Status
 import io.reactivex.Observable
 import xyz.fcampbell.rxplayservices.auth.exception.SignInException
-import xyz.fcampbell.rxplayservices.common.ApiClientDescriptor
-import xyz.fcampbell.rxplayservices.common.ApiDescriptor
-import xyz.fcampbell.rxplayservices.common.RxPlayServicesApi
-import xyz.fcampbell.rxplayservices.common.util.ResultActivity
+import xyz.fcampbell.rxplayservices.base.ApiClientDescriptor
+import xyz.fcampbell.rxplayservices.base.ApiDescriptor
+import xyz.fcampbell.rxplayservices.base.RxPlayServicesApi
+import xyz.fcampbell.rxplayservices.base.util.ResultActivity
 
 /**
  * Wraps [Auth.GoogleSignInApi]

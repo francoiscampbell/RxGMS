@@ -9,9 +9,9 @@ import com.google.android.gms.drive.DrivePreferencesApi
 import com.google.android.gms.drive.DrivePreferencesApi.FileUploadPreferencesResult
 import com.google.android.gms.drive.FileUploadPreferences
 import io.reactivex.Observable
-import xyz.fcampbell.rxplayservices.common.ApiClientDescriptor
-import xyz.fcampbell.rxplayservices.common.ApiDescriptor
-import xyz.fcampbell.rxplayservices.common.RxPlayServicesApi
+import xyz.fcampbell.rxplayservices.base.ApiClientDescriptor
+import xyz.fcampbell.rxplayservices.base.ApiDescriptor
+import xyz.fcampbell.rxplayservices.base.RxPlayServicesApi
 
 /**
  * Wraps [Drive.DrivePreferencesApi]

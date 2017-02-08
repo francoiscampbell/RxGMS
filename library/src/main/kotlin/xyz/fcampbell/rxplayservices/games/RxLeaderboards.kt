@@ -8,9 +8,9 @@ import com.google.android.gms.games.leaderboard.LeaderboardScoreBuffer
 import com.google.android.gms.games.leaderboard.Leaderboards
 import io.reactivex.Completable
 import io.reactivex.Observable
-import xyz.fcampbell.rxplayservices.common.ApiClientDescriptor
-import xyz.fcampbell.rxplayservices.common.ApiDescriptor
-import xyz.fcampbell.rxplayservices.common.RxPlayServicesApi
+import xyz.fcampbell.rxplayservices.base.ApiClientDescriptor
+import xyz.fcampbell.rxplayservices.base.ApiDescriptor
+import xyz.fcampbell.rxplayservices.base.RxPlayServicesApi
 
 
 /**

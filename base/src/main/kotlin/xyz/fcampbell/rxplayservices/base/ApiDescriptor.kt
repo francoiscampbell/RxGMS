@@ -1,4 +1,4 @@
-package xyz.fcampbell.rxplayservices.common
+package xyz.fcampbell.rxplayservices.base
 
 import com.google.android.gms.common.api.Api
 import com.google.android.gms.common.api.Scope

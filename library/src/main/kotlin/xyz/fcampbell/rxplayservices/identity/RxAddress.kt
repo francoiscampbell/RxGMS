@@ -4,9 +4,9 @@ import android.content.Context
 import com.google.android.gms.identity.intents.Address
 import com.google.android.gms.identity.intents.UserAddressRequest
 import io.reactivex.Completable
-import xyz.fcampbell.rxplayservices.common.ApiClientDescriptor
-import xyz.fcampbell.rxplayservices.common.ApiDescriptor
-import xyz.fcampbell.rxplayservices.common.RxPlayServicesApi
+import xyz.fcampbell.rxplayservices.base.ApiClientDescriptor
+import xyz.fcampbell.rxplayservices.base.ApiDescriptor
+import xyz.fcampbell.rxplayservices.base.RxPlayServicesApi
 
 /**
  * Wraps [Address]

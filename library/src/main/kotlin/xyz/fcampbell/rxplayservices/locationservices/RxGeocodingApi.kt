@@ -7,9 +7,9 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.LatLngBounds
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
-import xyz.fcampbell.rxplayservices.common.ApiClientDescriptor
-import xyz.fcampbell.rxplayservices.common.ApiDescriptor
-import xyz.fcampbell.rxplayservices.common.RxPlayServicesApi
+import xyz.fcampbell.rxplayservices.base.ApiClientDescriptor
+import xyz.fcampbell.rxplayservices.base.ApiDescriptor
+import xyz.fcampbell.rxplayservices.base.RxPlayServicesApi
 import xyz.fcampbell.rxplayservices.locationservices.action.geocode.Geocode
 import xyz.fcampbell.rxplayservices.locationservices.action.geocode.ReverseGeocode
 import java.util.*
