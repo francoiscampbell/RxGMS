@@ -21,6 +21,8 @@ buildscript {
         vDokkaPlugin = '0.9.13'
         vAndroidMavenGradlePlugin = '1.5'
         vGradleBintrayPlugin = '1.7.3'
+
+        vDexcount = '0.6.2'
     }
     repositories {
         mavenCentral()
@@ -33,6 +35,8 @@ buildscript {
         classpath "org.jetbrains.dokka:dokka-android-gradle-plugin:$vDokkaPlugin"
         classpath "com.github.dcendents:android-maven-gradle-plugin:$vAndroidMavenGradlePlugin"
         classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:$vGradleBintrayPlugin"
+
+        classpath "com.getkeepsafe.dexcount:dexcount-gradle-plugin:$vDexcount"
     }
 }
 

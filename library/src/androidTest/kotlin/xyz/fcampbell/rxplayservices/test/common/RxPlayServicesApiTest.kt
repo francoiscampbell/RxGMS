@@ -68,7 +68,7 @@ class RxPlayServicesApiTest {
 
         val testObserver = testApi.apiClient
                 .flatMap { Observable.never<GoogleApiClient>() }
-                .test() //an infinite stream, should be terminated on dispose
+                .test() //an infinite stream
         val apiClient = testApi.apiClient.blockingFirst()
 
         testObserver.assertSubscribed()

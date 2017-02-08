@@ -15,8 +15,6 @@ import xyz.fcampbell.rxplayservices.sample.PermittedActivity
 import xyz.fcampbell.rxplayservices.sample.R
 import xyz.fcampbell.rxplayservices.sample.utils.DisplayTextOnViewAction
 import xyz.fcampbell.rxplayservices.sample.utils.LocationToStringFunc
-import java.lang.Double
-import java.lang.Float
 
 class GeofenceActivity : PermittedActivity() {
     override val permissionsToRequest = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
