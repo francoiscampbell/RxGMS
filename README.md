@@ -7,32 +7,33 @@ This library is written in Kotlin because of the amount of lambdas used in react
 ## Current version - 0.1.0
 This version has been developed against Play services 10.0.1 and RxJava 2.0.4. It may work on earlier versions of Play services but any methods deprecated as of 10.0.1 are not included. It will not work with RxJava 1.x.y unless you provide a shim like [RxJavaReactiveStreams](https://github.com/ReactiveX/RxJavaReactiveStreams).
 
-This is a WIP as I implement more APIs. The status of implemented Play services APIs is:
+This is a WIP as more APIs get implemented. The status of implemented Play services APIs is:
 
-| API                                      | Status | Gradle dependency                                     |
-|------------------------------------------|--------|-------------------------------------------------------|
-| Google+                                  | ✘      | com.google.android.gms:play-services-plus:10.0.1      |
-| Google Account Login                     | ✔      | com.google.android.gms:play-services-auth:10.0.1      |
-| Google Actions, Base Client Library      | ✔      | com.google.android.gms:play-services-base:10.0.1      |
-| Google Address API                       | ✘      | com.google.android.gms:play-services-identity:10.0.1  |
-| Firebase App Indexing                    | ✘      | com.google.firebase:firebase-appindexing:10.0.1       |
-| Google Analytics                         | ✘      | com.google.android.gms:play-services-analytics:10.0.1 |
-| Google Awareness                         | ✘      | com.google.android.gms:play-services-awareness:10.0.1 |
-| Google Cast                              | ✔      | com.google.android.gms:play-services-cast:10.0.1      |
-| Google Cloud Messaging                   | ✘      | com.google.android.gms:play-services-gcm:10.0.1       |
-| Google Drive                             | ✔      | com.google.android.gms:play-services-drive:10.0.1     |
-| Google Fit                               | ✘      | com.google.android.gms:play-services-fitness:10.0.1   |
-| Google Location and Activity Recognition | ✔      | com.google.android.gms:play-services-location:10.0.1  |
-| Google Maps                              | ✘      | com.google.android.gms:play-services-maps:10.0.1      |
-| Google Mobile Ads                        | ✘      | com.google.android.gms:play-services-ads:10.0.1       |
-| Google Places                            | ✔      | com.google.android.gms:play-services-places:10.0.1    |
-| Mobile Vision                            | ✘      | com.google.android.gms:play-services-vision:10.0.1    |
-| Google Nearby                            | ✔      | com.google.android.gms:play-services-nearby:10.0.1    |
-| Google Panorama Viewer                   | ✘      | com.google.android.gms:play-services-panorama:10.0.1  |
-| Google Play Game services                | ✔      | com.google.android.gms:play-services-games:10.0.1     |
-| SafetyNet                                | ✘      | com.google.android.gms:play-services-safetynet:10.0.1 |
-| Android Pay                              | ✔      | com.google.android.gms:play-services-wallet:10.0.1    |
-| Android Wear                             | ✔      | com.google.android.gms:play-services-wearable:10.0.1  |
+| API                                      | Status | Gradle dependency                                         |
+|------------------------------------------|--------|-----------------------------------------------------------|
+| Google+                                  | ✘      | com.google.android.gms:play-services-plus:10.0.1          |
+| Google Account Login                     | ✔      | com.google.android.gms:play-services-auth:10.0.1          |
+| Google Actions, Base Client Library      | ✔      | com.google.android.gms:play-services-base:10.0.1          |
+| Google Address API                       | ✘      | com.google.android.gms:play-services-identity:10.0.1      |
+| Firebase App Indexing                    | ✘      | com.google.firebase:firebase-appindexing:10.0.1           |
+| Google Analytics                         | ✘      | com.google.android.gms:play-services-analytics:10.0.1     |
+| Google Awareness                         | ✘      | com.google.android.gms:play-services-awareness:10.0.1     |
+| Google Cast                              | ✔      | com.google.android.gms:play-services-cast:10.0.1          |
+| Google Cloud Messaging                   | ✘      | com.google.android.gms:play-services-gcm:10.0.1           |
+| Google Drive                             | ✔      | com.google.android.gms:play-services-drive:10.0.1         |
+| Google Fit                               | ✘      | com.google.android.gms:play-services-fitness:10.0.1       |
+| Google Instant Apps                      | ✘      | com.google.android.gms:play-services-instantapps:10.0.1   |
+| Google Location and Activity Recognition | ✔      | com.google.android.gms:play-services-location:10.0.1      |
+| Google Maps                              | ✘      | com.google.android.gms:play-services-maps:10.0.1          |
+| Google Mobile Ads                        | ✘      | com.google.android.gms:play-services-ads:10.0.1           |
+| Google Places                            | ✔      | com.google.android.gms:play-services-places:10.0.1        |
+| Mobile Vision                            | ✘      | com.google.android.gms:play-services-vision:10.0.1        |
+| Google Nearby                            | ✔      | com.google.android.gms:play-services-nearby:10.0.1        |
+| Google Panorama Viewer                   | ✘      | com.google.android.gms:play-services-panorama:10.0.1      |
+| Google Play Game services                | ✔      | com.google.android.gms:play-services-games:10.0.1         |
+| SafetyNet                                | ✘      | com.google.android.gms:play-services-safetynet:10.0.1     |
+| Android Pay                              | ✔      | com.google.android.gms:play-services-wallet:10.0.1        |
+| Android Wear                             | ✔      | com.google.android.gms:play-services-wearable:10.0.1      |
 
 ## Installation
 Add this to `build.gradle`:
@@ -40,12 +41,11 @@ Add this to `build.gradle`:
 compile 'xyz.fcampbell.rxplayservices:rxplayservices:0.1.0'
 ```
 
-This library declares all Play services Gradle dependencies as `provided`, meaning that they will not be automatically downloaded. This is to avoid pulling in libraries that you don't use and adding methods to your APK. You must therefore specify the Play services libraries that you wish to use. For example, to use location services, add the following line to your `build.gradle`:
+If you want only a certain module, use the same convention as Google Play services. For example:
 ```
-compile 'com.google.android.gms:play-services-location:10.0.1'
+compile 'xyz.fcampbell.rxplayservices:rxplayservices-location:0.1.0'
+compile 'xyz.fcampbell.rxplayservices:rxplayservices-drive:0.1.0'
 ```
-
-Chances are if you get a `NoClassDefFoundError`, it means you're trying to use a Play services API that you haven't added to your `build.gradle` file.
 
 ## Structure
 The packages and classes follow a similar structure to the original Play services packages. The API's name is the package and the particular interface in that API is wrapped in a class with the same name prefixed with `Rx`

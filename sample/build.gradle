@@ -11,6 +11,7 @@ def getGooglePlayServicesApiKey() {
     return ""
 }
 
+//noinspection GroovyMissingReturnStatement
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
@@ -44,9 +45,4 @@ dependencies {
     compile 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.1'
 
     compile project(':library')
-    compile "com.google.android.gms:play-services-identity:$vGooglePlayServices"
-    compile "com.google.android.gms:play-services-auth:$vGooglePlayServices"
-    compile "com.google.android.gms:play-services-location:$vGooglePlayServices"
-    compile "com.google.android.gms:play-services-places:$vGooglePlayServices"
-    compile "com.google.android.gms:play-services-drive:$vGooglePlayServices"
 }
