@@ -1,4 +1,4 @@
-package xyz.fcampbell.rxplayservices.test.base
+package xyz.fcampbell.rxplayservices.base.test
 
 import com.google.android.gms.common.api.GoogleApiClient
 import io.reactivex.Observable
