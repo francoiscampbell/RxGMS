@@ -16,7 +16,7 @@ dependencies {
     }
 }
 
-subprojects {
+def configureProject = {
     apply plugin: 'com.android.library'
     apply plugin: 'kotlin-android'
 
@@ -156,3 +156,6 @@ subprojects {
         }
     }
 }
+
+configureProject()
+subprojects(configureProject)
