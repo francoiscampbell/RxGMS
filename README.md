@@ -34,7 +34,7 @@ This is a WIP as more APIs get implemented. The status of implemented Play servi
 | Google Play Game services                | ✔           | com.google.android.gms:play-services-games:10.0.1         |
 | Google Tag Manager                       | Different   | com.google.android.gms:play-services-tagmanager-10.0.1    |
 | Google Tasks                             | Different   | com.google.android.gms:play-services-tasks-10.0.1         |
-| SafetyNet                                | ✘           | com.google.android.gms:play-services-safetynet:10.0.1     |
+| SafetyNet                                | ✔           | com.google.android.gms:play-services-safetynet:10.0.1     |
 | Android Pay                              | ✔           | com.google.android.gms:play-services-wallet:10.0.1        |
 | Android Wear                             | ✔           | com.google.android.gms:play-services-wearable:10.0.1      |
 
