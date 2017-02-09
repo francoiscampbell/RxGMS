@@ -37,6 +37,10 @@ android {
     }
 }
 
+repositories {
+    mavenLocal()
+}
+
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$vKotlin"
     compile 'com.android.support:appcompat-v7:24.2.1'
@@ -45,4 +49,5 @@ dependencies {
     compile 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.1'
 
     compile project(':library')
+//    compile 'xyz.fcampbell.rxplayservices:rxplayservices:0.5.0'
 }
