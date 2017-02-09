@@ -1,0 +1,5 @@
+dependencies {
+    compile project(':library:base')
+
+    compile "com.google.android.gms:play-services-auth:$vGooglePlayServices"
+}

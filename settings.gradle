@@ -1,1 +1,2 @@
-include ':sample', ':library', ':base'
+//include ':sample', ':library', ':library:base'
+include 'sample', ':library', ':library:base', ':library:location', ':library:auth', ':library:cast', ':library:drive', ':library:games', ':library:identity', ':library:nearby', ':library:places', ':library:wallet', ':library:wearable'

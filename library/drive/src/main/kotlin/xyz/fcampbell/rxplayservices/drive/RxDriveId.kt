@@ -1,0 +1,24 @@
+package xyz.fcampbell.rxplayservices.drive
+
+import xyz.fcampbell.rxplayservices.base.RxWrappedApi
+
+/**
+ * Wraps [DriveId]
+ */
+@Suppress("unused")
+class RxDriveId(
+        override val apiClient: Observable<GoogleApiClient>,
+        override val original: DriveId
+) : RxWrappedApi<DriveId> {
+    fun asDriveFile(): Observable<RxDriveFile> {
+        return Observable.just(RxDriveFile(apiClient, original.asDriveFile()))
+    }
+
+    fun asDriveFolder(): Observable<RxDriveFolder> {
+        return Observable.just(RxDriveFolder(apiClient, original.asDriveFolder()))
+    }
+
+    fun asDriveResource(): Observable<RxDriveResource<DriveResource>> {
+        return Observable.just(RxDriveResource(apiClient, original.asDriveResource()))
+    }
+}

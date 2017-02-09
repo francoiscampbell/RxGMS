@@ -1,0 +1,72 @@
+package xyz.fcampbell.rxplayservices.wearable
+
+import android.content.Context
+import android.net.Uri
+import xyz.fcampbell.rxplayservices.base.ApiClientDescriptor
+import xyz.fcampbell.rxplayservices.base.ApiDescriptor
+import xyz.fcampbell.rxplayservices.base.RxPlayServicesApi
+
+/**
+ * Wraps [Wearable.DataApi]
+ */
+@Suppress("unused")
+class RxDataApi(
+        apiClientDescriptor: ApiClientDescriptor,
+        wearableOptions: Wearable.WearableOptions
+) : RxPlayServicesApi<DataApi, Wearable.WearableOptions>(
+        apiClientDescriptor,
+        ApiDescriptor(Wearable.API, Wearable.DataApi, wearableOptions)
+) {
+    constructor(
+            context: Context,
+            wearableOptions: Wearable.WearableOptions
+    ) : this(ApiClientDescriptor(context), wearableOptions)
+
+    fun putDataItem(putDataRequest: PutDataRequest): Observable<DataApi.DataItemResult> {
+        return fromPendingResult { putDataItem(it, putDataRequest) }
+    }
+
+    fun getDataItem(uri: Uri): Observable<DataApi.DataItemResult> {
+        return fromPendingResult { getDataItem(it, uri) }
+    }
+
+    fun getDataItems(): Observable<DataItemBuffer> {
+        return fromPendingResult { getDataItems(it) }
+    }
+
+    fun getDataItems(uri: Uri): Observable<DataItemBuffer> {
+        return fromPendingResult { getDataItems(it, uri) }
+    }
+
+    fun getDataItems(uri: Uri, filterType: Int): Observable<DataItemBuffer> {
+        return fromPendingResult { getDataItems(it, uri, filterType) }
+    }
+
+    fun deleteDataItems(uri: Uri): Observable<DataApi.DeleteDataItemsResult> {
+        return fromPendingResult { deleteDataItems(it, uri) }
+    }
+
+    fun deleteDataItems(uri: Uri, filterType: Int): Observable<DataApi.DeleteDataItemsResult> {
+        return fromPendingResult { deleteDataItems(it, uri, filterType) }
+    }
+
+    fun getFdForAsset(asset: Asset): Observable<DataApi.GetFdForAssetResult> {
+        return fromPendingResult { getFdForAsset(it, asset) }
+    }
+
+    fun getFdForAsset(asset: DataItemAsset): Observable<DataApi.GetFdForAssetResult> {
+        return fromPendingResult { getFdForAsset(it, asset) }
+    }
+
+    fun addListener(listener: DataApi.DataListener): Observable<Status> {
+        return fromPendingResult { addListener(it, listener) }
+    }
+
+    fun addListener(listener: DataApi.DataListener, uri: Uri, filterType: Int): Observable<Status> {
+        return fromPendingResult { addListener(it, listener, uri, filterType) }
+    }
+
+    fun removeListener(listener: DataApi.DataListener): Observable<Status> {
+        return fromPendingResult { removeListener(it, listener) }
+    }
+}

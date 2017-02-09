@@ -1,12 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
-
-apply plugin: 'org.jetbrains.dokka-android'
-apply plugin: 'com.github.dcendents.android-maven'
-apply plugin: 'com.jfrog.bintray'
-
-group 'xyz.fcampbell.rxplayservices'
-version '0.1.0'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -15,29 +7,152 @@ android {
     defaultConfig {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-
-        multiDexEnabled true //for test app
-        testApplicationId = group + ".test"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        testHandleProfiling true
-        testFunctionalTest true
-    }
-
-    sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
-        androidTest.java.srcDirs += 'src/androidTest/kotlin'
     }
 }
 
 dependencies {
-    compile project(':base')
+    subprojects.each {
+        compile project(it.path)
+    }
+}
 
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$vKotlin"
-    compile "io.reactivex.rxjava2:rxjava:$vRxJava"
+subprojects {
+    apply plugin: 'com.android.library'
+    apply plugin: 'kotlin-android'
 
-    provided "com.google.android.gms:play-services:$vGooglePlayServices"
+    apply plugin: 'org.jetbrains.dokka-android'
+    apply plugin: 'com.github.dcendents.android-maven'
+    apply plugin: 'com.jfrog.bintray'
 
-    androidTestCompile "com.android.support.test:runner:$vTestSupportLib"
-    androidTestCompile "com.android.support.test:rules:$vTestSupportLib"
-    androidTestCompile "com.google.android.gms:play-services:$vGooglePlayServices"
+    //noinspection GroovyMissingReturnStatement
+    android {
+        compileSdkVersion rootProject.ext.compileSdkVersion
+        buildToolsVersion rootProject.ext.buildToolsVersion
+
+        defaultConfig {
+            minSdkVersion rootProject.ext.minSdkVersion
+            targetSdkVersion rootProject.ext.targetSdkVersion
+
+            multiDexEnabled true //for test app
+            testApplicationId = group + ".test"
+            testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+            testHandleProfiling true
+            testFunctionalTest true
+        }
+
+        sourceSets {
+            main.java.srcDirs += 'src/main/kotlin'
+            androidTest.java.srcDirs += 'src/androidTest/kotlin'
+        }
+
+        buildTypes {
+            release {
+                minifyEnabled false
+                proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            }
+        }
+    }
+
+    dependencies {
+        compile "org.jetbrains.kotlin:kotlin-stdlib:$vKotlin"
+        compile "io.reactivex.rxjava2:rxjava:$vRxJava"
+
+        androidTestCompile "com.android.support.test:runner:$vTestSupportLib"
+        androidTestCompile "com.android.support.test:rules:$vTestSupportLib"
+    }
+
+    //for bintray upload
+    repositories {
+        maven {
+            url 'http://dl.bintray.com/francoiscampbell/maven'
+        }
+    }
+
+    archivesBaseName = rootProject.getArtifactId(project.name)
+
+    task sourcesJar(type: Jar) {
+        from android.sourceSets.main.java.srcDirs
+        classifier = 'sources'
+    }
+
+    task dokkaJar(type: Jar, dependsOn: dokka) {
+        from dokka.outputDirectory
+        classifier = 'dokka'
+    }
+
+    task dokkaJavadoc(type: org.jetbrains.dokka.gradle.DokkaAndroidTask) {
+        outputFormat = 'javadoc'
+        outputDirectory = "$buildDir/javadoc"
+    }
+
+    task dokkaJavadocJar(type: Jar, dependsOn: dokkaJavadoc) {
+        from dokkaJavadoc.outputDirectory
+        classifier = 'javadoc'
+    }
+
+    artifacts {
+        archives dokkaJar
+        archives dokkaJavadocJar
+        archives sourcesJar
+    }
+
+    task installAndBintrayUpload(dependsOn: [install, bintrayUpload], group: 'publishing')
+    bintrayUpload.shouldRunAfter install
+
+    install {
+        group 'publishing'
+        repositories.mavenInstaller {
+            pom.project {
+                name rootProject.ext.projectFriendlyName
+                description rootProject.ext.projectDescription
+                url rootProject.ext.githubUrl
+                inceptionYear '2017'
+
+                packaging 'aar'
+                groupId project.group
+                artifactId rootProject.getArtifactId(project.name)
+                version project.version
+
+                licenses {
+                    license {
+                        name 'Apache-2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        distribution 'repo'
+                    }
+                }
+                scm {
+                    connection rootProject.ext.gitUrl
+                    url rootProject.ext.githubUrl
+                }
+                developers {
+                    developer {
+                        name 'Francois Campbell'
+                        email 'campbell.francois@gmail.com'
+                    }
+                }
+            }
+        }
+    }
+
+    bintray {
+        user = project.BINTRAY_USER
+        key = project.BINTRAY_KEY
+
+        configurations = ['archives']
+        publish = true
+        override = true
+        pkg {
+            repo = 'maven'
+            name = "$project.group"
+            licenses = ['Apache-2.0']
+            vcsUrl = rootProject.ext.gitUrl
+            //noinspection GroovyAssignabilityCheck
+            version {
+                name = project.version
+                desc = rootProject.ext.projectDescription
+                released = new Date()
+                vcsTag = rootProject.ext.gitTag
+            }
+        }
+    }
 }
