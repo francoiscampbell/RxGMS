@@ -2,13 +2,16 @@ package xyz.fcampbell.rxplayservices.test.common
 
 import com.google.android.gms.common.api.GoogleApiClient
 import io.reactivex.Observable
+import junit.framework.Assert
+import org.junit.Test
+import xyz.fcampbell.rxplayservices.base.RxPlayServicesApi
 import java.util.concurrent.TimeUnit
 
 /**
  * Created by francois on 2017-02-06.
  */
-class RxPlayServicesApiTest {
-    private val testApi = RxFusedLocationApi(InstrumentationRegistry.getContext()) //RxFusedLocationApi chosen at random
+abstract class RxPlayServicesApiTest {
+    abstract val testApi: RxPlayServicesApi<*, *>
 
     @Test
     fun observableEmitsOneClient() {

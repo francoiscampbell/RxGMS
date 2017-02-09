@@ -105,6 +105,9 @@ subprojects {
     dependencies {
         compile "org.jetbrains.kotlin:kotlin-stdlib:$vKotlin"
         compile "io.reactivex.rxjava2:rxjava:$vRxJava"
+
+        androidTestCompile "com.android.support.test:runner:$vTestSupportLib"
+        androidTestCompile "com.android.support.test:rules:$vTestSupportLib"
     }
 
     //for bintray upload
