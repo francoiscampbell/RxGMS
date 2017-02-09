@@ -22,7 +22,7 @@ This is a WIP as more APIs get implemented. The status of implemented Play servi
 | Google Cast                              | ✔           | com.google.android.gms:play-services-cast:10.0.1          |
 | Google Cloud Messaging                   | Different   | com.google.android.gms:play-services-gcm:10.0.1           |
 | Google Drive                             | ✔           | com.google.android.gms:play-services-drive:10.0.1         |
-| Google Fit                               | ✘           | com.google.android.gms:play-services-fitness:10.0.1       |
+| Google Fit                               | ✔           | com.google.android.gms:play-services-fitness:10.0.1       |
 | Google Instant Apps                      | ✔           | com.google.android.gms:play-services-instantapps:10.0.1   |
 | Google Location and Activity Recognition | ✔           | com.google.android.gms:play-services-location:10.0.1      |
 | Google Maps                              | Different   | com.google.android.gms:play-services-maps:10.0.1          |
