@@ -31,11 +31,11 @@ class RxGeofencingApi(
      * Creates observable that adds request and completes when the action is done.
      *
      *
-     * Observable can report [GoogleApiConnectionException]
+     * Observable can report [GoogleApiConnectionException][xyz.fcampbell.rxplayservices.base.exception.GoogleApiConnectionException]
      * when there are trouble connecting with Google Play Services.
      *
      *
-     * In case of unsuccessful status [StatusException] is delivered.
+     * In case of unsuccessful status [StatusException][xyz.fcampbell.rxplayservices.base.exception.StatusException] is delivered.
      *
      *
      * Other exceptions will be reported that can be thrown on [GeofencingApi.addGeofences]
@@ -55,14 +55,14 @@ class RxGeofencingApi(
      * Observable that can be used to remove geofences from LocationClient.
      *
      *
-     * In case of unsuccessful status [StatusException] is delivered.
+     * In case of unsuccessful status [StatusException][xyz.fcampbell.rxplayservices.base.exception.StatusException] is delivered.
      *
      *
-     * Other exceptions will be reported that can be thrown on [GeofencingApi.removeGeofences].
+     * Other exceptions will be reported that can be thrown on [removeGeofences].
      *
      *
-     * Every exception is delivered by [Observer.onError].
-
+     * Every exception is delivered in [onError][io.reactivex.Observer.onError].
+     *
      * @param pendingIntent key of registered geofences
      * *
      * @return observable that removed geofences
@@ -75,13 +75,13 @@ class RxGeofencingApi(
      * Observable that can be used to remove geofences from LocationClient.
      *
      *
-     * In case of unsuccessful status [StatusException] is delivered.
+     * In case of unsuccessful status [StatusException][xyz.fcampbell.rxplayservices.base.exception.StatusException] is delivered.
      *
      *
      * Other exceptions will be reported that can be thrown on [GeofencingApi.removeGeofences].
      *
      *
-     * Every exception is delivered by [Observer.onError].
+     * Every exception is delivered by [onError][io.reactivex.Observer.onError].
 
      * @param requestIds geofences to remove
      * *

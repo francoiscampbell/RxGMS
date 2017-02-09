@@ -24,20 +24,18 @@ class RxGeoDataApi(
 
     /**
      * Returns observable that fetches a place from the Places API using the place ID.
-
-     * @param placeId id for place
+     *
+     * @param placeIds The Place IDs to search for
      * *
-     * @return observable that emits places buffer and completes
+     * @return Observable that emits places buffer and completes
      */
     fun getPlaceById(vararg placeIds: String): Observable<PlaceBuffer> {
         return fromPendingResult { getPlaceById(it, *placeIds) }
     }
 
     /**
-     * Returns observable that fetches autocomplete predictions from Places API. To flatmap and autorelease
-     * [com.google.android.gms.location.places.AutocompletePredictionBuffer] you can use
-     * [DataBufferObservable].
-
+     * Returns observable that fetches autocomplete predictions from Places API.
+     *
      * @param query  search query
      * *
      * @param bounds bounds where to fetch suggestions from
@@ -52,7 +50,7 @@ class RxGeoDataApi(
 
     /**
      * Returns observable that fetches photo metadata from the Places API using the place ID.
-
+     *
      * @param placeId id for place
      * *
      * @return observable that emits metadata buffer and completes
@@ -63,8 +61,8 @@ class RxGeoDataApi(
 
     /**
      * Returns observable that fetches a placePhotoMetadata from the Places API using the place placePhotoMetadata metadata.
-     * Use after fetching the place placePhotoMetadata metadata with [RxPlayServices.getPhotoMetadataById]
-
+     * Use after fetching the place placePhotoMetadata metadata with [getPlacePhotos]
+     *
      * @param placePhotoMetadata the place photo meta data
      * *
      * @return observable that emits the photo result and completes

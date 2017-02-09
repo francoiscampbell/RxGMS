@@ -36,10 +36,10 @@ class RxFusedLocationApi(
      * any value.
      *
      *
-     * Observable can report [GoogleApiConnectionException]
+     * Observable can report [GoogleApiConnectionException][xyz.fcampbell.rxplayservices.base.exception.GoogleApiConnectionException]
      * when there are trouble connecting with Google Play Services and other exceptions that
      * can be thrown on [FusedLocationProviderApi.getLastLocation].
-     * Everything is delivered by [rx.Observer.onError].
+     * Everything is delivered by [onError][io.reactivex.Observer.onError].
 
      * @return observable that serves last known location
      */
@@ -60,10 +60,10 @@ class RxFusedLocationApi(
      * will be thrown.
      *
      *
-     * All statuses that are not successful will be reported as [StatusException].
+     * All statuses that are not successful will be reported as [StatusException][xyz.fcampbell.rxplayservices.base.exception.StatusException].
      *
      *
-     * Every exception is delivered by [Observer.onError].
+     * Every exception is delivered by [onError][io.reactivex.Observer.onError].
 
      * @param sourceLocationObservable observable that emits [Location] instances suitable to use as mock locations
      * *
@@ -80,10 +80,10 @@ class RxFusedLocationApi(
      * then disconnected.
      *
      *
-     * Observable can report [GoogleApiConnectionException]
+     * Observable can report [GoogleApiConnectionException][xyz.fcampbell.rxplayservices.base.exception.GoogleApiConnectionException]
      * when there are trouble connecting with Google Play Services and other exceptions that
      * can be thrown on [FusedLocationProviderApi.requestLocationUpdates].
-     * Everything is delivered by [rx.Observer.onError].
+     * Everything is delivered by [onError][io.reactivex.Observer.onError].
 
      * @param locationRequest request object with info about what kind of location you need
      * *
@@ -105,7 +105,7 @@ class RxFusedLocationApi(
      * should be made.
      *
      *
-     * In case of unsuccessful status [StatusException] is delivered.
+     * In case of unsuccessful status [StatusException][xyz.fcampbell.rxplayservices.base.exception.StatusException] is delivered.
 
      * @param locationRequest request object with info about what kind of location you need
      * *
@@ -122,7 +122,7 @@ class RxFusedLocationApi(
      * Observable that can be used to remove [PendingIntent] location updates.
      *
      *
-     * In case of unsuccessful status [StatusException] is delivered.
+     * In case of unsuccessful status [StatusException][xyz.fcampbell.rxplayservices.base.exception.StatusException] is delivered.
 
      * @param intent PendingIntent to remove location updates for
      * *

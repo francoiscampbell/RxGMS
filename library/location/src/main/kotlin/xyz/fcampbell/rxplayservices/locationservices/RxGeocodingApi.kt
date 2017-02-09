@@ -15,7 +15,7 @@ import xyz.fcampbell.rxplayservices.locationservices.action.geocode.ReverseGeoco
 import java.util.*
 
 /**
- * Wraps [Geocoder]
+ * Wraps [Geocoder][android.location.Geocoder]
  */
 @Suppress("unused")
 class RxGeocodingApi(

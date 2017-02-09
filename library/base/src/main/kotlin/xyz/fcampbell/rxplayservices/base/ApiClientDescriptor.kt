@@ -5,7 +5,7 @@ import android.os.Handler
 import android.view.View
 
 /**
- * Proxy for [GoogleApiClient.Builder]
+ * Proxy for [GoogleApiClient.Builder][com.google.android.gms.common.api.GoogleApiClient.Builder]
  */
 @Suppress("unused")
 class ApiClientDescriptor(

@@ -8,9 +8,9 @@ import io.reactivex.ObservableOnSubscribe
 import xyz.fcampbell.rxplayservices.base.exception.StatusException
 
 /**
- * Wraps a [PendingResult] and emits its result as an [Observable]. If the [Observable] is canceled or disposed, the [PendingResult] is canceled and any [Releasable] payload is released. If the [PendingResult] was successful, [onNext] is called with the [Result] of the [PendingResult], and if the [PendingResult] was not successful, [onError] is called with a [StatusException] that wraps the status of the [PendingResult].
+ * Wraps a [PendingResult] and emits its result as an [Observable][io.reactivex.Observable]. If the [Observable][io.reactivex.Observable] is canceled or disposed, the [PendingResult] is canceled and any [Releasable] payload is released. If the [PendingResult] was successful, [onNext][io.reactivex.Observer.onNext] is called with the [Result] of the [PendingResult], and if the [PendingResult] was not successful, [onError][io.reactivex.Observer.onError] is called with a [StatusException] that wraps the status of the [PendingResult].
  *
- * @param R The payload type of the [PendingResult] and the [Observable]'s type parameter
+ * @param R The payload type of the [PendingResult] and the [Observable][io.reactivex.Observable]'s type parameter
  *
  * @constructor
  * @param action A function that produces a [PendingResult]

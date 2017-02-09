@@ -22,10 +22,8 @@ class RxPlaceDetectionApi(
     ) : this(ApiClientDescriptor(context))
 
     /**
-     * Returns observable that fetches current place from Places API. To flatmap and auto release
-     * buffer to [com.google.android.gms.location.places.PlaceLikelihood] observable use
-     * [DataBufferObservable].
-
+     * Returns observable that fetches current place from Places API.
+     *
      * @param placeFilter filter
      * *
      * @return observable that emits current places buffer and completes

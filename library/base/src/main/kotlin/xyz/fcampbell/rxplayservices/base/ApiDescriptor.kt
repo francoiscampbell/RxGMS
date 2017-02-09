@@ -11,7 +11,7 @@ import com.google.android.gms.common.api.Scope
  *
  * @constructor
  * @param api The Google Play services to connect to
- * @param apiInterface The interface that hosts the methods that make up the API (the methods that require a [GoogleApiClient])
+ * @param apiInterface The interface that hosts the methods that make up the API (the methods that require a [GoogleApiClient][com.google.android.gms.common.api.GoogleApiClient])
  * @param options Any [Api.ApiOptions] to pass use with this API
  * @param scopes Any [Scope]s required for this API
  */

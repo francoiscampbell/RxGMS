@@ -58,7 +58,7 @@ interface RxWrappedApi<out O> {
     }
 
     /**
-     * Converts a [PendingResult] into an [Observable]. The [PendingResult] is automatically canceled if the [Observable] is cancelled before the [GoogleApiClient] is ready and if the payload of the [PendingResult] is [Releasable], it is automatically disposed.
+     * Converts a [PendingResult] into an [Observable]. The [PendingResult] is automatically canceled if the [Observable] is cancelled before the [GoogleApiClient] is ready and if the payload of the [PendingResult] is [Releasable][com.google.android.gms.common.api.Releasable], it is automatically disposed.
      *
      * @param R The returned [Observable]'s and the [PendingResult]'s type parameter.
      * @param func An extension function that has [original] as its receiver, the [GoogleApiClient] as its parameter, and returns a [PendingResult].
@@ -69,10 +69,10 @@ interface RxWrappedApi<out O> {
     }
 
     /**
-     * Converts a function that returns [Unit] or [void] into a [Completable].
+     * Converts a function that returns [Unit] or [void][java.lang.Void] into a [Completable].
      *
-     * @param func An extension function that has [original] as its receiver, the [GoogleApiClient] as its parameter, and returns [Unit] or [void].
-     * @return A [Completable] that emits [onComplete] when the [GoogleApiClient] is emitted and after [func] is run.
+     * @param func An extension function that has [original] as its receiver, the [GoogleApiClient] as its parameter, and returns [Unit] or [void][java.lang.Void].
+     * @return A [Completable] that emits [onComplete][io.reactivex.Observer.onComplete] when the [GoogleApiClient] is emitted and after [func] is run.
      */
     fun toCompletable(func: O.(GoogleApiClient) -> Unit): Completable {
         return apiClient.map { original.func(it) }.ignoreElements()
