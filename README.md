@@ -30,7 +30,7 @@ This is a WIP as more APIs get implemented. The status of implemented Play servi
 | Google Places                            | ✔           | com.google.android.gms:play-services-places:10.0.1        |
 | Mobile Vision                            | Different   | com.google.android.gms:play-services-vision:10.0.1        |
 | Google Nearby                            | ✔           | com.google.android.gms:play-services-nearby:10.0.1        |
-| Google Panorama Viewer                   | ✘           | com.google.android.gms:play-services-panorama:10.0.1      |
+| Google Panorama Viewer                   | ✔           | com.google.android.gms:play-services-panorama:10.0.1      |
 | Google Play Game services                | ✔           | com.google.android.gms:play-services-games:10.0.1         |
 | Google Tag Manager                       | Different   | com.google.android.gms:play-services-tagmanager-10.0.1    |
 | Google Tasks                             | Different   | com.google.android.gms:play-services-tasks-10.0.1         |
