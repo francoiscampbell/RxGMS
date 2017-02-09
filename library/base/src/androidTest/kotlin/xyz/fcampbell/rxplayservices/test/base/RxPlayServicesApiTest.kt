@@ -1,6 +1,9 @@
 package xyz.fcampbell.rxplayservices.test.base
 
+import com.google.android.gms.common.api.GoogleApiClient
+import io.reactivex.Observable
 import junit.framework.Assert
+import org.junit.Test
 import xyz.fcampbell.rxplayservices.base.RxPlayServicesApi
 import java.util.concurrent.TimeUnit
 
