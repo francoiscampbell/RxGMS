@@ -16,7 +16,7 @@ This is a WIP as more APIs get implemented. The status of implemented Play servi
 | Google Actions, Base Client Library      | ✔           | com.google.android.gms:play-services-base:10.0.1          |
 | Google Address API                       | ✔           | com.google.android.gms:play-services-identity:10.0.1      |
 | Firebase App Indexing                    | Different   | com.google.firebase:firebase-appindexing:10.0.1           |
-| Google App Invites                       | ✔           | play-services-appinvite-10.0.1                            |
+| Google App Invites                       | ✔           | com.google.firebase:play-services-appinvite-10.0.1                            |
 | Google Analytics                         | Different   | com.google.android.gms:play-services-analytics:10.0.1     |
 | Google Awareness                         | ✔           | com.google.android.gms:play-services-awareness:10.0.1     |
 | Google Cast                              | ✔           | com.google.android.gms:play-services-cast:10.0.1          |
