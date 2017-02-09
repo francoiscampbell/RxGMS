@@ -63,13 +63,13 @@ internal class GoogleApiClientOnSubscribe<A, O : Api.ApiOptions>(
     @Suppress("UNCHECKED_CAST")
     private fun GoogleApiClient.Builder.addApi(api: Api<O>, options: O?): GoogleApiClient.Builder {
         if (options == null) {
-            if (api in APIS_TO_ADD_ONLY_IF_AVAILABLE) {
+            if (api.name in APIS_TO_ADD_ONLY_IF_AVAILABLE) {
                 addApiIfAvailable(api as Api<Api.ApiOptions.NotRequiredOptions>)
             } else {
                 addApi(api as Api<Api.ApiOptions.NotRequiredOptions>)
             }
         } else {
-            if (api in APIS_TO_ADD_ONLY_IF_AVAILABLE) {
+            if (api.name in APIS_TO_ADD_ONLY_IF_AVAILABLE) {
                 addApiIfAvailable(api as Api<Api.ApiOptions.HasOptions>, options as Api.ApiOptions.HasOptions)
             } else {
                 addApi(api as Api<Api.ApiOptions.HasOptions>, options as Api.ApiOptions.HasOptions)
@@ -100,14 +100,7 @@ internal class GoogleApiClientOnSubscribe<A, O : Api.ApiOptions>(
     }
 
     companion object {
-        private val APIS_TO_ADD_ONLY_IF_AVAILABLE = mutableSetOf<Api<out Api.ApiOptions>>()
-
-        init {
-            try { //add one per api that may not be there
-                APIS_TO_ADD_ONLY_IF_AVAILABLE.add(com.google.android.gms.wearable.Wearable.API)
-            } catch (e: NoClassDefFoundError) {
-            }
-        }
+        private val APIS_TO_ADD_ONLY_IF_AVAILABLE = mutableSetOf("Wearable.API")
     }
 
     private inner class ApiClientConnectionCallbacks(

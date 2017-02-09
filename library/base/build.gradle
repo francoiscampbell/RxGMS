@@ -1,5 +1,3 @@
 dependencies {
     compile "com.google.android.gms:play-services-base:$vGooglePlayServices"
-    provided "com.google.android.gms:play-services:$vGooglePlayServices"
-    //for APIs to add only if available
 }
