@@ -16,11 +16,10 @@ dependencies {
     }
 }
 
-def configureProject = {
+def configureProject = { isSubproject ->
     apply plugin: 'com.android.library'
     apply plugin: 'kotlin-android'
 
-    apply plugin: 'org.jetbrains.dokka-android'
     apply plugin: 'com.github.dcendents.android-maven'
     apply plugin: 'com.jfrog.bintray'
 
@@ -53,47 +52,13 @@ def configureProject = {
         }
     }
 
-    dependencies {
-        compile "org.jetbrains.kotlin:kotlin-stdlib:$vKotlin"
-        compile "io.reactivex.rxjava2:rxjava:$vRxJava"
-
-        androidTestCompile "com.android.support.test:runner:$vTestSupportLib"
-        androidTestCompile "com.android.support.test:rules:$vTestSupportLib"
-    }
+    archivesBaseName = isSubproject ? rootProject.getArtifactId(project.name) : rootProject.name.toLowerCase()
 
     //for bintray upload
     repositories {
         maven {
             url 'http://dl.bintray.com/francoiscampbell/maven'
         }
-    }
-
-    archivesBaseName = rootProject.getArtifactId(project.name)
-
-    task sourcesJar(type: Jar) {
-        from android.sourceSets.main.java.srcDirs
-        classifier = 'sources'
-    }
-
-    task dokkaJar(type: Jar, dependsOn: dokka) {
-        from dokka.outputDirectory
-        classifier = 'dokka'
-    }
-
-    task dokkaJavadoc(type: org.jetbrains.dokka.gradle.DokkaAndroidTask) {
-        outputFormat = 'javadoc'
-        outputDirectory = "$buildDir/javadoc"
-    }
-
-    task dokkaJavadocJar(type: Jar, dependsOn: dokkaJavadoc) {
-        from dokkaJavadoc.outputDirectory
-        classifier = 'javadoc'
-    }
-
-    artifacts {
-        archives dokkaJar
-        archives dokkaJavadocJar
-        archives sourcesJar
     }
 
     task installAndBintrayUpload(dependsOn: [install, bintrayUpload], group: 'publishing')
@@ -110,7 +75,7 @@ def configureProject = {
 
                 packaging 'aar'
                 groupId project.group
-                artifactId rootProject.getArtifactId(project.name)
+                artifactId isSubproject ? rootProject.getArtifactId(project.name) : rootProject.name.toLowerCase()
                 version project.version
 
                 licenses {
@@ -155,7 +120,45 @@ def configureProject = {
             }
         }
     }
+
+    if (isSubproject) {
+        dependencies {
+            compile "org.jetbrains.kotlin:kotlin-stdlib:$vKotlin"
+            compile "io.reactivex.rxjava2:rxjava:$vRxJava"
+
+            androidTestCompile "com.android.support.test:runner:$vTestSupportLib"
+            androidTestCompile "com.android.support.test:rules:$vTestSupportLib"
+        }
+
+        apply plugin: 'org.jetbrains.dokka-android'
+
+        task sourcesJar(type: Jar) {
+            from android.sourceSets.main.java.srcDirs
+            classifier = 'sources'
+        }
+
+        task dokkaJar(type: Jar, dependsOn: dokka) {
+            from dokka.outputDirectory
+            classifier = 'dokka'
+        }
+
+        task dokkaJavadoc(type: org.jetbrains.dokka.gradle.DokkaAndroidTask) {
+            outputFormat = 'javadoc'
+            outputDirectory = "$buildDir/javadoc"
+        }
+
+        task dokkaJavadocJar(type: Jar, dependsOn: dokkaJavadoc) {
+            from dokkaJavadoc.outputDirectory
+            classifier = 'javadoc'
+        }
+
+        artifacts {
+            archives dokkaJar
+            archives dokkaJavadocJar
+            archives sourcesJar
+        }
+    }
 }
 
-configureProject()
-subprojects(configureProject)
+configureProject(false)
+subprojects(configureProject.curry(true))
