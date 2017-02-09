@@ -125,14 +125,6 @@ def configureProject = { isSubproject ->
     }
 
     if (isSubproject) {
-        dependencies {
-            compile "org.jetbrains.kotlin:kotlin-stdlib:$vKotlin"
-            compile "io.reactivex.rxjava2:rxjava:$vRxJava"
-
-            androidTestCompile "com.android.support.test:runner:$vTestSupportLib"
-            androidTestCompile "com.android.support.test:rules:$vTestSupportLib"
-        }
-
         apply plugin: 'org.jetbrains.dokka-android'
 
         task sourcesJar(type: Jar) {
