@@ -26,9 +26,9 @@ This is a WIP as more APIs get implemented. The status of implemented Play servi
 | Google Instant Apps                      | ✘           | com.google.android.gms:play-services-instantapps:10.0.1   |
 | Google Location and Activity Recognition | ✔           | com.google.android.gms:play-services-location:10.0.1      |
 | Google Maps                              | ✘           | com.google.android.gms:play-services-maps:10.0.1          |
-| Google Mobile Ads                        | ✘           | com.google.android.gms:play-services-ads:10.0.1           |
+| Google Mobile Ads                        | Different   | com.google.android.gms:play-services-ads:10.0.1           |
 | Google Places                            | ✔           | com.google.android.gms:play-services-places:10.0.1        |
-| Mobile Vision                            | ✘           | com.google.android.gms:play-services-vision:10.0.1        |
+| Mobile Vision                            | Different   | com.google.android.gms:play-services-vision:10.0.1        |
 | Google Nearby                            | ✔           | com.google.android.gms:play-services-nearby:10.0.1        |
 | Google Panorama Viewer                   | ✘           | com.google.android.gms:play-services-panorama:10.0.1      |
 | Google Play Game services                | ✔           | com.google.android.gms:play-services-games:10.0.1         |
