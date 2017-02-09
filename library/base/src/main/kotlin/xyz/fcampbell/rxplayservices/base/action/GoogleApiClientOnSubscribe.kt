@@ -1,6 +1,12 @@
 package xyz.fcampbell.rxplayservices.base.action
 
 import android.os.Bundle
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.api.Api
+import com.google.android.gms.common.api.GoogleApiClient
+import com.google.android.gms.common.api.Scope
+import io.reactivex.ObservableEmitter
+import io.reactivex.ObservableOnSubscribe
 import xyz.fcampbell.rxplayservices.base.ApiClientDescriptor
 import xyz.fcampbell.rxplayservices.base.ApiDescriptor
 import xyz.fcampbell.rxplayservices.base.exception.GoogleApiConnectionException

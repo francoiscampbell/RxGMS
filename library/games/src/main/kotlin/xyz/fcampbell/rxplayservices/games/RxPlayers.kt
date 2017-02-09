@@ -2,6 +2,11 @@ package xyz.fcampbell.rxplayservices.games
 
 import android.content.Context
 import android.content.Intent
+import com.google.android.gms.common.api.Scope
+import com.google.android.gms.games.Games
+import com.google.android.gms.games.Player
+import com.google.android.gms.games.Players
+import io.reactivex.Observable
 import xyz.fcampbell.rxplayservices.base.ApiClientDescriptor
 import xyz.fcampbell.rxplayservices.base.ApiDescriptor
 import xyz.fcampbell.rxplayservices.base.RxPlayServicesApi

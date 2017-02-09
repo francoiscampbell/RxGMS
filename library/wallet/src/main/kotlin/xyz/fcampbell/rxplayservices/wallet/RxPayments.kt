@@ -1,6 +1,10 @@
 package xyz.fcampbell.rxplayservices.wallet
 
 import android.content.Context
+import com.google.android.gms.common.api.BooleanResult
+import com.google.android.gms.wallet.*
+import io.reactivex.Completable
+import io.reactivex.Observable
 import xyz.fcampbell.rxplayservices.base.ApiClientDescriptor
 import xyz.fcampbell.rxplayservices.base.ApiDescriptor
 import xyz.fcampbell.rxplayservices.base.RxPlayServicesApi

@@ -1,6 +1,8 @@
 package xyz.fcampbell.rxplayservices.places
 
 import android.content.Context
+import com.google.android.gms.location.places.*
+import io.reactivex.Observable
 import xyz.fcampbell.rxplayservices.base.ApiClientDescriptor
 import xyz.fcampbell.rxplayservices.base.ApiDescriptor
 import xyz.fcampbell.rxplayservices.base.RxPlayServicesApi

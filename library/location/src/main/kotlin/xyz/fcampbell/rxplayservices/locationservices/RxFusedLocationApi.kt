@@ -3,9 +3,18 @@ package xyz.fcampbell.rxplayservices.locationservices
 import android.app.PendingIntent
 import android.content.Context
 import android.location.Location
+import android.support.annotation.RequiresPermission
+import com.google.android.gms.common.api.Api
+import com.google.android.gms.common.api.Status
+import com.google.android.gms.location.FusedLocationProviderApi
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationServices
+import io.reactivex.Observable
 import xyz.fcampbell.rxplayservices.base.ApiClientDescriptor
 import xyz.fcampbell.rxplayservices.base.ApiDescriptor
 import xyz.fcampbell.rxplayservices.base.RxPlayServicesApi
+import xyz.fcampbell.rxplayservices.locationservices.action.location.LocationUpdates
+import xyz.fcampbell.rxplayservices.locationservices.action.location.MockLocation
 
 /**
  * Wraps [LocationServices.FusedLocationApi]

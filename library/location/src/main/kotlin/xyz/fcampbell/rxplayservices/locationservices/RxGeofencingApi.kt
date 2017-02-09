@@ -2,6 +2,13 @@ package xyz.fcampbell.rxplayservices.locationservices
 
 import android.app.PendingIntent
 import android.content.Context
+import android.support.annotation.RequiresPermission
+import com.google.android.gms.common.api.Api
+import com.google.android.gms.common.api.Status
+import com.google.android.gms.location.GeofencingApi
+import com.google.android.gms.location.GeofencingRequest
+import com.google.android.gms.location.LocationServices
+import io.reactivex.Observable
 import xyz.fcampbell.rxplayservices.base.ApiClientDescriptor
 import xyz.fcampbell.rxplayservices.base.ApiDescriptor
 import xyz.fcampbell.rxplayservices.base.RxPlayServicesApi

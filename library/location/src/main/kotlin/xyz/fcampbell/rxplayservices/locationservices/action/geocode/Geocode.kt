@@ -3,6 +3,9 @@ package xyz.fcampbell.rxplayservices.locationservices.action.geocode
 import android.content.Context
 import android.location.Address
 import android.location.Geocoder
+import com.google.android.gms.maps.model.LatLngBounds
+import io.reactivex.ObservableEmitter
+import io.reactivex.ObservableOnSubscribe
 import java.io.IOException
 
 internal class Geocode(

@@ -1,6 +1,13 @@
 package xyz.fcampbell.rxplayservices.nearby
 
 import android.content.Context
+import com.google.android.gms.common.api.Api
+import com.google.android.gms.common.api.Status
+import com.google.android.gms.nearby.Nearby
+import com.google.android.gms.nearby.connection.AppMetadata
+import com.google.android.gms.nearby.connection.Connections
+import io.reactivex.Completable
+import io.reactivex.Observable
 import xyz.fcampbell.rxplayservices.base.ApiClientDescriptor
 import xyz.fcampbell.rxplayservices.base.ApiDescriptor
 import xyz.fcampbell.rxplayservices.base.RxPlayServicesApi

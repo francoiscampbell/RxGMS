@@ -3,6 +3,8 @@ package xyz.fcampbell.rxplayservices.base.util
 import android.app.Activity
 import android.content.*
 import android.os.Bundle
+import android.support.v4.content.LocalBroadcastManager
+import io.reactivex.Observable
 import xyz.fcampbell.rxplayservices.base.BuildConfig
 import java.util.*
 

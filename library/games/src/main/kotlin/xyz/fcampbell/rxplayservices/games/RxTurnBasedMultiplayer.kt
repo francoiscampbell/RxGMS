@@ -2,6 +2,14 @@ package xyz.fcampbell.rxplayservices.games
 
 import android.content.Context
 import android.content.Intent
+import com.google.android.gms.common.api.Scope
+import com.google.android.gms.games.Games
+import com.google.android.gms.games.multiplayer.ParticipantResult
+import com.google.android.gms.games.multiplayer.turnbased.OnTurnBasedMatchUpdateReceivedListener
+import com.google.android.gms.games.multiplayer.turnbased.TurnBasedMatchConfig
+import com.google.android.gms.games.multiplayer.turnbased.TurnBasedMultiplayer
+import io.reactivex.Completable
+import io.reactivex.Observable
 import xyz.fcampbell.rxplayservices.base.ApiClientDescriptor
 import xyz.fcampbell.rxplayservices.base.ApiDescriptor
 import xyz.fcampbell.rxplayservices.base.RxPlayServicesApi

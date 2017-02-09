@@ -1,6 +1,15 @@
 package xyz.fcampbell.rxplayservices.drive
 
 import android.content.Context
+import com.google.android.gms.common.api.Api
+import com.google.android.gms.common.api.Scope
+import com.google.android.gms.common.api.Status
+import com.google.android.gms.drive.CreateFileActivityBuilder
+import com.google.android.gms.drive.Drive
+import com.google.android.gms.drive.DriveApi
+import com.google.android.gms.drive.OpenFileActivityBuilder
+import com.google.android.gms.drive.query.Query
+import io.reactivex.Observable
 import xyz.fcampbell.rxplayservices.base.ApiClientDescriptor
 import xyz.fcampbell.rxplayservices.base.ApiDescriptor
 import xyz.fcampbell.rxplayservices.base.RxPlayServicesApi
@@ -47,7 +56,7 @@ class RxDriveApi(
         return Observable.just(Drive.DriveApi.newOpenFileActivityBuilder())
     }
 
-    fun query(query: Query): Observable<MetadataBufferResult> {
+    fun query(query: Query): Observable<DriveApi.MetadataBufferResult> {
         return fromPendingResult { query(it, query) }
     }
 

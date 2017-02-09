@@ -4,6 +4,13 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
+import com.google.android.gms.common.api.Scope
+import com.google.android.gms.games.Games
+import com.google.android.gms.games.request.GameRequest
+import com.google.android.gms.games.request.OnRequestReceivedListener
+import com.google.android.gms.games.request.Requests
+import io.reactivex.Completable
+import io.reactivex.Observable
 import xyz.fcampbell.rxplayservices.base.ApiClientDescriptor
 import xyz.fcampbell.rxplayservices.base.ApiDescriptor
 import xyz.fcampbell.rxplayservices.base.RxPlayServicesApi

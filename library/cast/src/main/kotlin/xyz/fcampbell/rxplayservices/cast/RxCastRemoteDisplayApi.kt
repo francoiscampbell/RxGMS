@@ -1,6 +1,10 @@
 package xyz.fcampbell.rxplayservices.cast
 
 import android.content.Context
+import com.google.android.gms.cast.CastRemoteDisplay
+import com.google.android.gms.cast.CastRemoteDisplayApi
+import com.google.android.gms.common.api.Scope
+import io.reactivex.Observable
 import xyz.fcampbell.rxplayservices.base.ApiClientDescriptor
 import xyz.fcampbell.rxplayservices.base.ApiDescriptor
 import xyz.fcampbell.rxplayservices.base.RxPlayServicesApi

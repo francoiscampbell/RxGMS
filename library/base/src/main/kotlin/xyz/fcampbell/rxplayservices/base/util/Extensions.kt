@@ -1,5 +1,10 @@
 package xyz.fcampbell.rxplayservices.base.util
 
+import com.google.android.gms.common.api.PendingResult
+import com.google.android.gms.common.api.Result
+import io.reactivex.Observable
+import xyz.fcampbell.rxplayservices.base.action.PendingResultOnSubscribe
+
 /**
  * Convenience extension function to convert a [PendingResult] to an [Observable].
  *

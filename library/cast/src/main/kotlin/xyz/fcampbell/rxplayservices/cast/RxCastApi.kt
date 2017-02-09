@@ -1,6 +1,13 @@
 package xyz.fcampbell.rxplayservices.cast
 
 import android.content.Context
+import com.google.android.gms.cast.ApplicationMetadata
+import com.google.android.gms.cast.Cast
+import com.google.android.gms.cast.LaunchOptions
+import com.google.android.gms.common.api.Scope
+import com.google.android.gms.common.api.Status
+import io.reactivex.Completable
+import io.reactivex.Observable
 import xyz.fcampbell.rxplayservices.base.ApiClientDescriptor
 import xyz.fcampbell.rxplayservices.base.ApiDescriptor
 import xyz.fcampbell.rxplayservices.base.RxPlayServicesApi

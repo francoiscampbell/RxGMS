@@ -5,6 +5,11 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import com.google.android.gms.common.api.GoogleApiClient
+import com.google.android.gms.location.ActivityRecognition
+import com.google.android.gms.location.ActivityRecognitionResult
+import io.reactivex.ObservableEmitter
+import io.reactivex.ObservableOnSubscribe
 import xyz.fcampbell.rxplayservices.location.BuildConfig
 
 internal class ActivityUpdates(

@@ -1,5 +1,13 @@
 package xyz.fcampbell.rxplayservices.base
 
+import com.google.android.gms.common.api.GoogleApiClient
+import com.google.android.gms.common.api.PendingResult
+import com.google.android.gms.common.api.Result
+import io.reactivex.Completable
+import io.reactivex.Observable
+import io.reactivex.ObservableOnSubscribe
+import xyz.fcampbell.rxplayservices.base.util.toObservable
+
 /**
  * Interface to add to a class to denote it as wrapping a Google Play service API. This interface provides convenience functions that reduce the boilerplate required to wrap the API's functions into Rx.
  * @param O The type of the class to wrap.

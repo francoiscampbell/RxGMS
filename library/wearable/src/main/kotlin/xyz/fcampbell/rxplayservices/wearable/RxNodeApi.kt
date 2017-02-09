@@ -1,6 +1,9 @@
 package xyz.fcampbell.rxplayservices.wearable
 
 import android.content.Context
+import com.google.android.gms.wearable.NodeApi
+import com.google.android.gms.wearable.Wearable
+import io.reactivex.Observable
 import xyz.fcampbell.rxplayservices.base.ApiClientDescriptor
 import xyz.fcampbell.rxplayservices.base.ApiDescriptor
 import xyz.fcampbell.rxplayservices.base.RxPlayServicesApi

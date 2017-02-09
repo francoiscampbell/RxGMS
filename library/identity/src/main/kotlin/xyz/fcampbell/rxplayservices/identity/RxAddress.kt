@@ -1,6 +1,9 @@
 package xyz.fcampbell.rxplayservices.identity
 
 import android.content.Context
+import com.google.android.gms.identity.intents.Address
+import com.google.android.gms.identity.intents.UserAddressRequest
+import io.reactivex.Completable
 import xyz.fcampbell.rxplayservices.base.ApiClientDescriptor
 import xyz.fcampbell.rxplayservices.base.ApiDescriptor
 import xyz.fcampbell.rxplayservices.base.RxPlayServicesApi

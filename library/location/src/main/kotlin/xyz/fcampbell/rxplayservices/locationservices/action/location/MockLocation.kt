@@ -1,6 +1,13 @@
 package xyz.fcampbell.rxplayservices.locationservices.action.location
 
 import android.location.Location
+import com.google.android.gms.common.api.GoogleApiClient
+import com.google.android.gms.common.api.Status
+import com.google.android.gms.location.LocationServices
+import io.reactivex.Observable
+import io.reactivex.ObservableEmitter
+import io.reactivex.ObservableOnSubscribe
+import io.reactivex.disposables.Disposable
 import xyz.fcampbell.rxplayservices.base.exception.StatusException
 
 internal class MockLocation(

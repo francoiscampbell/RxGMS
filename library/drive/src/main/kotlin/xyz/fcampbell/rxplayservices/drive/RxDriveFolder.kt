@@ -1,5 +1,9 @@
 package xyz.fcampbell.rxplayservices.drive
 
+import com.google.android.gms.common.api.GoogleApiClient
+import com.google.android.gms.drive.*
+import com.google.android.gms.drive.query.Query
+import io.reactivex.Observable
 import xyz.fcampbell.rxplayservices.base.RxWrappedApi
 
 /**

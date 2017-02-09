@@ -2,6 +2,11 @@ package xyz.fcampbell.rxplayservices.auth
 
 import android.app.PendingIntent
 import android.content.Context
+import com.google.android.gms.auth.api.Auth
+import com.google.android.gms.auth.api.credentials.*
+import com.google.android.gms.common.api.Scope
+import com.google.android.gms.common.api.Status
+import io.reactivex.Observable
 import xyz.fcampbell.rxplayservices.base.ApiClientDescriptor
 import xyz.fcampbell.rxplayservices.base.ApiDescriptor
 import xyz.fcampbell.rxplayservices.base.RxPlayServicesApi

@@ -1,6 +1,10 @@
 package xyz.fcampbell.rxplayservices.activityrecognition
 
 import android.content.Context
+import com.google.android.gms.common.api.Api
+import com.google.android.gms.location.ActivityRecognition
+import com.google.android.gms.location.ActivityRecognitionResult
+import io.reactivex.Observable
 import xyz.fcampbell.rxplayservices.activityrecognition.action.ActivityUpdates
 import xyz.fcampbell.rxplayservices.base.ApiClientDescriptor
 import xyz.fcampbell.rxplayservices.base.ApiDescriptor
