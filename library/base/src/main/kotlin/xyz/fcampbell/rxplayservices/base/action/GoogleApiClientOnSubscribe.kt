@@ -14,7 +14,7 @@ import xyz.fcampbell.rxplayservices.base.exception.GoogleApiConnectionSuspendedE
 import xyz.fcampbell.rxplayservices.base.util.ResultActivity
 
 /**
- * Handles creating, connecting, and delivering the [GoogleApiClient] for a particulat Google Play services API
+ * Handles creating, connecting, and delivering the [GoogleApiClient] for a particular Google Play services API
  *
  * @param A The type of the API to wrap  (If there is no API but you still want to extend this class, use [Unit] or [Void]).
  * @param O The type of that API's options.

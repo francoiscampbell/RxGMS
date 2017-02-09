@@ -10,6 +10,9 @@ ext {
     projectFriendlyName = 'RxPlayServices'
     projectDescription = 'Library that wraps Google Play services APIs using RxJava'
 
+    groupId = 'xyz.fcampbell.rxplayservices'
+    versionName = '0.5.0'
+
     minSdkVersion = 11
     compileSdkVersion = 24
     targetSdkVersion = 24
@@ -55,8 +58,8 @@ def getArtifactId(String projectName) {
 }
 
 allprojects {
-    version = VERSION_NAME
-    group = GROUP
+    version = rootProject.ext.versionName
+    group = rootProject.ext.groupId
 
     repositories {
         mavenCentral()

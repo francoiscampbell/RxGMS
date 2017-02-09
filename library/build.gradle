@@ -62,9 +62,12 @@ def configureProject = { isSubproject ->
     }
 
     task installAndBintrayUpload(dependsOn: [install, bintrayUpload], group: 'publishing')
-    bintrayUpload.shouldRunAfter install
+    bintrayUpload.mustRunAfter install
 
     install {
+        dependsOn {
+            tasks.findAll { it.name == 'build' }
+        }
         group 'publishing'
         repositories.mavenInstaller {
             pom.project {
