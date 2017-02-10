@@ -1,10 +1,10 @@
 package xyz.fcampbell.rxplayservices.locationservices
 
 import android.content.Context
+import android.graphics.RectF
 import android.location.Address
 import com.google.android.gms.common.api.Api
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.maps.model.LatLngBounds
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import xyz.fcampbell.rxplayservices.base.ApiClientDescriptor
@@ -84,9 +84,11 @@ class RxGeocodingApi(
      * *
      * @return observable that serves list of address based on location name
      */
-    @JvmOverloads fun geocode(locationName: String, maxResults: Int, bounds: LatLngBounds? = null): Observable<List<Address>> {
+    @JvmOverloads fun geocode(locationName: String, maxResults: Int, bounds: RectF? = null): Observable<List<Address>> {
         return create { Geocode(apiClientDescriptor.context, locationName, maxResults, bounds) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.trampoline())
     }
+
+
 }

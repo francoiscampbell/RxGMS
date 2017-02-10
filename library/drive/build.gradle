@@ -1,5 +1,36 @@
+apply from: '../buildSubproject.gradle'
+apply from: '../publish.gradle'
+
 dependencies {
     compile project(':library:base')
 
-    compile "com.google.android.gms:play-services-drive:$vGooglePlayServices"
+    compile "com.google.android.gms:play-services-$name:$vGooglePlayServices"
+}
+
+apply plugin: 'org.jetbrains.dokka-android'
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task dokkaJar(type: Jar, dependsOn: dokka) {
+    from dokka.outputDirectory
+    classifier = 'dokka'
+}
+
+task dokkaJavadoc(type: org.jetbrains.dokka.gradle.DokkaAndroidTask) {
+    outputFormat = 'javadoc'
+    outputDirectory = "$buildDir/javadoc"
+}
+
+task dokkaJavadocJar(type: Jar, dependsOn: dokkaJavadoc) {
+    from dokkaJavadoc.outputDirectory
+    classifier = 'javadoc'
+}
+
+artifacts {
+    archives dokkaJar
+    archives dokkaJavadocJar
+    archives sourcesJar
 }

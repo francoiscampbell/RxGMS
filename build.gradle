@@ -54,7 +54,7 @@ def isReleaseBuild() {
 }
 
 def getArtifactId(String projectName) {
-    return "${rootProject.name.toLowerCase()}-$projectName"
+    return rootProject.name.toLowerCase() + (projectName == 'library' ? '' : ('-' + projectName))
 }
 
 allprojects {

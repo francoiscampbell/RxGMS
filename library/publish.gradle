@@ -1,0 +1,72 @@
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
+
+//for bintray upload
+repositories {
+    maven {
+        url 'http://dl.bintray.com/francoiscampbell/maven'
+    }
+}
+
+task installAndBintrayUpload(dependsOn: [install, bintrayUpload], group: 'publishing')
+bintrayUpload.mustRunAfter install
+
+install {
+    dependsOn {
+        tasks.findAll { it.name == 'build' }
+    }
+    group 'publishing'
+    repositories.mavenInstaller {
+        pom.project {
+            name rootProject.ext.projectFriendlyName
+            description rootProject.ext.projectDescription
+            url rootProject.ext.githubUrl
+            inceptionYear '2017'
+
+            packaging 'aar'
+            groupId project.group
+            artifactId rootProject.getArtifactId(project.name)
+            version project.version
+
+            licenses {
+                license {
+                    name 'Apache-2.0'
+                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    distribution 'repo'
+                }
+            }
+            scm {
+                connection rootProject.ext.gitUrl
+                url rootProject.ext.githubUrl
+            }
+            developers {
+                developer {
+                    name 'Francois Campbell'
+                    email 'campbell.francois@gmail.com'
+                }
+            }
+        }
+    }
+}
+
+bintray {
+    user = project.BINTRAY_USER
+    key = project.BINTRAY_KEY
+
+    configurations = ['archives']
+    publish = true
+    override = true
+    pkg {
+        repo = 'maven'
+        name = "$project.group"
+        licenses = ['Apache-2.0']
+        vcsUrl = rootProject.ext.gitUrl
+        //noinspection GroovyAssignabilityCheck
+        version {
+            name = project.version
+            desc = rootProject.ext.projectDescription
+            released = new Date()
+            vcsTag = rootProject.ext.gitTag
+        }
+    }
+}

@@ -1,8 +1,37 @@
+apply from: '../buildSubproject.gradle'
+apply from: '../publish.gradle'
+
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$vKotlin"
     compile "io.reactivex.rxjava2:rxjava:$vRxJava"
-    compile "com.google.android.gms:play-services-base:$vGooglePlayServices"
 
-    androidTestCompile "com.android.support.test:runner:$vTestSupportLib"
-    androidTestCompile "com.android.support.test:rules:$vTestSupportLib"
+    compile "com.google.android.gms:play-services-base:$vGooglePlayServices"
+}
+
+apply plugin: 'org.jetbrains.dokka-android'
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task dokkaJar(type: Jar, dependsOn: dokka) {
+    from dokka.outputDirectory
+    classifier = 'dokka'
+}
+
+task dokkaJavadoc(type: org.jetbrains.dokka.gradle.DokkaAndroidTask) {
+    outputFormat = 'javadoc'
+    outputDirectory = "$buildDir/javadoc"
+}
+
+task dokkaJavadocJar(type: Jar, dependsOn: dokkaJavadoc) {
+    from dokkaJavadoc.outputDirectory
+    classifier = 'javadoc'
+}
+
+artifacts {
+    archives dokkaJar
+    archives dokkaJavadocJar
+    archives sourcesJar
 }
